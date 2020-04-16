@@ -1,0 +1,112 @@
+I"�<h1 id="封面图的渲染">封面图的渲染</h1>
+
+<hr />
+
+<p>一系列随机的球体</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *random_scene() {
+    int n = 500;
+    hittable **list = new hittable*[n+1];
+    list[0] =  new sphere(vec3(0,-1000,0), 1000, new lambertian(vec3(0.5, 0.5, 0.5)));
+    int i = 1;
+    for (int a = -11; a &lt; 11; a++) {
+        for (int b = -11; b &lt; 11; b++) {
+            float choose_mat = random_double();
+            vec3 center(a+0.9*random_double(),0.2,b+0.9*random_double());
+            if ((center-vec3(4,0.2,0)).length() &gt; 0.9) {
+                if (choose_mat &lt; 0.8) {  // diffuse
+                    list[i++] = new sphere(center, 0.2,
+                        new lambertian(vec3(random_double()*random_double(),
+                                            random_double()*random_double(),
+                                            random_double()*random_double())
+                        )
+                    );
+                }
+                else if (choose_mat &lt; 0.95) { // metal
+                    list[i++] = new sphere(center, 0.2,
+                            new metal(vec3(0.5*(1 + random_double()),
+                                           0.5*(1 + random_double()),
+                                           0.5*(1 + random_double())),
+                                      0.5*random_double()));
+                }
+                else {  // glass
+                    list[i++] = new sphere(center, 0.2, new dielectric(1.5));
+                }
+            }
+        }
+    }
+
+    list[i++] = new sphere(vec3(0, 1, 0), 1.0, new dielectric(1.5));
+    list[i++] = new sphere(vec3(-4, 1, 0), 1.0, new lambertian(vec3(0.4, 0.2, 0.1)));
+    list[i++] = new sphere(vec3(4, 1, 0), 1.0, new metal(vec3(0.7, 0.6, 0.5), 0.0));
+
+    return new hittable_list(list,i);
+}
+</code></pre></div></div>
+
+<hr />
+
+<p>修改main函数</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+int main() {
+
+    int nx=600,ny=300,ns=100;
+    unsigned char rgb[nx * ny * 3], *p = rgb;
+    FILE *fp = fopen("test.png", "wb");
+
+    vec3 lookfrom(0,10,0);
+    vec3 lookat(0,0,-1);
+    float dist_to_focus = (lookfrom-lookat).length();
+    float aperture = 0.01;
+
+    camera cam(lookfrom, lookat, vec3(0,1,0), 50,
+           float(nx)/float(ny), aperture, dist_to_focus);
+    hittable *world = random_scene();
+
+    for (int j = ny-1; j &gt;= 0; j--){
+        for (int i = 0; i &lt; nx; i++) {
+            vec3 col(0,0,0);
+            for(int s = 0; s &lt; ns ; s++){
+                float u = float(i + random_double()) / float(nx);
+                float v = float(j + random_double()) / float(ny);
+                ray r = cam.get_ray(u,v);               
+                col += color(r, world, 0);           
+            }
+            col /= float(ns);
+            col = vec3( sqrt(col[0]), sqrt(col[1]), sqrt(col[2]) );
+            *p++ = int(255.99*col[0]);    /* R */
+            *p++ = int(255.99*col[1]);    /* G */
+            *p++ = int(255.99*col[2]);    /* B */   
+        }
+    }
+    svpng(fp, nx, ny, rgb, 0);
+    fclose(fp); 
+    return 0;
+}
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="output">output</h3>
+
+<p><img src="https://pic.downk.cc/item/5e26bdf52fb38b8c3cb88f3f.png" alt="" /></p>
+
+<hr />
+
+<h3 id="next">next</h3>
+
+<ul>
+  <li>
+    <p>光源</p>
+  </li>
+  <li>
+    <p>纹理</p>
+  </li>
+  <li>
+    <p>多边形</p>
+  </li>
+</ul>
+
+<p>-并行计算</p>
+:ET

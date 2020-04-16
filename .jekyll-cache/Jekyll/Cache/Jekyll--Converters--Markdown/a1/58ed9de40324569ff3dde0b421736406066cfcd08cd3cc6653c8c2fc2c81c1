@@ -1,0 +1,117 @@
+I"^<h1 id="纹理">纹理</h1>
+
+<hr />
+
+<h3 id="纹理类">纹理类</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef TEXTURE
+#define TEXTURE 
+
+
+class texture {
+    public:
+        virtual vec3 value(float u, float v, const vec3&amp; p) const = 0;
+};
+
+//纯色纹理
+class constant_texture : public texture {
+    public:
+        constant_texture() {}
+        constant_texture(vec3 c) : color(c) {}
+        virtual vec3 value(float u, float v, const vec3&amp; p) const {
+            return color;
+        }
+        vec3 color;
+};
+
+//棋盘纹理
+class checker_texture : public texture {
+    public:
+        checker_texture() {}
+        checker_texture(texture *t0, texture *t1): even(t0), odd(t1) {}
+        virtual vec3 value(float u, float v, const vec3&amp; p) const {
+            float sines = sin(10*p.x())*sin(10*p.y())*sin(10*p.z());
+            if (sines &lt; 0)
+                return odd-&gt;value(u, v, p);
+            else
+                return even-&gt;value(u, v, p);
+        }
+        texture *odd;
+        texture *even;
+};
+
+#endif
+</code></pre></div></div>
+
+<p>修改材质类中相关代码</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class lambertian : public material {
+    public:
+        lambertian(texture *a) : albedo(a) {}
+        virtual bool scatter(const ray&amp; r_in, const hit_record&amp; rec,
+                             vec3&amp; attenuation, ray&amp; scattered) const {
+            vec3 target = rec.p + rec.normal + random_in_unit_sphere();
+            scattered = ray(rec.p, target - rec.p);
+            attenuation = albedo-&gt;value(0, 0, rec.p);
+            return true;
+        }
+        texture *albedo;
+};
+</code></pre></div></div>
+
+<p>在纯色纹理中，value函数直接返回所接受的vec3 p的颜色值</p>
+
+<p>在棋盘纹理中，value函数根据p的xyz坐标返回一个周期性的二值颜色，用三角函数实现是一个不错的选择</p>
+
+<hr />
+
+<h3 id="examples">Examples</h3>
+
+<p>以下代码定义了纯色和棋盘两种不同的材质</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *two_spheres() {
+    texture *checker = new checker_texture(
+        new constant_texture(vec3(0.2, 0.3, 0.1)),
+        new constant_texture(vec3(0.9, 0.9, 0.9))
+    );
+    texture* simple=new constant_texture(vec3(0.5,0.5,0.5));
+
+
+    int n = 50;
+    hittable **list = new hittable*[n+1];
+    list[0] = new sphere(vec3(0,-10, 0), 10, new lambertian(checker));
+    list[1] = new sphere(vec3(0, 10, 0), 10, new lambertian(simple));
+    return new hittable_list(list,2);
+}
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="结果如下">结果如下</h3>
+
+<p><img src="https://pic.downk.cc/item/5e2a655a2fb38b8c3c5a145a.png" alt="" /></p>
+
+<hr />
+
+<h3 id="渐变色纹理">渐变色纹理</h3>
+
+<p>顺手写了一个根据交点坐标渲染渐变颜色的纹理</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class rainbow_texture:public texture
+{
+public:
+    rainbow_texture(){};
+    virtual vec3 value(float u,float v,const vec3&amp; p)const{
+        return vec3(fabs(sin(p.x())),fabs(sin(p.y())),fabs(sin(p.z())));
+    }
+    ~rainbow_texture();
+};
+</code></pre></div></div>
+
+<hr />
+
+<p>渲染  结果如下</p>
+
+<p><img src="https://pic.downk.cc/item/5e2a86032fb38b8c3c5c4176.png" alt="" /></p>
+
+:ET

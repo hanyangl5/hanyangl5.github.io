@@ -1,0 +1,165 @@
+---
+layout: post
+title: OpenGL-04-DrawTriangle
+date: 2019-09-02 18:21:54
+
+---
+
+# 三角形的绘制
+
+***
+
+## 顶点输入
+
+要绘制一个三角形，首先我们要定义一个float类型的数组来储存三角形的三个顶点，我们将三个顶点的z坐标均设为0以表示我们要绘制的三角形是一个平面图形
+
+```
+float vertices[] = {
+    -0.5f, -0.5f, 0.0f,
+     0.5f, -0.5f, 0.0f,
+     0.0f,  0.5f, 0.0f
+};
+```
+
+<!-- more -->
+
+***
+
+## 顶点缓冲对象
+
+定义顶点数据后，我们会把它作为输入发送给顶点着色器，它会在GPU上创建一片内存储存我们的顶点数据，我们用顶点缓冲对象（[Vertex Buffer Object](https://en.wikipedia.org/wiki/Vertex_buffer_object)，简称VBO）来操作这片内存，VBO实质上是一个`unsigned int`型变量，我们用[`glGenBuffer()`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenBuffers.xhtml)函数创建缓冲并将缓冲的ID返回给VBO
+
+```
+GLuint VBO;
+glGenBuffers(1, &VBO);
+```
+
+调用`glGenBuffer()`后，我们得到了缓冲对象的ID，但它还不是真正的缓冲对象，在缓冲对象的ID和缓冲类型通过[`glBindBuffer()`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml)函数绑定后，其对应的缓冲对象才会被创建出来
+
+```
+glBindBuffer(GL_ARRAY_BUFFER, VBO);
+```
+
+上文代码中的`GL_ARRAY_BUFFER`就是一个缓冲对象类型，一个缓冲类型只能和一个缓冲对象绑定，如果新的缓冲对象绑定了已绑定的缓冲对象类型，那么先前的绑定将会销毁。在OpenGL红宝书中给出了一个恰当的比喻：绑定对象的过程就像设置铁路的道岔开关，每一个缓冲类型中的各个对象就像不同的轨道一样，我们将开关设置为其中一个状态，那么之后的列车都会驶入这条轨道。
+
+此后，我们使用的任何（在GL_ARRAY_BUFFER目标上的）缓冲调用都会用来配置当前绑定的缓冲(VBO)。然后我们可以调用`glBufferData()`函数，它会把之前定义的顶点数据复制到缓冲的内存中
+
+```
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+```
+
+
+
+***
+
+ ## 顶点数组对象
+
+顶点数组对象（VAO）也是一个 OpenGL 对象，它存储提供顶点数据所需的所有状态，即告诉OpenGL如何读取VBO中所储存的定点数据，创建VAO的方式和VBO类似，通过[`glGenVertexArrays()`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/)，[`glBindVertexArray()`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindVertexArray.xhtml)创建并绑定
+
+```
+GLunit VAO;
+glGenVertexArrays(1, &VAO);
+glBindVertexArray(VAO);
+```
+
+我们通过[`glVertexAttribPointer()`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml)告诉OpenGL如何解析数据
+![](https://learnopengl-cn.github.io/img/01/04/vertex_attribute_pointer.png)
+
+```
+glVertexAttribPointer(
+   0,                  // attribute 0. No particularreason for 0, but must match the layout in the shader.
+   3,                 // size
+   GL_FLOAT,          // type
+   GL_FALSE,          // normalized?
+   3 * sizeof(float), // stride
+   (void*)0           // array buffer offset
+);
+
+glEnableVertexAttribArray(0);
+```
+- 第一行代码表示我们需要启用索引为0的顶点属性。
+- 然后第二行表明我们要使用vertexbuffer内的数据，下面的操作都是针对这个缓冲区的。
+- 第三行代码中函数的参数比较多，第一个参数指明要操作的属性索引值，第二个参数则说明每个顶点属性需要几个数据（可以为1,2,3或4），因为vertexbuffer里现在存储了3X3=9个数据，而实际上3个是一组，每个顶点需要使用3个数据。第三个参数指定了缓冲区内每个数据的类型，这里顶点坐标使用的是浮点类型。
+- 第四个参数表明数据是否需要normalized，归一化（对于有符号整数，归一化将使数据保持在[-1, 1]范围内，对于无符号整数，则在范围[0, 1]）。
+- 第五个参数是步幅，指定了两个连续的顶点属性之间的偏移量（以字节为单位）。因此数值为3*sizeof(float)。
+- 最后一个参数看似是一个指针，但实际上它并不是起到指针的作用。实际上，它表明缓冲区的开头距离第一个顶点属性之间的偏移量。这里，缓冲区里第一个顶点属性之前并没有任何额外的信息，因为我们取值为0。
+
+
+
+
+
+## 着色器
+
+***
+
+### 顶点着色器
+  顶点着色器(Vertex Shader)是几个可编程着色器中的一个。现代OpenGL需要我们至少设置一个顶点和一个片段着色器。我们会配置两个非常简单的着色器来绘制一个三角形
+
+```
+const char* vertexShaderSource =
+"#version 330 core										 \n"
+"layout(location = 0) in vec3 aPos;						  \n"
+"void main() {											\n"
+"	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);}	   \n";
+
+```
+
+### 片段着色器
+
+
+```
+const char* fragmentShaderSource =
+"#version 330 core										  \n"
+"out vec4 FragColor;									  \n"
+"void main(){											  \n"
+"	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);}			    \n";
+
+```
+
+###  编译着色器
+
+```
+	unsigned int vertexShader;
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+
+	unsigned int fragmentShader;
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+```
+### 调用着色器程序
+```
+	unsigned int shaderProgram;
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+
+```
+
+***
+
+## 绘制
+
+要想绘制我们想要的物体，OpenGL给我们提供了glDrawArrays函数，它使用当前激活的着色器，之前定义的顶点属性配置，和VBO的顶点数据（通过VAO间接绑定）来绘制图元。
+
+```
+//绘制代码（渲染循环中）
+
+glUseProgram(shaderProgram);
+glBindVertexArray(VAO);
+glDrawArrays(GL_TRIANGLES, 0, 3);
+```
+
+输出结果
+
+![](https://ae01.alicdn.com/kf/H1d246230c31946fba17dd8479c9eeed2H.png)
+
+
+
+[完整代码](https://raw.githubusercontent.com/v4vendeta/MyOpenGL/master/1_start/practice1.cpp)
+
+
+

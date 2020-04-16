@@ -1,0 +1,236 @@
+I",<h1 id="纹理">纹理</h1>
+
+<hr />
+
+<h1 id="纹理坐标">纹理坐标</h1>
+
+<p>纹理坐标看起来就像这样：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float texCoords[] = {
+    0.0f, 0.0f, // 左下角
+    1.0f, 0.0f, // 右下角
+    0.5f, 1.0f // 上中
+};
+</code></pre></div></div>
+
+<p>我们用纹理坐标获取纹理颜色，我们需要指定三角形的顶点对应的纹理的哪一部分，这样每个顶点就会关联着一个纹理坐标，用来标明该从纹理图像的哪个部分采样，我们只需要向顶点着色器提供顶点的纹理坐标，接下来它们会被传入片段着色器中进行片段插值</p>
+
+<!-- more -->
+
+<p><img src="https://learnopengl-cn.github.io/img/01/06/tex_coords.png" alt="" /></p>
+
+<h1 id="纹理环绕方式">纹理环绕方式</h1>
+
+<p>纹理坐标的范围通常是(0,0)到(1,1)，如果我们把纹理坐标设置在范围之外时，OpenGL为我们提供了一些选项来设置范围外显示的图像</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">环绕方式</th>
+      <th style="text-align: left">描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">GL_REPEAT</td>
+      <td style="text-align: left">对纹理的默认行为。重复纹理图像。</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">GL_MIRRORED_REPEAT</td>
+      <td style="text-align: left">和GL_REPEAT一样，但每次重复图片是镜像放置的。</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">GL_CLAMP_TO_EDGE</td>
+      <td style="text-align: left">纹理坐标会被约束在0到1之间，超出的部分会重复纹理坐标的边缘，产生一种边缘被拉伸的效果。</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">GL_CLAMP_TO_BORDER</td>
+      <td style="text-align: left">超出的坐标为用户指定的边缘颜色。</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>当纹理坐标超出默认范围时，每个选项都有不同的视觉效果输出。我们来看看这些纹理图像的例子：</p>
+
+<p><img src="https://learnopengl-cn.github.io/img/01/06/texture_wrapping.png" alt="img" /></p>
+
+<p>OpenGL提供了<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexParameter.xhtml"><code class="highlighter-rouge">glTexParameter</code></a>函数帮助我们设置这些选项</p>
+
+<h1 id="纹理过滤">纹理过滤</h1>
+
+<p>纹理坐标可以是任意浮点数，不依赖与分辨率，当图像放大或缩小时，纹理坐标的中心不一定正对着像素的中心，因此在贴图时会产生一定的偏差，这时我们就需要在纹理映射的过程中进行一定的处理，这就是纹理过滤</p>
+
+<p>GL_NEAREST（也叫邻近过滤，Nearest Neighbor Filtering）是OpenGL默认的纹理过滤方式。当设置为GL_NEAREST的时候，OpenGL会选择中心点最接近纹理坐标的那个像素。下图中你可以看到四个像素，加号代表纹理坐标。左上角那个纹理像素的中心距离纹理坐标最近，所以它会被选择为样本颜色：</p>
+
+<p><img src="https://learnopengl-cn.github.io/img/01/06/filter_nearest.png" alt="img" /></p>
+
+<p>GL_LINEAR（也叫(双)线性过滤，(Bi)linear Filtering）它会基于纹理坐标附近的纹理像素，计算出一个插值，近似出这些纹理像素之间的颜色。一个纹理像素的中心距离纹理坐标越近，那么这个纹理像素的颜色对最终的样本颜色的贡献越大。下图中你可以看到返回的颜色是邻近像素的混合色：</p>
+
+<p><img src="https://learnopengl-cn.github.io/img/01/06/filter_linear.png" alt="img" /></p>
+
+<p>GL_NEAREST会产生<strong>颗粒状</strong>的图案，而GL_LINEAR能够产生更<strong>平滑</strong>的图案，也更加符合真实世界的输出。</p>
+
+<blockquote>
+  <p>多级渐远纹理</p>
+
+  <p>在纹理缩放的过程中还有一种常用的技术：多级渐远纹理，多级渐远纹理技术将原纹理提前用滤波处理来得到更小的图像，形成一个图像金字塔，每一层都是对上一层直接采样的结果。在实时运行时，就可以快速得到像素的颜色</p>
+</blockquote>
+
+<p>OpenGL提供了<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexParameter.xhtml"><code class="highlighter-rouge">glTexParameter()</code></a>函数帮助我们设置这些选项</p>
+
+<h1 id="加载和创建纹理">加载和创建纹理</h1>
+
+<p><code class="highlighter-rouge">stb_image.h</code>是<a href="https://github.com/nothings">Sean Barrett</a>的一个非常流行的单头文件图像加载库，它能够加载大部分流行的文件格式，并且能够很简单得整合到你的工程之中。</p>
+
+<p>在程序开头，包含加载纹理所用的头文件</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+</code></pre></div></div>
+
+<p>生成一个纹理的过程应该看起来像这样：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unsigned int texture;
+glGenTextures(1, &amp;texture);
+
+glBindTexture(GL_TEXTURE_2D, texture);
+
+// 为当前绑定的纹理对象设置环绕、过滤方式
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);   
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+// 加载并生成纹理
+int width, height, nrChannels;
+unsigned char *data = stbi_load("container.jpg", &amp;width, &amp;height, &amp;nrChannels, 0);
+if (data)
+{
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+}
+else
+{
+    std::cout &lt;&lt; "Failed to load texture" &lt;&lt; std::endl;
+}
+
+stbi_image_free(data);
+</code></pre></div></div>
+
+<ul>
+  <li>首先我们用glGenTextures，glBindTextures创建并绑定纹理对象</li>
+  <li>接着用glTexParameter设置纹理的环绕方式和过滤方式</li>
+  <li>用stbi_load函数加载图片数据</li>
+  <li>使用前面载入的图片数据，通过glTexImage2D来生成纹理</li>
+  <li>为当前绑定的纹理自动生成多级渐远纹理</li>
+  <li>释放图像内存</li>
+</ul>
+
+<h1 id="应用纹理">应用纹理</h1>
+
+<p>我们需要告知OpenGL如何采样纹理，所以我们必须使用纹理坐标更新顶点数据：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float vertices[] = {
+//     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
+     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
+    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
+};
+</code></pre></div></div>
+
+<p>随后，我们必须告诉OpenGL我们新的顶点格式</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
+glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+glEnableVertexAttribArray(2);
+...
+</code></pre></div></div>
+<p>在顶点着色器和片段着色器中设置属性</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aColor;
+layout (location = 2) in vec2 aTexCoord;//纹理坐标
+
+out vec3 ourColor;
+out vec2 TexCoord;
+
+void main()
+{
+    gl_Position = vec4(aPos, 1.0);
+    ourColor = aColor;
+    TexCoord = aTexCoord;
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 330 core
+out vec4 FragColor;
+
+in vec3 ourColor;
+in vec2 TexCoord;
+
+uniform sampler2D ourTexture;//采样器
+
+void main()
+{
+    FragColor = texture(ourTexture, TexCoord);
+}
+</code></pre></div></div>
+
+<p>我们可以简单声明一个<code class="highlighter-rouge">uniform sampler2D</code>把一个纹理添加到片段着色器中</p>
+
+<p>我们使用GLSL内建的texture函数来采样纹理的颜色，它第一个参数是纹理采样器，第二个参数是对应的纹理坐标。texture函数会使用之前设置的纹理参数对相应的颜色值进行采样。这个片段着色器的输出就是纹理的（插值）纹理坐标上的(过滤后的)颜色。</p>
+
+<h1 id="纹理单元">纹理单元</h1>
+
+<p>一个纹理的位置值通常称为一个纹理单元(Texture Unit)。一个纹理的默认纹理单元是0，它是<strong>默认的激活纹理单元</strong>，所以前面部分我们没有分配一个位置值。</p>
+
+<p>纹理单元的主要目的是让我们在着色器中可以使用多个的纹理。通过把纹理单元赋值给采样器，我们可以一次绑定多个纹理，只要我们首先激活对应的纹理单元。就像glBindTexture一样，我们可以使用glActiveTexture激活纹理单元，传入我们需要使用的纹理单元：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glActiveTexture(GL_TEXTURE0); // 在绑定纹理之前先激活纹理单元
+glBindTexture(GL_TEXTURE_2D, texture);
+</code></pre></div></div>
+
+<p>激活纹理单元之后，接下来的glBindTexture函数调用会绑定这个纹理到当前激活的纹理单元，<strong>纹理单元GL_TEXTURE0默认总是被激活</strong>，所以我们在前面的例子里当我们使用<code class="highlighter-rouge">glBindTexture</code>的时候，无需激活任何纹理单元。</p>
+
+<p>我们仍然需要编辑片段着色器来接收另一个采样器。这应该相对来说非常直接了：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 330 core
+...
+
+uniform sampler2D texture1;
+uniform sampler2D texture2;
+
+void main()
+{
+    FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2);
+}
+</code></pre></div></div>
+
+<p>为了使用第二个纹理（以及第一个），我们必须改变一点渲染流程，先绑定两个纹理到对应的纹理单元，然后定义哪个uniform采样器对应哪个纹理单元：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glActiveTexture(GL_TEXTURE0);
+glBindTexture(GL_TEXTURE_2D, texture1);
+glActiveTexture(GL_TEXTURE1);
+glBindTexture(GL_TEXTURE_2D, texture2);
+
+glBindVertexArray(VAO);
+glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+</code></pre></div></div>
+
+<p>我们还要通过使用glUniform1i设置每个采样器的方式告诉OpenGL每个着色器采样器属于哪个纹理单元。我们只需要设置一次即可，所以这个会放在渲染循环的前面：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>testShader.use(); 
+glUniform1i(glGetUniformLocation(testShader-&gt;ID, "texture1"), 0);
+glUniform1i(glGetUniformLocation(testShader-&gt;ID, "texture2"), 1);
+
+while(...) 
+{
+    [...]
+}
+</code></pre></div></div>
+
+<p>通过使用glUniform1i设置采样器，我们保证了每个uniform采样器对应着正确的纹理单元</p>
+
+:ET

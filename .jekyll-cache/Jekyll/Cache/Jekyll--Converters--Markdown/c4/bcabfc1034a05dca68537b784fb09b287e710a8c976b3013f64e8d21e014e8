@@ -1,0 +1,127 @@
+I"�<h1 id="抗锯齿">抗锯齿</h1>
+
+<hr />
+
+<h3 id="random类">random类</h3>
+
+<p>先引用我们上一章所生成的图像</p>
+
+<p><img src="https://pic.downk.cc/item/5e2180132fb38b8c3c398a66.png" alt="" /></p>
+
+<p>可以看出，在球体的边缘会有明显的锯齿感，减少锯齿感的方法是，在计算某一个像素的颜色时，计算它邻近的区域内多个采样点的颜色，并求平均值，因此我们引入一个random类</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef RANDOMH
+#define RANDOMH
+
+#include &lt;cstdlib&gt;
+
+inline double random_double() {
+    return rand() / (RAND_MAX + 1.0);
+}
+#endif
+</code></pre></div></div>
+
+<p>random_double函数生成一个(0,1)之间的浮点数</p>
+
+<hr />
+
+<h3 id="camera类">camera类</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef CAMERAH
+#define CAMERAH
+
+#include "ray.h"
+
+class camera {
+    public:
+        camera() {
+            lower_left_corner = vec3(-2.0, -1.0, -1.0);
+            horizontal = vec3(4.0, 0.0, 0.0);
+            vertical = vec3(0.0, 2.0, 0.0);
+            origin = vec3(0.0, 0.0, 0.0);
+        }
+        ray get_ray(float u, float v) {
+            return ray(origin,
+                       lower_left_corner + u*horizontal + v*vertical - origin);
+        }
+
+        vec3 origin;
+        vec3 lower_left_corner;
+        vec3 horizontal;
+        vec3 vertical;
+};
+#endif
+</code></pre></div></div>
+
+<p>amera类用于发射不同的光线，用于采样</p>
+
+<hr />
+
+<p>修改后的main函数</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
+#include "sphere.h"
+#include "hittablelist.h"
+#include "camera.h"
+#include "random.h"
+#include&lt;cfloat&gt;
+
+vec3 color(const ray&amp; r, hittable *world) {
+    hit_record rec;
+    if (world-&gt;hit(r, 0.0, FLT_MAX, rec)) {
+        return 0.5*vec3(rec.normal.x()+1, rec.normal.y()+1, rec.normal.z()+1);
+    }
+    else{
+    vec3 unit_direction = unit_vector(r.direction());
+    float t = 0.5*(unit_direction.y() + 1.0);
+    return (1.0-t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.5, 0.7, 1.0);   
+    }
+ 
+}
+
+int main() {
+
+    int nx=600,ny=300,ns=100;
+    unsigned char rgb[nx * ny * 3], *p = rgb;
+    FILE *fp = fopen("test.png", "wb");
+
+    vec3 lower_left_corner(-2.0, -1.0, -1.0);
+    vec3 horizontal(4.0, 0.0, 0.0);
+    vec3 vertical(0.0, 2.0, 0.0);
+    vec3 origin(0.0, 0.0, 0.0);
+    camera cam;
+    hittable *list[2];
+    list[0] = new sphere(vec3(0,0,-1), 0.5);
+    list[1] = new sphere(vec3(0,-100.5,-1), 100);
+    hittable *world = new hittable_list(list,2);
+
+    for (int j = ny-1; j &gt;= 0; j--){
+        for (int i = 0; i &lt; nx; i++) {
+            vec3 col(0,0,0);
+            for(int s = 0; s &lt; ns ; s++){
+                float u = float(i + random_double()) / float(nx);
+                float v = float(j + random_double()) / float(ny);
+                ray r = cam.get_ray(u,v);               
+                col += color(r, world);           
+            }
+            col /= float(ns);
+            *p++ = int(255.99*col[0]);    /* R */
+            *p++ = int(255.99*col[1]);    /* G */
+            *p++ = int(255.99*col[2]);    /* B */   
+        }
+    }
+    svpng(fp, nx, ny, rgb, 0);
+    fclose(fp); 
+    return 0;
+}
+</code></pre></div></div>
+
+<p>我们以采样100次为例（ns=100）</p>
+
+<hr />
+
+<p>渲染出的图片如下</p>
+
+<p><img src="https://pic.downk.cc/item/5e226b362fb38b8c3c4eef5c.png" alt="" /></p>
+
+<p>球体边缘处的像素锯齿感明显降低</p>
+:ET

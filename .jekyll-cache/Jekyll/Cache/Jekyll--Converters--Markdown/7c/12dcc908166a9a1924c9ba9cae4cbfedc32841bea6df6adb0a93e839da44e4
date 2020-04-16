@@ -1,0 +1,120 @@
+I"�<h1 id="dielectrics">Dielectrics</h1>
+
+<h3 id="折射向量">折射向量</h3>
+
+<p>光线照射在水，玻璃等物体时，会发生折射现象，如图所示</p>
+
+<p><img src="https://raytracing.github.io/images/fig-1-10-1.jpg" alt="" /></p>
+
+<p>求解折射方向的步骤如下</p>
+
+<p><a href="https://zhuanlan.zhihu.com/p/31127076">用 C 语言画光（五）：折射</a></p>
+
+<p>计算折射方向的代码如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool refract(const vec3&amp; v, const vec3&amp; n, float ni_over_nt, vec3&amp; refracted) {
+    vec3 uv = unit_vector(v);
+    float dt = dot(uv, n);
+    float discriminant = 1.0 - ni_over_nt*ni_over_nt*(1-dt*dt);
+    if (discriminant &gt; 0) {
+        refracted = ni_over_nt*(uv - n*dt) - n*sqrt(discriminant);
+        return true;
+    }
+    else
+        return false;
+}
+</code></pre></div></div>
+
+<p>ni_over_nt为两种介质折射率之比n1/n2</p>
+
+<hr />
+
+<h3 id="反射系数">反射系数</h3>
+
+<p>照射到物体上的光并不会全部发生折射，有一部分光会发生反射，计算反射稀疏的代码如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float schlick(float cosine, float ref_idx) {
+    float r0 = (1-ref_idx) / (1+ref_idx);
+    r0 = r0*r0;
+    return r0 + (1-r0)*pow((1 - cosine),5);
+}
+</code></pre></div></div>
+
+<p>参考</p>
+
+<p><a href="https://zhuanlan.zhihu.com/p/75360639">从Phong光照模型到 BRDF</a></p>
+
+<p><a href="https://blog.csdn.net/libing_zeng/article/details/54428732">怎么模拟ray tracing图形中介质材料的颜色</a>中24.1.2 介质界面的反射系数</p>
+
+<hr />
+
+<h3 id="电解质类deilectric">电解质类deilectric</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class dielectric : public material {
+    public:
+        dielectric(float ri) : ref_idx(ri) {}
+        virtual bool scatter(const ray&amp; r_in, const hit_record&amp; rec,
+                             vec3&amp; attenuation, ray&amp; scattered) const {
+            vec3 outward_normal;
+            vec3 reflected = reflect(r_in.direction(), rec.normal);
+            float ni_over_nt;
+            attenuation = vec3(1.0, 1.0, 1.0);
+            vec3 refracted;
+
+            float reflect_prob;
+            float cosine;
+
+            if (dot(r_in.direction(), rec.normal) &gt; 0) {
+                 outward_normal = -rec.normal;
+                 ni_over_nt = ref_idx;
+                 cosine = ref_idx * dot(r_in.direction(), rec.normal)
+                        / r_in.direction().length();
+            }
+            else {
+                 outward_normal = rec.normal;
+                 ni_over_nt = 1.0 / ref_idx;
+                 cosine = -dot(r_in.direction(), rec.normal)
+                        / r_in.direction().length();
+            }
+
+            if (refract(r_in.direction(), outward_normal, ni_over_nt, refracted)) {
+               reflect_prob = schlick(cosine, ref_idx);
+            }
+            else {
+               reflect_prob = 1.0;
+            }
+
+            if (random_double() &lt; reflect_prob) {
+               scattered = ray(rec.p, reflected);
+            }
+            else {
+               scattered = ray(rec.p, refracted);
+            }
+
+            return true;
+        }
+
+        float ref_idx;
+};
+</code></pre></div></div>
+
+<hr />
+
+<p>修改main函数</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>list[0] = new sphere(vec3(0,0,-1), 0.5, new metal(vec3(0.1, 0.2, 0.5),1));
+list[1] = new sphere(vec3(0,-100.5,-1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
+list[2] = new sphere(vec3(1,0,-1), 0.5, new metal(vec3(0.8, 0.6, 0.2), 0.3));
+list[3] = new sphere(vec3(-1,0,-1), 0.5, new dielectric(1.5));
+</code></pre></div></div>
+
+<hr />
+
+<p>渲染出的图片如下</p>
+
+<p><img src="https://pic.downk.cc/item/5e2316052fb38b8c3c5fdd85.png" alt="" /></p>
+
+<p>可以看出左侧的球体中像是颠倒的，下面这副图可以给出一个解释(图源https://blog.csdn.net/libing_zeng/article/details/54428732)</p>
+
+<p><img src="https://img-blog.csdn.net/20170114205419889?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGliaW5nX3plbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="" /></p>
+:ET

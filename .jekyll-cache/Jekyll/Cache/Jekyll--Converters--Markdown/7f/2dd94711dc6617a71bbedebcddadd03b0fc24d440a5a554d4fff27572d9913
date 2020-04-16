@@ -1,0 +1,448 @@
+I"�><h1 id="矩形-光照-变换">矩形 光照 变换</h1>
+
+<hr />
+
+<p>矩形和光照。如何做一个自发光的材质，首先须要在hit_record里面加一个 emitted的方法。比如说背景如果是纯黑的话，就相当于光线来了的时候，他不反射任何光线。</p>
+
+<h3 id="自发光">自发光</h3>
+
+<p>在material类中添加虚函数emitted，默认返回黑色</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>virtual vec3 emitted(float u, float v, const vec3&amp; p) const {
+    return vec3(0,0,0);
+}
+</code></pre></div></div>
+
+<p>diffuse_light类</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class diffuse_light : public material {
+    public:
+        diffuse_light(texture *a) : emit(a) {}
+        virtual bool scatter(const ray&amp; r_in, const hit_record&amp; rec,
+            vec3&amp; attenuation, ray&amp; scattered) const { return false; }
+        virtual vec3 emitted(float u, float v, const vec3&amp; p) const {
+            return emit-&gt;value(u, v, p);
+        }
+        texture *emit;
+};
+</code></pre></div></div>
+
+<p>color函数</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec3 color(const ray&amp; r, hittable *world, int depth) {
+    hit_record rec;
+    if (world-&gt;hit(r, 0.001, MAXFLOAT, rec)) {
+        ray scattered;
+        vec3 attenuation;
+        vec3 emitted = rec.mat_ptr-&gt;emitted(rec.u, rec.v, rec.p);
+        if (depth &lt; 50 &amp;&amp; rec.mat_ptr-&gt;scatter(r, rec, attenuation, scattered))
+             return emitted + attenuation*color(scattered, world, depth+1);
+        else
+            return emitted;
+    }
+    else
+        return vec3(0,0,0);
+}
+</code></pre></div></div>
+
+<h3 id="矩形">矩形</h3>
+
+<p>以xy平面上的矩形为例，在 <strong>z=k</strong>时，<strong>x0</strong>，<strong>x1</strong>，<strong>y0</strong>，<strong>y1</strong>可以定义一个矩形平面区域</p>
+
+<p><img src="https://raytracing.github.io/images/fig-2-7-01.jpg" alt="" /></p>
+
+<p>计算光线和矩形相交的方程如下</p>
+
+<p><strong>p(t)=a+t*b</strong></p>
+
+<p><strong>z(t)=az+t*bz</strong></p>
+
+<p><strong>z=k</strong></p>
+
+<p>解得：</p>
+
+<p><strong>t=(k−az)/bz</strong></p>
+
+<p><strong>x=ax+t∗bx</strong></p>
+
+<p><strong>y=ay+t∗by</strong></p>
+
+<p>如果同时x在区间[x0,x1]，y在[y0,y1]上，光线就和矩形相交</p>
+
+<h3 id="xyz_rech">xyz_rec.h</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef XYZRECT
+#define XYZRECT 
+
+#include "hittable.h"
+
+class xy_rect:public hittable
+{
+    public:
+        xy_rect();
+        xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, material *mat)
+                : x0(_x0), x1(_x1), y0(_y0), y1(_y1), k(_k), mp(mat) {};
+        ~xy_rect();
+        virtual bool hit(const ray&amp; r,float t_min,float t_max,hit_record&amp; rec)const;
+        virtual bool bounding_box(float t_min,float t_max,aabb&amp; box)const;
+
+        float x0,x1,y0,y1,k;
+        material *mp;
+};
+
+class xz_rect: public hittable {
+    public:
+        xz_rect() {}
+        xz_rect(float _x0, float _x1, float _z0, float _z1, float _k, material *mat)
+            : x0(_x0), x1(_x1), z0(_z0), z1(_z1), k(_k), mp(mat) {};
+        virtual bool hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const;
+        virtual bool bounding_box(float t_min, float t_max, aabb&amp; box) const;
+        
+        material *mp;
+        float x0, x1, z0, z1, k;
+};
+
+class yz_rect: public hittable {
+    public:
+        yz_rect() {}
+        yz_rect(float _y0, float _y1, float _z0, float _z1, float _k, material *mat)
+            : y0(_y0), y1(_y1), z0(_z0), z1(_z1), k(_k), mp(mat) {};
+        virtual bool hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const;
+        virtual bool bounding_box(float t_min, float t_max, aabb&amp; box) const;
+
+        material  *mp;
+        float y0, y1, z0, z1, k;
+};
+bool xy_rect::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const {
+    float t = (k-r.origin().z()) / r.direction().z();
+    if (t &lt; t_min || t &gt; t_max)
+        return false;
+    float x = r.origin().x() + t*r.direction().x();
+    float y = r.origin().y() + t*r.direction().y();
+    if (x &lt; x0 || x &gt; x1 || y &lt; y0 || y &gt; y1)
+        return false;
+    rec.u = (x-x0)/(x1-x0);
+    rec.v = (y-y0)/(y1-y0);
+    rec.t = t;
+    rec.mat_ptr = mp;
+    rec.p = r.point_at_parameter(t);
+    rec.normal = vec3(0, 0, 1);
+    return true;
+}
+bool xy_rect::bounding_box(float t_min,float t_max,aabb&amp; box)const{
+    box =  aabb(vec3(x0,y0, k-0.0001), vec3(x1, y1, k+0.0001));
+    return true;
+}
+
+bool xz_rect::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const {
+    float t = (k-r.origin().y()) / r.direction().y();
+    if (t &lt; t_min || t &gt; t_max)
+        return false;
+    float x = r.origin().x() + t*r.direction().x();
+    float z = r.origin().z() + t*r.direction().z();
+    if (x &lt; x0 || x &gt; x1 || z &lt; z0 || z &gt; z1)
+        return false;
+    rec.u = (x-x0)/(x1-x0);
+    rec.v = (z-z0)/(z1-z0);
+    rec.t = t;
+    rec.mat_ptr = mp;
+    rec.p = r.point_at_parameter(t);
+    rec.normal = vec3(0, 1, 0);
+    return true;
+}
+
+bool xz_rect::bounding_box(float t_min, float t_max, aabb&amp; box) const {
+    box =  aabb(vec3(x0,k-0.0001,z0), vec3(x1, k+0.0001, z1));
+    return true;
+}
+
+bool yz_rect::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const {
+    float t = (k-r.origin().x()) / r.direction().x();
+    if (t &lt; t_min || t &gt; t_max)
+        return false;
+    float y = r.origin().y() + t*r.direction().y();
+    float z = r.origin().z() + t*r.direction().z();
+    if (y &lt; y0 || y &gt; y1 || z &lt; z0 || z &gt; z1)
+        return false;
+    rec.u = (y-y0)/(y1-y0);
+    rec.v = (z-z0)/(z1-z0);
+    rec.t = t;
+    rec.mat_ptr = mp;
+    rec.p = r.point_at_parameter(t);
+    rec.normal = vec3(1, 0, 0);
+    return true;
+}
+
+bool yz_rect::bounding_box(float t_min, float t_max, aabb&amp; box) const {
+    box =  aabb(vec3(k-0.0001, y0, z0), vec3(k+0.0001, y1, z1));
+    return true;
+}
+#endif
+</code></pre></div></div>
+
+<p>类中有hit和bounding_box两个成员函数</p>
+
+<p>###flip_normals.h</p>
+
+<p>在前一步做完后，渲染出的cornell box有一个bug，我们所建立的矩形是有朝向的，光照射到矩形背面时只会渲染出黑色，因此，我们要对一些矩形进行法向量的翻转</p>
+
+<p>flip_normals.h</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class flip_normals : public hittable {
+    public:
+        flip_normals(hittable *p) : ptr(p) {}
+
+        virtual bool hit(
+            const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const {
+
+            if (ptr-&gt;hit(r, t_min, t_max, rec)) {
+                rec.normal = -rec.normal;
+                return true;
+            }
+            else
+                return false;
+        }
+
+        virtual bool bounding_box(float t0, float t1, aabb&amp; box) const {
+            return ptr-&gt;bounding_box(t0, t1, box);
+        }
+
+        hittable *ptr;
+};
+</code></pre></div></div>
+
+<h3 id="test">test</h3>
+
+<p>接下来渲染一个cornell_box</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *cornell_box() {
+    hittable **list = new hittable*[50];
+    int i = 0;
+    material *red = new lambertian(new constant_texture(vec3(0.65, 0.05, 0.05)));
+    material *white = new lambertian(new constant_texture(vec3(0.73, 0.73, 0.73)));
+    material *green = new lambertian(new constant_texture(vec3(0.12, 0.45, 0.15)));
+    material *light = new diffuse_light(new constant_texture(vec3(15, 15, 15)));
+    material *spec = new metal(vec3(1,1,1),0);
+
+    list[i++] = new flip_normals(new yz_rect(0, 555, 0, 555, 555, green));
+    list[i++] = new yz_rect(0, 555, 0, 555, 0, red);
+    list[i++] = new xz_rect(213, 343, 227, 332, 554, light);
+    list[i++] = new flip_normals(new xz_rect(0, 555, 0, 555, 555, white));
+    list[i++] = new xz_rect(0, 555, 0, 555, 0, white);
+    list[i++] = new flip_normals(new xy_rect(0, 555, 0, 555, 555, white));
+
+    list[i++] = new sphere(vec3(150, 150, 350), 100, spec);
+    list[i++] = new sphere(vec3(350, 100, 500), 100, green);
+
+    return new hittable_list(list,i);
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec3 lookfrom(278, 278, -800);
+vec3 lookat(278,278,0);
+float dist_to_focus = 10.0;
+float aperture = 0.0;
+float vfov = 40.0;
+camera cam(lookfrom, lookat, vec3(0,1,0), vfov, float(nx)/float(ny),aperture, dist_to_focus, 0.0, 1.0);
+</code></pre></div></div>
+
+<p>渲染结果如下</p>
+
+<p><img src="https://pic.downk.cc/item/5e31999e2fb38b8c3ce9b208.png" alt="" /></p>
+
+<h3 id="长方体">长方体</h3>
+
+<p>长方体类的定义只需要定义8个相邻的矩形即可</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class box: public hittable {
+    public:
+        box() {}
+        box(const vec3&amp; p0, const vec3&amp; p1, material *ptr);
+        virtual bool hit(const ray&amp; r, float t0, float t1, hit_record&amp; rec) const;
+        virtual bool bounding_box(float t0, float t1, aabb&amp; box) const {
+            box =  aabb(pmin, pmax);
+            return true;
+        }
+        vec3 pmin, pmax;
+        hittable *list_ptr;
+};
+
+box::box(const vec3&amp; p0, const vec3&amp; p1, material *ptr) {
+    pmin = p0;
+    pmax = p1;
+    hittable **list = new hittable*[6];
+    list[0] = new xy_rect(p0.x(), p1.x(), p0.y(), p1.y(), p1.z(), ptr);
+    list[1] = new flip_normals(
+        new xy_rect(p0.x(), p1.x(), p0.y(), p1.y(), p0.z(), ptr));
+    list[2] = new xz_rect(p0.x(), p1.x(), p0.z(), p1.z(), p1.y(), ptr);
+    list[3] = new flip_normals(
+        new xz_rect(p0.x(), p1.x(), p0.z(), p1.z(), p0.y(), ptr));
+    list[4] = new yz_rect(p0.y(), p1.y(), p0.z(), p1.z(), p1.x(), ptr);
+    list[5] = new flip_normals(
+        new yz_rect(p0.y(), p1.y(), p0.z(), p1.z(), p0.x(), ptr));
+    list_ptr = new hittable_list(list,6);
+}
+
+bool box::hit(const ray&amp; r, float t0, float t1, hit_record&amp; rec) const {
+    return list_ptr-&gt;hit(r, t0, t1, rec);
+}
+</code></pre></div></div>
+
+<h3 id="变换">变换</h3>
+
+<h4 id="平移">平移</h4>
+
+<p>translate.h</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef TRANSLATE
+#define TRANSLATE 
+
+class translate : public hittable {
+    public:
+        translate(hittable *p, const vec3&amp; displacement) : ptr(p), offset(displacement) {}
+        virtual bool hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const;
+        virtual bool bounding_box(float t0, float t1, aabb&amp; box) const;
+        hittable *ptr;
+        vec3 offset;
+};
+
+bool translate::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const {
+    ray moved_r(r.origin() - offset, r.direction(), r.time());//平移光线
+    if (ptr-&gt;hit(moved_r, t_min, t_max, rec)) {
+        //平移交点
+        rec.p += offset;
+        return true;
+    }
+    else
+        return false;
+}
+
+bool translate::bounding_box(float t0, float t1, aabb&amp; box) const {
+    if (ptr-&gt;bounding_box(t0, t1, box)) {
+        box = aabb(box.min() + offset, box.max() + offset);
+        return true;
+    }
+    else
+        return false;
+}
+#endif
+</code></pre></div></div>
+
+<h4 id="旋转">旋转</h4>
+
+<p>物体绕z轴旋转的示意图如下</p>
+
+<p><img src="https://pic1.zhimg.com/80/v2-72fae3a355859660cdf42881b335d30c_hd.jpg" alt="" /></p>
+
+<p>旋转角度为θ</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x'=cos(θ)*x-sin(θ)*y
+y'=sin(θ)*x+cos(θ)*y
+</code></pre></div></div>
+
+<p>rotate.h</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef ROTATE
+#define ROTATE 
+
+class rotate_y : public hittable {
+    public:
+        rotate_y(hittable *p, float angle);
+        virtual bool hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const;
+        virtual bool bounding_box(float t0, float t1, aabb&amp; box) const {
+            box = bbox; return hasbox;
+        }
+        hittable *ptr;
+        float sin_theta;
+        float cos_theta;
+        bool hasbox;
+        aabb bbox;
+};
+
+rotate_y::rotate_y(hittable *p, float angle) : ptr(p) {
+    float radians = (M_PI / 180.) * angle;
+    sin_theta = sin(radians);
+    cos_theta = cos(radians);
+    hasbox = ptr-&gt;bounding_box(0, 1, bbox);
+    vec3 min(FLT_MAX, FLT_MAX, FLT_MAX);
+    vec3 max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+    for (int i = 0; i &lt; 2; i++) {
+        for (int j = 0; j &lt; 2; j++) {
+            for (int k = 0; k &lt; 2; k++) {
+                float x = i*bbox.max().x() + (1-i)*bbox.min().x();
+                float y = j*bbox.max().y() + (1-j)*bbox.min().y();
+                float z = k*bbox.max().z() + (1-k)*bbox.min().z();
+                float newx = cos_theta*x + sin_theta*z;
+                float newz = -sin_theta*x + cos_theta*z;
+                vec3 tester(newx, y, newz);
+                //重新计算bounding_box
+                for ( int c = 0; c &lt; 3; c++ )
+                {
+                    if ( tester[c] &gt; max[c] )
+                        max[c] = tester[c];
+                    if ( tester[c] &lt; min[c] )
+                        min[c] = tester[c];
+                }
+            }
+        }
+    }
+    bbox = aabb(min, max);
+}
+
+//交点，法线，入射光线也做同样的旋转
+bool rotate_y::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const {
+    vec3 origin = r.origin();
+    vec3 direction = r.direction();
+    origin[0] = cos_theta*r.origin()[0] - sin_theta*r.origin()[2];
+    origin[2] =  sin_theta*r.origin()[0] + cos_theta*r.origin()[2];
+    direction[0] = cos_theta*r.direction()[0] - sin_theta*r.direction()[2];
+    direction[2] = sin_theta*r.direction()[0] + cos_theta*r.direction()[2];
+    ray rotated_r(origin, direction, r.time());
+    if (ptr-&gt;hit(rotated_r, t_min, t_max, rec)) {
+        vec3 p = rec.p;
+        vec3 normal = rec.normal;
+        p[0] = cos_theta*rec.p[0] + sin_theta*rec.p[2];
+        p[2] = -sin_theta*rec.p[0] + cos_theta*rec.p[2];
+        normal[0] = cos_theta*rec.normal[0] + sin_theta*rec.normal[2];
+        normal[2] = -sin_theta*rec.normal[0] + cos_theta*rec.normal[2];
+        rec.p = p;
+        rec.normal = normal;
+        return true;
+    }
+    else
+        return false;
+}
+#endif
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="test-1">test</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *cornell_box() {
+    hittable **list = new hittable*[50];
+    int i = 0;
+    material *red = new lambertian(new constant_texture(vec3(0.65, 0.05, 0.05)));
+    material *white = new lambertian(new constant_texture(vec3(0.73, 0.73, 0.73)));
+    material *green = new lambertian(new constant_texture(vec3(0.12, 0.45, 0.15)));
+    material *light = new diffuse_light(new constant_texture(vec3(15, 15, 15)));
+    material *spec = new metal(vec3(1,1,1),0);
+
+    list[i++] = new flip_normals(new yz_rect(0, 555, 0, 555, 555, green));
+    list[i++] = new yz_rect(0, 555, 0, 555, 0, red);
+    list[i++] = new xz_rect(213, 343, 227, 332, 554, light);
+    list[i++] = new flip_normals(new xz_rect(0, 555, 0, 555, 555, white));
+    list[i++] = new xz_rect(0, 555, 0, 555, 0, white);
+    list[i++] = new flip_normals(new xy_rect(0, 555, 0, 555, 555, white));
+
+    list[i++] = new translate(new rotate_y(new box(vec3(0,0,0), vec3(165,165,165), white), -18),vec3(130,0,65));
+    list[i++] = new translate(new rotate_y(new box(vec3(0,0,0), vec3(165,330,165), white), 15),vec3(265,0,295));
+
+    return new hittable_list(list,i);
+}
+</code></pre></div></div>
+
+<p>渲染出的图像如下</p>
+
+<p><img src="https://pic.downk.cc/item/5e31ad492fb38b8c3ceb61cf.png" alt="" /></p>
+:ET

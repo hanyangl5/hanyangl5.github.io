@@ -1,0 +1,326 @@
+I"�(<h1 id="着色器">着色器</h1>
+<hr />
+
+<h1 id="glsl">GLSL</h1>
+
+<p>着色器是使用一种叫GLSL的类C语言写成的。GLSL是为图形计算量身定制的，它包含一些针对向量和矩阵操作的有用特性。</p>
+
+<p>着色器的开头总是要<strong>声明版本</strong>，接着是<strong>输入和输出变量</strong>、<strong>uniform</strong>和<strong>main</strong>函数</p>
+
+<p>一个典型的着色器有下面的结构：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//声明版本
+#version version_number 
+
+//输入变量
+in type in_variable_name;
+in type in_variable_name;
+
+//输出变量
+out type out_variable_name;
+
+//uniform
+uniform type uniform_name;
+
+//main函数
+int main()
+{
+  // 处理输入并进行一些图形操作
+  ...
+  // 输出处理过的结果到输出变量
+  out_variable_name = weird_stuff_we_processed;
+}
+</code></pre></div></div>
+
+<hr />
+
+<!-- more -->
+
+<h1 id="数据类型">数据类型</h1>
+
+<p>GLSL包含C语言等其它语言大部分的默认基础数据类型：<code class="highlighter-rouge">int</code> <code class="highlighter-rouge">float</code> <code class="highlighter-rouge">double</code> <code class="highlighter-rouge">uint</code>和<code class="highlighter-rouge">bool</code>，此外，GLSL还包含内置的一些容器类型，如<code class="highlighter-rouge">vecor </code> <code class="highlighter-rouge">matrix</code> <code class="highlighter-rouge">sampler</code></p>
+
+<p>可以用如下方式声明一个<code class="highlighter-rouge">vector2</code>变量</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec2 testVec2 = vec2(0.5, 0.7);
+</code></pre></div></div>
+
+<p>可以用如下方式声明一个matrix4变量</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mat4 testMat4 = mat4(1.0);
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="输入输出">输入输出</h1>
+
+<p>GL3.x中，GLSL废弃了<code class="highlighter-rouge">attribute</code>，<code class="highlighter-rouge">varying</code>关键字，定义了<code class="highlighter-rouge">in</code> ，<code class="highlighter-rouge">out</code> 两个关键字来处理着色器的输入和输出</p>
+
+<hr />
+
+<h3 id="顶点着色器">顶点着色器</h3>
+
+<p>以下是一个基本的<strong>顶点着色器</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 330 core				
+
+in vec3 testPos;						     
+
+void main() 
+{											 
+	gl_Position = vec4(testPos.x, testPos.y, testPos.z, 1.0);
+}
+</code></pre></div></div>
+
+<p>这种方式通常用来输入顶点坐标，法线，纹理坐标，顶点颜色等，它可以访问数据缓冲区，随时动态修改</p>
+
+<p>在定义了输入变量后，需要链接程序中的顶点数据和Shader中的变量，GLSL允许我们用两种方式链接顶点数据和变量</p>
+
+<blockquote>
+  <p><strong>使用glBindAttribLocation</strong></p>
+
+  <p>第一种方法是通过glBindAttribLocation函数来实现索引和变量之间的对应关系。</p>
+
+  <p><code class="highlighter-rouge">glBindAttribLocation (shaderProgram, 0, "testPos");</code></p>
+
+  <p>上述代码规定，shader里名字为testPos的变量对应顶点属性索引为0。如果使用这种方法，你需要确保在编译程序之后、链接程序之前就调用它们</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>在Shader中直接指定</strong></p>
+
+  <p>例：</p>
+
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>layout(location = index) in vec3 testPos;
+</code></pre></div>  </div>
+
+  <p>这样的代码layout(location = index)指定了顶点属性testPos对应了索引值index</p>
+
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> glVertexAttribPointer(	
+ 	GLuint index, //索引值
+ 	GLint size,
+ 	GLenum type,
+ 	GLboolean normalized,
+ 	GLsizei stride,
+ 	const GLvoid * pointer);
+</code></pre></div>  </div>
+
+  <p>在原文件中用glVertexAttribPointer()函数指定顶点的索引值index</p>
+</blockquote>
+
+<p><strong>我们通常用第二种方式来定义索引的对应关系</strong></p>
+
+<p>程序结束后，GLSL的内置变量gl_Position的值会成为该顶点着色器的输出值</p>
+
+<hr />
+
+<h3 id="片段着色器">片段着色器</h3>
+
+<p>以下是一个基本的<strong>片段着色器</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 330 core		
+
+out vec4 FragColor;		
+
+void main()
+{											  
+	FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+}
+</code></pre></div></div>
+
+<p>片段着色器需要输出一个vec4类型的变量（R，G，B，A）作为着色器渲染的颜色，也可以用内置变量gl_FragColor作为片段着色器的输出</p>
+
+<hr />
+
+<h3 id="发送数据">发送数据</h3>
+
+<p>如果我们要从一个着色器向另一个着色器发送数据，我们必须在发送方着色器中声明一个输出，在接收方着色器中声明一个类似的输入。当类型和名字都一样的时候，OpenGL就会把两个变量链接到一起，它们之间就能发送数据了，下图所示的代码演示了如何通过顶点着色器向片段着色器发送数据</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 330 core				
+
+layout(location = 0) in vec3 testPos;						     
+
+out vec4 vertexColor; //输出给片段着色器
+
+void main() 
+{											 
+	gl_Position = vec4(testPos.x, testPos.y, testPos.z, 1.0);
+	
+	vertexColor = vec4(1.0, 1.0, 1.0, 1.0);
+}
+
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 330 core	
+
+in vec4 vertexColor; // 从顶点着色器输入
+
+out vec4 fragColor;	
+
+
+void main()
+{											  
+	fragColor = vertexColor ;
+}
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="uniform">Uniform</h3>
+
+<p>Uniform是一种从CPU中的应用向GPU中的着色器发送数据的方式，通常在顶点着色器和片段着色器中使用，用来储存一些不变的变量，类似const，Uniform变量是<strong>全局可读</strong>变量，它可以被当前着色器程序的任意着色器在任意阶段访问，我们可以在一个着色器中添加<code class="highlighter-rouge">uniform</code>关键字至类型和变量名前来声明一个GLSL的uniform变量</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 330 core
+
+out vec4 FragColor;
+
+uniform vec4 uniformColor; //uniform变量
+
+void main()
+{
+	FragColor = uniformColor;
+}
+</code></pre></div></div>
+
+<p>我们需要手动输入uniform变量，在源程序中，用glUseProgram启用了某个着色器程序之后，要用<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml">gluniform()</a>函数给每个unifom变量关联数据</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glUseProgram(shaderProgram);
+GLint location = glGetUniformLocation(shaderProgram, "uniformColor");
+glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f); //red
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="着色器类">着色器类</h1>
+
+<p>我们可以定义自己的着色器类来简化编写、编译、管理着色器的过程</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//Shader.h
+
+#pragma once
+#include &lt;string&gt;
+
+class Shader
+{
+public:
+	Shader(const char* vertexPath, const char* fragmentPath);
+
+	std::string vertexString;
+	std::string fragmentString;
+
+	const char* vertexSource;
+	const char* fragmentSource;
+	unsigned int ID; //shader program ID
+	void use();
+private:
+	//check errors
+	void checkCompileErrors(unsigned int ID, std::string Type);
+
+};
+
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "Shader.h"
+#include &lt;glad/glad.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+#include&lt;fstream&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+Shader::Shader(const char* vertexPath, const char* fragmentPath) {
+	ifstream vertexFile;
+	ifstream fragmentFile;
+	stringstream vertexSStream;
+	stringstream fragmentSStream;
+
+	vertexFile.open(vertexPath);
+	fragmentFile.open(fragmentPath);
+	vertexFile.exceptions(ifstream::failbit || ifstream::badbit);
+	fragmentFile.exceptions(ifstream::failbit || ifstream::badbit);
+	
+	try {
+		if (!vertexFile.is_open()) {
+			throw exception("open file error");
+		}
+		vertexSStream &lt;&lt; vertexFile.rdbuf();
+		fragmentSStream &lt;&lt; fragmentFile.rdbuf();
+
+		vertexString = vertexSStream.str();
+		fragmentString = fragmentSStream.str();
+
+		vertexSource = vertexString.c_str();
+		fragmentSource = fragmentString.c_str();
+
+		unsigned int vertex, fragment;
+		vertex = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertex, 1, &amp;vertexSource, NULL);
+		glCompileShader(vertex);
+		checkCompileErrors(vertex, "VERTEX");
+
+		fragment = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragment, 1, &amp;fragmentSource, NULL);
+		glCompileShader(fragment);
+		checkCompileErrors(fragment, "FRAGMENT");
+
+		ID = glCreateProgram();
+		glAttachShader(ID, vertex);
+		glAttachShader(ID, fragment);
+		glLinkProgram(ID);
+		checkCompileErrors(ID, "PROGRAM");
+
+		glDeleteShader(vertex);
+		glDeleteShader(fragment);
+
+	}
+	catch (const std::exception&amp; ex) {
+		cout &lt;&lt; ex.what();
+	}
+
+}
+
+void Shader::use() {
+	glUseProgram(ID);
+
+}
+
+//check errors
+void Shader::checkCompileErrors(unsigned int ID, std::string Type) {
+	int success;
+	char infoLog[512];
+
+	if (Type != "PROGRAM") {
+
+		glGetShaderiv(ID, GL_COMPILE_STATUS, &amp;success);
+
+		if (!success) {
+			glGetShaderInfoLog(ID, 512, NULL, infoLog);
+			cout &lt;&lt; "shader compile error" &lt;&lt; infoLog &lt;&lt; endl;
+		}
+	}
+	else {
+		glGetProgramiv(ID, GL_LINK_STATUS, &amp;success);
+		if (!success) {
+			glGetProgramInfoLog(ID, 512, NULL, infoLog);
+			cout &lt;&lt; "program compile error" &lt;&lt; infoLog &lt;&lt; endl;
+
+		}
+	}
+}
+</code></pre></div></div>
+
+<hr />
+
+<p>液✌</p>
+
+<hr />
+
+<p>Inspired by</p>
+
+<p>http://zwqxin.com/archives/shaderglsl/communication-between-opengl-glsl-2.html</p>
+
+<p>https://blog.csdn.net/candycat1992/article/details/8830894</p>
+
+<p><a href="https://learnopengl-cn.github.io/01 Getting started/05 Shaders/#_4">https://learnopengl-cn.github.io/01%20Getting%20started/05%20Shaders/#_4</a></p>
+:ET

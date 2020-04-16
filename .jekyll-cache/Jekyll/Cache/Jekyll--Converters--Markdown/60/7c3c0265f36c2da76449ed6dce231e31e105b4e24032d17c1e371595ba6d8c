@@ -1,0 +1,218 @@
+I"�<h1 id="纹理映射">纹理映射</h1>
+
+<p>纹理映射，就是通过读取一张图片，使用uv映射的方法，直接将一张图片的纹理绘制在物体表面。</p>
+
+<p>直接的方法是缩放uv，uv是[0,1]之间的float。而像素肯定大于这个区间，所以需要进行缩放，用(i,j)表示当前像素，nx和ny表示纹理的分辨率，所以对于任意像素(i,j)位置，对应的uv坐标就是</p>
+
+<p><strong>u = i / (nx - 1)</strong></p>
+
+<p><strong>v = j / (ny - 1)</strong></p>
+
+<hr />
+
+<h3 id="读取纹理">读取纹理</h3>
+
+<p><a href="https://github.com/nothings/stb/blob/master/stb_image.h"></a></p>
+
+<p>我们用stb_image这个库来读取图片纹理，在使用前，需要进行初始化</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+</code></pre></div></div>
+
+<p>可以用stbi_load函数将纹理数据存入data中</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Basic usage
+//    int x,y,n;
+//    unsigned char *data = stbi_load(filename, &amp;x, &amp;y, &amp;n, 0);
+//    // ... process data if not NULL ...
+//    // ... x = width, y = height, n = # 8-bit components per pixel ...
+//    // ... replace '0' with '1'..'4' to force that many components per pixel
+//    // ... but 'n' will always be the number that it would have been if you said 0
+</code></pre></div></div>
+
+<p>x，y是图片的宽，高</p>
+
+<hr />
+
+<h3 id="投影函数">投影函数</h3>
+
+<p>使用球的顶点来求球面的纹理坐标，示意图如下</p>
+
+<p><img src="https://pic.downk.cc/item/5e3111562fb38b8c3cde3bf4.jpg" alt="" /></p>
+
+<p>对交点P(x,y,z)和半径r，映射成球坐标的θ和ϕ。有以下公式</p>
+
+<p><strong>x=r*cosθcosϕ</strong></p>
+
+<p><strong>y=r*sinθ</strong></p>
+
+<p><strong>z=r*cosθsinϕ</strong></p>
+
+<p>设 <strong>r=1</strong>，则</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float theta = asin(p.y());
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float phi = atan2(p.z(), p.x());
+</code></pre></div></div>
+
+<p>接下来我们要将ϕ，θ映射到(0,1)内</p>
+
+<p>纹理坐标的u对应ϕ，ϕ的范围是从[-π,π]，映射到[0,1]之间，即：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>u = float(1 - (phi + M_PI) / (2 * M_PI));
+</code></pre></div></div>
+
+<p>上面除了个1是颠倒一下，以让球面图片向上。</p>
+
+<p>v值对应θ，θ的范围是从[-π/2,π/2],映射到[0,1]之间，即：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v = float((theta + M_PI / 2) / M_PI);
+</code></pre></div></div>
+
+<p>由上整理成一个根据交点p求uv的函数为：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void get_sphere_uv(const vec3&amp; p, float&amp; u, float&amp; v)
+{
+    float phi = atan2(p.z(), p.x());
+    float theta = asin(p.y());
+    u = float(1 - (phi + M_PI) / (2 * M_PI));
+    v = float((theta + M_PI / 2) / M_PI);
+}
+</code></pre></div></div>
+
+<p><strong>对于简单的几何形状，如球形、圆柱投影函数是可以用数学推导的，在常规情况下，投影函数通常在美术建模阶段使用，并将投影结果存储于顶点数据中。也就是说，在软件开发过程中，我们一般不会去用投影函数去计算得到投影结果，而是直接使用在美术建模过程中，已经存储在模型顶点数据中的投影结果 — Real-Time Rendering 3rd</strong></p>
+
+<hr />
+
+<h3 id="图片纹理类">图片纹理类</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef IMAGETEXTURE
+#define IMAGETEXTURE
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#include "texture.h"
+
+class image_texture : public texture {
+    public:
+        image_texture() {}
+        image_texture(unsigned char *pixels, int A, int B)
+            : data(pixels), nx(A), ny(B) {}
+        virtual vec3 value(float u, float v, const vec3&amp; p) const;
+        unsigned char *data; //纹理数据
+        int nx, ny; //纹理的长，宽
+};
+
+//提取data数据中指定位置的rgb值
+vec3 image_texture::value(float u, float v, const vec3&amp; p) const {
+     int i = (u) * nx;
+     int j = (1-v) * ny - 0.001;
+     if (i &lt; 0) i = 0;
+     if (j &lt; 0) j = 0;
+     if (i &gt; nx-1) i = nx-1;
+     if (j &gt; ny-1) j = ny-1;
+     float r = int(data[3*i + 3*nx*j]  ) / 255.0;
+     float g = int(data[3*i + 3*nx*j+1]) / 255.0;
+     float b = int(data[3*i + 3*nx*j+2]) / 255.0;
+     return vec3(r, g, b);
+}
+#endif
+</code></pre></div></div>
+
+<hr />
+
+<p>修改hittable.h</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void get_sphere_uv(const vec3&amp; p, float&amp; u, float&amp; v) {
+    float phi = atan2(p.z(), p.x());
+    float theta = asin(p.y());
+    u = 1-(phi + M_PI) / (2*M_PI);
+    v = (theta + M_PI/2) / M_PI;
+}
+
+struct hit_record {
+    float t;  
+    float u;
+    float v;
+    vec3 p;
+    vec3 normal; 
+    material *mat_ptr;
+};
+</code></pre></div></div>
+
+<p>sphere.h</p>
+
+<p>get_sphere_uv获取撞击点的坐标</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool sphere::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const {
+    vec3 oc = r.origin() - center;
+    float a = dot(r.direction(), r.direction());
+    float b = dot(oc, r.direction());
+    float c = dot(oc, oc) - radius*radius;
+    float discriminant = b*b - a*c;
+    if (discriminant &gt; 0) {
+        
+        float temp = (-b - sqrt(discriminant))/a;
+        if (temp &lt; t_max &amp;&amp; temp &gt; t_min) {
+            rec.t = temp;
+            rec.p = r.point_at_parameter(rec.t);
+            get_sphere_uv((rec.p-center)/radius, rec.u, rec.v);
+            rec.normal = (rec.p - center) / radius;
+            rec.mat_ptr = mat_ptr; 
+            return true;
+        }
+        
+         temp = (-b + sqrt(discriminant)) / a;
+        if (temp &lt; t_max &amp;&amp; temp &gt; t_min) {
+            rec.t = temp;
+            rec.p = r.point_at_parameter(rec.t);
+            get_sphere_uv((rec.p-center)/radius, rec.u, rec.v);
+            rec.normal = (rec.p - center) / radius;
+            rec.mat_ptr = mat_ptr; 
+            return true;
+        }
+    }
+    return false;
+}
+</code></pre></div></div>
+
+<p>material.h</p>
+
+<p>反射求取图片对应出的像素值</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class lambertian : public material {
+    public:
+        lambertian(texture *a) : albedo(a) {}
+        virtual bool scatter(const ray&amp; r_in, const hit_record&amp; rec, vec3&amp; attenuation, ray&amp; scattered) const  {
+             vec3 target = rec.p + rec.normal + random_in_unit_sphere();
+             scattered = ray(rec.p, target-rec.p, r_in.time());
+             attenuation = albedo-&gt;value(rec.u, rec.v, rec.p);
+             return true;
+        }
+        texture *albedo;
+};
+</code></pre></div></div>
+
+<p>main.cpp</p>
+
+<p>读取并生成纹理</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable* texture_spheres(){
+    int nx, ny, nn;
+    unsigned char *tex_data = stbi_load("earthmap.jpg", &amp;nx, &amp;ny, &amp;nn, 0);
+    material *mat = new lambertian(new image_texture(tex_data, nx, ny));
+    int n = 50;
+    hittable **list = new hittable*[n+1];
+    list[0] = new sphere(vec3(0,0, 0), 1, mat);
+    return new hittable_list(list,1);
+}
+</code></pre></div></div>
+
+<hr />
+
+<p>最终渲染的图片如下</p>
+
+<p><img src="https://pic.downk.cc/item/5e2e71af2fb38b8c3ca808d3.png" alt="" /></p>
+:ET

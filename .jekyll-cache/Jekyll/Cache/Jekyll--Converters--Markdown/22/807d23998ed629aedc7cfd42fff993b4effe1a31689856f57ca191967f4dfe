@@ -1,0 +1,207 @@
+I"�<h1 id="球体-表面法线-多物体">球体 表面法线 多物体</h1>
+
+<hr />
+
+<h3 id="hittable类">hittable类</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef HITTABLEH
+#define HITTABLEH
+
+#include "ray.h"
+
+struct hit_record {
+    float t;
+    vec3 p;
+    vec3 normal;
+};
+
+class hittable  {
+    public:
+        virtual bool hit(
+            const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const = 0;
+};
+
+#endif
+</code></pre></div></div>
+
+<p>hittable是一个抽象类，其中定义了数据类型hit_record，包含光线与表面的交点p，交点的法线方向normal，t用于记录离观察者最近的点</p>
+
+<p>hit函数接收ray类型变量r，t_min，t_max，并将hit信息保存在rec中</p>
+
+<hr />
+
+<h3 id="球体类-sphereh">球体类 sphere.h</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef SPHEREH
+#define SPHEREH
+
+#include "hittable.h"
+
+class sphere: public hittable  {
+    public:
+        sphere() {}
+        sphere(vec3 cen, float r) : center(cen), radius(r)  {};
+        virtual bool hit(const ray&amp; r, float tmin, float tmax, hit_record&amp; rec) const;
+        vec3 center;
+        float radius;
+};
+
+bool sphere::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const {
+    vec3 oc = r.origin() - center;
+    float a = dot(r.direction(), r.direction());
+    float b = dot(oc, r.direction());
+    float c = dot(oc, oc) - radius*radius;
+    float discriminant = b*b - a*c;
+
+    if (discriminant &gt; 0) {
+        float temp = (-b - sqrt(discriminant))/a;
+        if (temp &lt; t_max &amp;&amp; temp &gt; t_min) {
+            rec.t = temp;
+            rec.p = r.point_at_parameter(rec.t);
+            rec.normal = (rec.p - center) / radius;
+            return true;
+        }
+        temp = (-b + sqrt(discriminant)) / a;
+        if (temp &lt; t_max &amp;&amp; temp &gt; t_min) {
+            rec.t = temp;
+            rec.p = r.point_at_parameter(rec.t);
+            rec.normal = (rec.p - center) / radius;
+            return true;
+        }
+    }
+    //no roots
+    return false;
+}
+
+
+#endif
+</code></pre></div></div>
+
+<p>sphere类继承自hittable类的初始化需要球心cent和半径r两个变量</p>
+
+<p>hit函数用于计算光线是否与球体相交，数学推导如下:</p>
+
+<p>我们通常用 <strong>(x−Cx)^2+(y−Cy)^2+(z−Cz)^2=R^2</strong> 表示球心为(Cx,Cy,Cz)的球体</p>
+
+<p>我们记 <strong>C=(Cx,Cy,Cz) P=(x,y,z)</strong></p>
+
+<p>那么 <strong>dot(P-C,P-C)=(x−Cx)^2+(y−Cy)^2+(z−Cz)^2=R^2</strong></p>
+
+<p>点P的坐标可以用ray类中的point_at_parameter函数得到，即 <strong>p(t)=A+t∗B</strong></p>
+
+<p>改写方程如下</p>
+
+<p><strong>dot((p(t)−C),(p(t)−C))=dot((A+t∗B−C),(A+t∗B−C))=R^2</strong></p>
+
+<p><strong>t^2⋅dot(B,B)+2t⋅dot(B,A−C)+dot(A−C,A−C)−R^2=0</strong></p>
+
+<p>我们要做的就是对不同的t求出此方程的解（代码中在方程的系数上稍有变化，但不影响结果的正负）</p>
+
+<p><img src="https://raytracing.github.io/images/fig-1-05-1.jpg" alt="" /></p>
+
+<p>判别式(b^2-4<em>a</em>c)&lt;0，方程无实数解时：光线与球体无交点，输出背景色</p>
+
+<p>判别式&gt;0时，方程有两个解r1，r2，我们首先考察距离观察点角较近的交点，即方程解中较小的一个，因为光线不会穿过物体，只会照射到球体上较近的点（我们假设物体是完全不透明的），记录交点的t值，坐标p，和法线方向n</p>
+
+<hr />
+
+<h3 id="hittablelist类-多物体">hittablelist类 多物体</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef HITTABLELISTH
+#define HITTABLELISTH
+
+#include "hittable.h"
+
+class hittable_list: public hittable {
+    public:
+        hittable_list() {}
+        hittable_list(hittable **l, int n) {list = l; list_size = n; }
+        virtual bool hit(
+            const ray&amp; r, float tmin, float tmax, hit_record&amp; rec) const;
+        hittable **list;
+        int list_size;
+};
+
+bool hittable_list::hit(const ray&amp; r, float t_min, float t_max,
+                        hit_record&amp; rec) const {
+
+    hit_record temp_rec;
+    bool hit_anything = false;
+    double closest_so_far = t_max;
+    for (int i = 0; i &lt; list_size; i++) {
+        if (list[i]-&gt;hit(r, t_min, closest_so_far, temp_rec)) {
+            hit_anything = true;
+            closest_so_far = temp_rec.t;
+            rec = temp_rec;
+        }
+    }
+    return hit_anything;
+}
+
+#endif
+</code></pre></div></div>
+
+<p>hittablelist类会计算出光线与多个球体最近的交点</p>
+
+<hr />
+
+<p>修改后的main函数</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
+#include "sphere.h"
+#include "hittablelist.h"
+#include&lt;cfloat&gt;
+
+vec3 color(const ray&amp; r, hittable *world) {
+    hit_record rec;
+    if (world-&gt;hit(r, 0.0, FLT_MAX, rec)) {
+        return 0.5*vec3(rec.normal.x()+1, rec.normal.y()+1, rec.normal.z()+1);
+    }
+    else{
+    vec3 unit_direction = unit_vector(r.direction());
+    float t = 0.5*(unit_direction.y() + 1.0);
+    return (1.0-t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.5, 0.7, 1.0);   
+    }
+}
+
+int main() {
+
+    int nx=600,ny=300;
+    unsigned char rgb[nx * ny * 3], *p = rgb;
+    FILE *fp = fopen("test.png", "wb");
+
+    vec3 lower_left_corner(-2.0, -1.0, -1.0);
+    vec3 horizontal(4.0, 0.0, 0.0);
+    vec3 vertical(0.0, 2.0, 0.0);
+    vec3 origin(0.0, 0.0, 0.0);
+
+    hittable *list[2];
+    list[0] = new sphere(vec3(0,0,-1), 0.5);
+    list[1] = new sphere(vec3(0,-100.5,-1), 100);
+    hittable *world = new hittable_list(list,2);
+    
+    for (int j = ny-1; j &gt;= 0; j--)
+        for (int i = 0; i &lt; nx; i++) {
+
+            float u = float(i) / float(nx);
+            float v = float(j) / float(ny);
+            ray r(origin, lower_left_corner + u*horizontal + v*vertical);
+            vec3 pap = r.point_at_parameter(2.0);
+            vec3 col = color(r, world);
+            *p++ = int(255.99*col[0]);    /* R */
+            *p++ = int(255.99*col[1]);    /* G */
+            *p++ = int(255.99*col[2]);    /* B */
+        }
+    svpng(fp, nx, ny, rgb, 0);
+    fclose(fp); 
+    return 0;
+}
+</code></pre></div></div>
+
+<p>在color函数中，如果光线照射到了球体上，会根据交点的法线方向，改变颜色的值</p>
+
+<hr />
+
+<p>产生的图片如下</p>
+
+<p><img src="https://pic.downk.cc/item/5e2180132fb38b8c3c398a66.png" alt="" /></p>
+:ET

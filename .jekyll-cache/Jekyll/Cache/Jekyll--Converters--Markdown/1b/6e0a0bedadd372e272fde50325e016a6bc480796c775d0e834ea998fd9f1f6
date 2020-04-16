@@ -1,0 +1,175 @@
+I"<h1 id="向量类-vec3h">向量类 vec3.h</h1>
+
+<p>我们构造的向量类如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+#include &lt;cstdlib&gt;
+
+class vec3 {
+public:
+    vec3() {}
+    vec3(float e0, float e1, float e2) { e[0] = e0; e[1] = e1; e[2] = e2; }
+    inline float x() const { return e[0]; }
+    inline float y() const { return e[1]; }
+    inline float z() const { return e[2]; }
+    inline float r() const { return e[0]; }
+    inline float g() const { return e[1]; }
+    inline float b() const { return e[2]; }
+
+    inline const vec3&amp; operator+() const { return *this; }
+    inline vec3 operator-() const { return vec3(-e[0], -e[1], -e[2]); }
+    inline float operator[](int i) const { return e[i]; }
+    inline float&amp; operator[](int i) { return e[i]; }
+
+    inline vec3&amp; operator+=(const vec3 &amp;v2);
+    inline vec3&amp; operator-=(const vec3 &amp;v2);
+    inline vec3&amp; operator*=(const vec3 &amp;v2);
+    inline vec3&amp; operator/=(const vec3 &amp;v2);
+    inline vec3&amp; operator*=(const float t);
+    inline vec3&amp; operator/=(const float t);
+
+    inline float length() const { return sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2]); }
+    inline float squared_length() const { return e[0]*e[0] + e[1]*e[1] + e[2]*e[2]; }
+    inline void make_unit_vector();
+
+    float e[3];
+};
+</code></pre></div></div>
+
+<p>类成员函数的实例化</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inline std::istream&amp; operator&gt;&gt;(std::istream &amp;is, vec3 &amp;t) {
+    is &gt;&gt; t.e[0] &gt;&gt; t.e[1] &gt;&gt; t.e[2];
+    return is;
+}
+
+inline std::ostream&amp; operator&lt;&lt;(std::ostream &amp;os, const vec3 &amp;t) {
+    os &lt;&lt; t.e[0] &lt;&lt; " " &lt;&lt; t.e[1] &lt;&lt; " " &lt;&lt; t.e[2];
+    return os;
+}
+
+inline void vec3::make_unit_vector() {
+    float k = 1.0 / sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2]);
+    e[0] *= k; e[1] *= k; e[2] *= k;
+}
+
+inline vec3 operator+(const vec3 &amp;v1, const vec3 &amp;v2) {
+    return vec3(v1.e[0] + v2.e[0], v1.e[1] + v2.e[1], v1.e[2] + v2.e[2]);
+}
+
+inline vec3 operator-(const vec3 &amp;v1, const vec3 &amp;v2) {
+    return vec3(v1.e[0] - v2.e[0], v1.e[1] - v2.e[1], v1.e[2] - v2.e[2]);
+}
+
+inline vec3 operator*(const vec3 &amp;v1, const vec3 &amp;v2) {
+    return vec3(v1.e[0] * v2.e[0], v1.e[1] * v2.e[1], v1.e[2] * v2.e[2]);
+}
+
+inline vec3 operator*(float t, const vec3 &amp;v) {
+    return vec3(t*v.e[0], t*v.e[1], t*v.e[2]);
+}
+
+inline vec3 operator*(const vec3 &amp;v, float t) {
+    return vec3(t*v.e[0], t*v.e[1], t*v.e[2]);
+}
+
+inline vec3 operator/(const vec3 &amp;v1, const vec3 &amp;v2) {
+    return vec3(v1.e[0] / v2.e[0], v1.e[1] / v2.e[1], v1.e[2] / v2.e[2]);
+}
+
+inline vec3 operator/(vec3 v, float t) {
+    return vec3(v.e[0]/t, v.e[1]/t, v.e[2]/t);
+}
+
+inline float dot(const vec3 &amp;v1, const vec3 &amp;v2) {
+    return v1.e[0]*v2.e[0]
+         + v1.e[1]*v2.e[1]
+         + v1.e[2]*v2.e[2];
+}
+
+inline vec3 cross(const vec3 &amp;v1, const vec3 &amp;v2) {
+    return vec3(v1.e[1] * v2.e[2] - v1.e[2] * v2.e[1],
+                v1.e[2] * v2.e[0] - v1.e[0] * v2.e[2],
+                v1.e[0] * v2.e[1] - v1.e[1] * v2.e[0]);
+}
+
+inline vec3&amp; vec3::operator+=(const vec3 &amp;v) {
+    e[0] += v.e[0];
+    e[1] += v.e[1];
+    e[2] += v.e[2];
+    return *this;
+}
+
+inline vec3&amp; vec3::operator-=(const vec3&amp; v) {
+    e[0] -= v.e[0];
+    e[1] -= v.e[1];
+    e[2] -= v.e[2];
+    return *this;
+}
+
+inline vec3&amp; vec3::operator*=(const vec3 &amp;v) {
+    e[0] *= v.e[0];
+    e[1] *= v.e[1];
+    e[2] *= v.e[2];
+    return *this;
+}
+
+inline vec3&amp; vec3::operator*=(const float t) {
+    e[0] *= t;
+    e[1] *= t;
+    e[2] *= t;
+    return *this;
+}
+
+inline vec3&amp; vec3::operator/=(const vec3 &amp;v) {
+    e[0] /= v.e[0];
+    e[1] /= v.e[1];
+    e[2] /= v.e[2];
+    return *this;
+}
+
+inline vec3&amp; vec3::operator/=(const float t) {
+    float k = 1.0/t;
+
+    e[0] *= k;
+    e[1] *= k;
+    e[2] *= k;
+    return *this;
+}
+
+inline vec3 unit_vector(vec3 v) {
+    return v / v.length();
+}
+</code></pre></div></div>
+
+<p>vec3类中的成员变量e[3]可以表示三维空间中的xyz坐标和rgb三个通道</p>
+
+<p>类中成员函数有向量长度length，长度平方squared_length，单位化make_unit_vector</p>
+
+<hr />
+
+<p>我们更改main函数中的代码来测试一下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
+#include "vec3.h"
+int main() {
+
+    int nx=200,ny=150; // width &amp; height
+    unsigned char rgb[nx * ny * 3], *p = rgb;
+    FILE *fp = fopen("rgb.png", "wb");
+    for (int j = ny-1; j &gt;= 0; j--)
+        for (int i = 0; i &lt; nx; i++) {
+            vec3 col(float(i) / float(nx), float(j) / float(ny), 0.2);
+            *p++ = int(255.99*col[0]);    /* R */
+            *p++ = int(255.99*col[1]);    /* G */
+            *p++ = int(255.99*col[2]);    /* B */
+        }
+
+    svpng(fp, nx, ny, rgb, 0);
+    fclose(fp); 
+    return 0;
+}
+</code></pre></div></div>
+
+<p>会得到与上一章相同的图像</p>
+:ET

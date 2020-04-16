@@ -1,0 +1,233 @@
+I"(<p>由程序产生噪声的方法大致可以分为两类：</p>
+
+<ul>
+  <li>
+    <p>基于晶格的方法（Lattice based）又可细分为两种：
+  第一种是梯度噪声（Gradient noise），包括Perlin noise，Simplex noise，Wavelet noise等
+  第二种是Value noise。</p>
+  </li>
+  <li>
+    <p>基于点的方法（Point based）
+  Worley noise</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>下图是我们常见的白噪声图像</p>
+
+<p><img src="https://raytracing.github.io/images/img-2-5-01.jpg" alt="" /></p>
+
+<p>梯度噪声产生的纹理具有连续性，因为在其噪声与相邻点噪声的加权有关，所以经常用来模拟山脉、云朵等具有连续性的物质，perlin noise，其它梯度噪声还有Simplex Noise和Wavelet Noise，它们也是由Perlin Noise演变而来</p>
+
+<p>Perlin Noise返回如下所示的图像，是一个具有模糊效果的噪声图</p>
+
+<p><img src="https://raytracing.github.io/images/img-2-5-02.jpg" alt="" /></p>
+
+<hr />
+
+<h3 id="算法步骤">算法步骤</h3>
+
+<p>生成perlin noise的步骤如下：</p>
+
+<ul>
+  <li>
+    <p>给定点输入点p</p>
+  </li>
+  <li>
+    <p>对于每一个与点p相邻的方格端点（二维的噪声就是4个点，三维噪声就是8个点）</p>
+  </li>
+  <li>
+    <p>挑选一个伪随机梯度向量</p>
+  </li>
+  <li>
+    <p>计算随机向量和距离的点积</p>
+  </li>
+  <li>
+    <p>每个维度上，均采用缓和曲线，计算出加权平均值，缓和曲线可以选用3<em>t^3-2</em>t^3</p>
+  </li>
+</ul>
+
+<p>具体推导可见下面几篇文章以及pen perlin的论文</p>
+
+<p><a href="https://blog.csdn.net/qq_34302921/article/details/80849139"></a></p>
+
+<p><a href="http://www.twinklingstar.cn/2015/2581/classical-perlin-noise/#2_Perlin"></a></p>
+
+<hr />
+
+<h3 id="perlinh">perlin.h</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static vec3* perlin_generate() {
+    vec3 *p = new vec3[256];
+    for (int i = 0; i &lt; 256; ++i) {
+        double x_random = 2*random_double() - 1;
+        double y_random = 2*random_double() - 1;
+        double z_random = 2*random_double() - 1;
+        p[i] = unit_vector(vec3(x_random, y_random, z_random));
+    }
+    return p;
+}
+</code></pre></div></div>
+
+<p>perlin_generate返回一个长度为1的随机vec3数组</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void permute(int *p, int n) {
+    for (int i = n-1; i &gt; 0; i--) {
+        int target = int(random_double()*(i+1));
+        int tmp = p[i];
+        p[i] = p[target];
+        p[target] = tmp;
+    }
+    return;
+}
+</code></pre></div></div>
+
+<p>打乱数组p的顺序，经测试，std::random_shuffle也可以达到同样的效果</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static int* perlin_generate_perm() {
+    int * p = new int[256];
+    for (int i = 0; i &lt; 256; i++)
+        p[i] = i;
+    permute(p, 256);
+    return p;
+}
+</code></pre></div></div>
+
+<p>perlin_generate_perm返回一个乱序无重复的从0~255的数组</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inline float perlin_interp(vec3 c[2][2][2], float u, float v, float w) {
+    //缓和曲线
+    float uu = u*u*(3-2*u);
+    float vv = v*v*(3-2*v);
+    float ww = w*w*(3-2*w);
+    float accum = 0;
+    for (int i=0; i &lt; 2; i++)
+        for (int j=0; j &lt; 2; j++)
+            for (int k=0; k &lt; 2; k++) {
+                vec3 weight_v(u-i, v-j, w-k);
+                //三维线性插值*权重*梯度
+                accum += (i*uu + (1-i)*(1-uu))*
+                    (j*vv + (1-j)*(1-vv))*
+                    (k*ww + (1-k)*(1-ww))*dot(c[i][j][k], weight_v);
+            }
+    return accum;
+}
+</code></pre></div></div>
+
+<p>perlin类</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class perlin {
+    public:
+        float noise(const vec3&amp; p) const;
+        static vec3 *ranvec;
+        static int *perm_x;
+        static int *perm_y;
+        static int *perm_z;
+};
+
+vec3* perlin::ranvec = perlin_generate();//随机向量
+int *perlin::perm_x = perlin_generate_perm();//随机数组
+int *perlin::perm_y = perlin_generate_perm();//随机数组
+int *perlin::perm_z = perlin_generate_perm();//随机数组
+
+float perlin::noise(const vec3&amp; p) const {
+    float u = p.x() - floor(p.x());
+    float v = p.y() - floor(p.y());
+    float w = p.z() - floor(p.z());
+
+    int i = floor(p.x());
+    int j = floor(p.y());
+    int k = floor(p.z());
+
+    vec3 c[2][2][2];
+    //挑选p临近8个点的随机向量
+    for (int di=0; di &lt; 2; di++)
+        for (int dj=0; dj &lt; 2; dj++)
+            for (int dk=0; dk &lt; 2; dk++)
+                //只保留后8位
+                c[di][dj][dk] = ranvec[perm_x[(i+di) &amp; 255] ^ perm_y[(j+dj) &amp; 255] ^ perm_z[(k+dk) &amp; 255] ];
+
+    return perlin_interp(c, u, v, w);
+}
+</code></pre></div></div>
+
+<p>perlin_noise材质</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class noise_texture : public texture {
+    public:
+        noise_texture() {}
+        noise_texture(float sc) : scale(sc) {}
+        virtual vec3 value(float u, float v, const vec3&amp; p) const {
+            return vec3(1,1,1) * noise.noise(scale*p);
+        }
+
+        perlin noise;
+        float scale;
+};
+</code></pre></div></div>
+
+<p>noise_texture接受一个scale值，scale越大，噪声纹理越密</p>
+
+<hr />
+
+<h3 id="test">test</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *two_perlin_spheres() {
+    texture* pertext = new noise_texture(10);
+    texture* simple=new constant_texture(vec3(0.0,0.0,0.0));
+    hittable **list = new hittable*[2];
+    list[0] = new sphere(vec3(0,-1000, 0), 1000, new lambertian(pertext));
+    list[1] = new sphere(vec3(0, 2, 0), 1, new lambertian(pertext));
+    return new hittable_list(list, 2);
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec3 lookfrom(13,4,3);
+vec3 lookat(0,2,0);
+float dist_to_focus = 10.0;
+float aperture = 0.0;
+float vfov = 20.0;
+
+camera cam(lookfrom, lookat, vec3(0,1,0), vfov, float(nx)/float(ny),aperture, dist_to_focus, 0.0, 1.0);
+hittable* world=two_perlin_spheres();
+</code></pre></div></div>
+
+<p>渲染出的图片如下</p>
+
+<p><img src="https://pic.downk.cc/item/5e3036a92fb38b8c3ccb988b.png" alt="" /></p>
+
+<hr />
+
+<h3 id="turb">turb</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float turb(const vec3 &amp;p, int depth = 7) const {
+    float accum = 0;
+    vec3 temp_p = p;
+    float weight = 1.0;
+
+    for (int i = 0; i &lt; depth; i++) {
+      accum += weight * noise(temp_p);
+      weight *= 0.5;
+      temp_p *= 2;
+    }
+    return fabs(accum);
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class noise_texture : public texture {
+    public:
+        noise_texture() {}
+        noise_texture(float sc) : scale(sc) {}
+        virtual vec3 value(float u, float v, const vec3&amp; p) const {
+            return vec3(1,1,1) * 0.5 * (1 + sin(scale*p.z() + 10*noise.turb(p)));
+        }
+        perlin noise;
+        float scale;
+};
+</code></pre></div></div>
+
+<p>加上turbulence后渲染出的大理石材质</p>
+
+<p><img src="https://pic.downk.cc/item/5e303a112fb38b8c3ccbe11a.png" alt="" /></p>
+:ET

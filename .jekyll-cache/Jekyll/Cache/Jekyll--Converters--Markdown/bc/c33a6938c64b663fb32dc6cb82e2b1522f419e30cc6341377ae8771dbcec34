@@ -1,0 +1,111 @@
+I"�<h1 id="光线-相机-背景">光线 相机 背景</h1>
+
+<hr />
+
+<h3 id="光线类rayh">光线类ray.h</h3>
+
+<p>我们习惯用直线来表示光线</p>
+
+<p>直线方程是p(t)=A+t∗B，其中，A，B都是vec3类型，A是光线的起点，B是光线的方向，t为一实数（代码中用浮点数表示），p(t)对应t不同取值时直线上的点</p>
+
+<p><img src="https://raytracing.github.io/images/fig-1-04-1.jpg" alt="" /></p>
+
+<p>ray类的代码如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef RAYH
+#define RAYH
+#include "vec3.h"
+
+class ray
+{
+    public:
+        ray() {}
+        ray(const vec3&amp; a, const vec3&amp; b) { A = a; B = b; }
+        vec3 origin() const       { return A; }
+        vec3 direction() const    { return B; }
+        vec3 point_at_parameter(float t) const { return A + t*B; }
+
+        vec3 A;
+        vec3 B;
+};
+
+#endif
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="color函数">color函数</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec3 color(const ray&amp; r) {
+    vec3 unit_direction = unit_vector(r.direction());
+    float t = 0.5*(unit_direction.y() + 1.0);
+    return (1.0-t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.5, 0.7, 1.0);
+}
+</code></pre></div></div>
+
+<p>color函数接收一个ray类型变量r，并将r的方向向量单位化，t是一个(0,1)之间的浮点数，光线y分量越小，t越小，反之，t越大
+函数返回(1,1,1)，(0.5,0.7,1.0)颜色的插值作为背景颜色</p>
+
+<hr />
+
+<h3 id="坐标系统">坐标系统</h3>
+
+<p>使用右手坐标系，我们光线的起点设为(0,0,0)，屏幕的坐下角为(-2,-1,-1)，屏幕的宽，高分别为4，2</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    vec3 lower_left_corner(-2.0, -1.0, -1.0);
+    vec3 horizontal(4.0, 0.0, 0.0);
+    vec3 vertical(0.0, 2.0, 0.0);
+    vec3 origin(0.0, 0.0, 0.0);
+</code></pre></div></div>
+
+<p>如下图所示</p>
+
+<p><img src="https://raytracing.github.io/images/fig-1-04-2.jpg" alt="" /></p>
+
+<hr />
+
+<p>修改后的main函数如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
+#include "ray.h"
+
+vec3 color(const ray&amp; r) {
+    vec3 unit_direction = unit_vector(r.direction());
+    float t = 0.5*(unit_direction.y() + 1.0);
+    return (1.0-t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.5, 0.7, 1.0);
+}
+
+int main() {
+
+    int nx=600,ny=300;
+    unsigned char rgb[nx * ny * 3], *p = rgb;
+    FILE *fp = fopen("test.png", "wb");
+
+    vec3 lower_left_corner(-2.0, -1.0, -1.0);
+    vec3 horizontal(4.0, 0.0, 0.0);
+    vec3 vertical(0.0, 2.0, 0.0);
+    vec3 origin(0.0, 0.0, 0.0);
+
+    for (int j = ny-1; j &gt;= 0; j--)
+        for (int i = 0; i &lt; nx; i++) {
+            float u = float(i) / float(nx);
+            float v = float(j) / float(ny);
+            ray r(origin, lower_left_corner + u*horizontal + v*vertical);
+            vec3 col = color(r);
+
+            *p++ = int(255.99*col[0]);    /* R */
+            *p++ = int(255.99*col[1]);    /* G */
+            *p++ = int(255.99*col[2]);    /* B */
+        }
+    svpng(fp, nx, ny, rgb, 0);
+    fclose(fp); 
+    return 0;
+}
+</code></pre></div></div>
+
+<p>渲染出的图像如下</p>
+
+<p><img src="https://pic.downk.cc/item/5e2174ab2fb38b8c3c384130.png" alt="" /></p>
+
+<p>在竖直方向，图像的颜色由白色(0,0,0)渐变到蓝色(0.5,0.8,1.0)，在水平方向，由于光线向量的y分量相同，颜色不变化</p>
+:ET
