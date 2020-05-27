@@ -1,4 +1,4 @@
-I"(<h1 id="软件实践课第一次小作业数据采集">软件实践课第一次小作业：数据采集</h1>
+I"<h1 id="软件实践课第一次小作业数据采集">软件实践课第一次小作业：数据采集</h1>
 
 <p>#####实验要求</p>
 
@@ -68,7 +68,7 @@ campus_list = ['合肥校区', '宣城校区']
 
 <p>结果如下</p>
 
-<p><img src="https://pic.downk.cc/item/5ece4022c2a9a83be5a7d919.png" width="300" height="300" alt="图片名称" align="center" /></p>
+<p><img src="https://pic.downk.cc/item/5ece4022c2a9a83be5a7d919.png" height="300" width="300" /></p>
 
 <p><a href="https://github.com/v4vendeta/SEU-Backup/tree/python/crawler">source code</a></p>
 :ET
