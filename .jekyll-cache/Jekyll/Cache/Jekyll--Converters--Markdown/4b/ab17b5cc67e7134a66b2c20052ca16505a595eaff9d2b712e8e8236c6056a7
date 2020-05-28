@@ -1,4 +1,4 @@
-I"<h1 id="软件实践课第一次小作业数据采集">软件实践课第一次小作业：数据采集</h1>
+I"�<h1 id="软件实践课第一次小作业数据采集">软件实践课第一次小作业：数据采集</h1>
 
 <p>#####实验要求</p>
 
@@ -29,13 +29,13 @@ campus_list = ['合肥校区', '宣城校区']
 </code></pre></div></div>
 
 <p>构造需要post的form data</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>formdata = {
-    'ssmc': province_list[j],
-    'zsnf': year_list[i],
-    'klmc': catagory_list[k],
-    'campus': campus_list[l],
-    'zslx': '统招一批'
-}
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">formdata</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'ssmc'</span><span class="p">:</span> <span class="n">province_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+    <span class="s1">'zsnf'</span><span class="p">:</span> <span class="n">year_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+    <span class="s1">'klmc'</span><span class="p">:</span> <span class="n">catagory_list</span><span class="p">[</span><span class="n">k</span><span class="p">],</span>
+    <span class="s1">'campus'</span><span class="p">:</span> <span class="n">campus_list</span><span class="p">[</span><span class="n">l</span><span class="p">],</span>
+    <span class="s1">'zslx'</span><span class="p">:</span> <span class="s1">'统招一批'</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <p>用requests库中requests.post()向服务器发送post请求</p>
