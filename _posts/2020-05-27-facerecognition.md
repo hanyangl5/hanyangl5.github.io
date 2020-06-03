@@ -16,11 +16,15 @@ date: 2020-05-13
 大作业的名字是人脸识别，但在阅读实验要求后可以看出是一个分类问题
 
 
-笔者选用resnet50进行分类
+笔者选用resnet152进行分类
 
+- 项目结构如下
 
-    |main.ipynb
-    |数据库图片
+~~~
+    |main.py
+    |Dataset.py
+
+    |cuttrain
         |name1
             |name1_1.jpg
             |name1_2.jpg
@@ -30,11 +34,28 @@ date: 2020-05-13
             |name2_2.jpg
             ...
         ...
-    |test
-        |name1.jpg
-        |name2.jpg
+    |cuttest
+        |name1
+            |name1.jpg
+        |name2
+            |name2.jpg
+~~~
 
-首先导入所需要的库以及运行所需要的各项准备：
+- 定义get_name函数生成人名列表
+
+~~~
+def get_name_list(path):
+    names = []
+    name_path = path
+    for filename in os.listdir(name_path):
+        temp = re.sub("[0-9_-]", "", filename)
+        temp = temp.split('.')[0]
+        names.append(temp)
+    return names
+~~~
+
+- 导入所需要的库以及运行所需要的各项准备：
+
 ~~~
 import os
 import torchvision.models as models
@@ -49,33 +70,13 @@ import matplotlib.pyplot as plt
 import re
 from torchvision import transforms, datasets, models
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+names = get_name_list('../数据库图片/')
 ~~~
 
-构建dataset，因为train和test的目录结构不同，所以需要构建两个dataset
+- 构建dataset，重写__len__,__getitem__
 
 ~~~
-class TestDataset(torch.utils.data.Dataset):
-    def __init__(self, root, list, transform=None):
-        self.labellist = list
-        self.root = root
-        self.transform = transform
-
-    def __len__(self):
-        return 1
-
-    def __getitem__(self, index):
-        img_path = self.root
-        img = Image.open(self.root).convert('RGB')
-
-        label=re.sub("[A-Za-z0-9\!\%\[\]\, \.\-\_\/]", "", img_path)
-        label = self.labellist.index(label)
-        
-        if self.transform:
-            img = self.transform(img)
-        return img, label
-
-
-class TrainDataset(torch.utils.data.Dataset):
+class Dataset(torch.utils.data.Dataset):
     def __init__(self, root, list, transform=None):
         self.labellist = list
         self.root = root
@@ -92,113 +93,132 @@ class TrainDataset(torch.utils.data.Dataset):
     def __getitem__(self, index):
         image_index = self.images[index]
         img_path = os.path.join(self.root, image_index)
+
         img = Image.open(img_path).convert('RGB')
-        label = img_path.split('_')[1]
+
+        label = img_path.split('/')[-1].split('_')[0]
         label = re.sub("[A-Za-z0-9\!\%\[\]\, \.\-\_]", "", label)
-        label = self.labellist.index(label)   mapping
+        label = self.labellist.index(label)  # mapping
         if self.transform:
             img = self.transform(img)
         return img, label
 ~~~
 
-
-names = get_name_list('../数据库图片/')
+- 数据预处理，将图像缩放为224x224，加入了随机反转和旋转
 
 ~~~
- transform
 data_transform = transforms.Compose([
-    transforms.Resize((256, 256)),
-    transforms.CenterCrop(224),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                         std=[0.229, 0 .224, 0.225])
+    transforms.Resize((224, 224)),
+    transforms.RandomHorizontalFlip(p=0.5),
+    transforms.RandomRotation(15),
+    transforms.ToTensor()
 ])
 ~~~
-加载训练集
+
+- 加载训练集，验证集
 
 ~~~
- load train
-train_dataset =  TrainDataset(
-    root="../数据库图片/",list=names, transform=data_transform)
+
+#get name list
+names = get_name_list('cuttrain')
+
+#load testset
+train_dataset = Dataset(
+    root="cuttrain/", list=names, transform=data_transform)
 train_loader = torch.utils.data.DataLoader(
-    train_dataset, batch_size=4, shuffle=True)
+    train_dataset, batch_size=8, shuffle=True)
+#load testset
+test_dataset = Dataset(
+    root="cuttest/", list=names, transform=data_transform)
+test_loader = torch.utils.data.DataLoader(
+    test_dataset, batch_size=8, shuffle=True)
+print(len(train_dataset),len(test_dataset))
+
 ~~~
 
-##### 初始化模型和训练方法
+- 初始化模型和训练方法，fc层输出104维向量，损失函数为交叉熵，优化器为Adam
+
 ~~~
-net = models.resnet50().to(device)
-criterion = torch.nn.CrossEntropyLoss()  # loss function
-optimizer = torch.optim.SGD(
-    net.parameters(), lr=0.0001, momentum=0.9)  # sgd
-epochs = 25
-PATH = 'models/resnet152.pth'
+
+#init neural network
+net = models.resnet152(pretrained=True)
+
+for param in net.parameters():
+    param.requires_grad = False
+
+net.fc = torch.nn.Sequential(
+    torch.nn.Linear(2048, 256),
+    torch.nn.Linear(256, 104)
+)
+net = net.to(device)
+criterion = torch.nn.CrossEntropyLoss().to(device)
+optimizer = torch.optim.Adam(net.parameters(), lr=0.0001,betas=(0.9, 0.999), eps=1e-08, weight_decay=0.01)
+epochs = 30
+PATH = 'models/resnet152_mtcnn.pth'
+~~~
+
+- 模型训练
+
+~~~
 if not os.path.exists(PATH):
     print('start training')
-    for epoch in range(epochs):  # loop over the dataset multiple times
+    for epoch in range(epochs):
         running_loss = 0.0
         train_correct = 0
         train_total = 0
         for i, data in enumerate(train_loader, 0):
-            inputs, labels = data
+            step = (epoch, i)
+            inputs, train_labels = data
             inputs, labels = Variable(
-                inputs.cuda()), Variable(labels.cuda())
+                inputs.cuda()), Variable(train_labels.cuda())
             optimizer.zero_grad()
             outputs = net(inputs)
             _, train_predicted = torch.max(outputs.data, 1)
+            train_correct += (train_predicted == labels.data).sum()
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
             running_loss += loss.item()
             train_total += labels.size(0)
-        print('train %d epoch loss: %.3f  ' % (
-            epoch + 1, running_loss / train_total))
-
-    print('Finished Training,model saved to ',PATH)  # finish training
-
-    torch.save(net.state_dict(), PATH)
-~~~
-
-
-~~~
-def facial_recognition(path):
-    test_dataset = Test1Dataset(root=path, list=names, transform=data_transform)
-    test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1, shuffle=False)
-    with torch.no_grad():
-        for i, data in enumerate(test_loader):
+        print('train %d epoch loss: %.3f  acc: %.3f ' % (
+            epoch + 1, running_loss / train_total, 100 * train_correct / train_total))
+        # 模型测试
+        correct = 0
+        test_loss = 0.0
+        test_total = 0
+        net.eval()
+        for data in test_loader:
             images, labels = data
-            images, labels = images.to(device), labels.to(device)
+            images, labels = Variable(
+                images.cuda()), Variable(labels.cuda())
             outputs = net(images)
             _, predicted = torch.max(outputs.data, 1)
-    return names[predicted]
+            loss = criterion(outputs, labels)
+            test_loss += loss.item()
+            test_total += labels.size(0)
+            correct += (predicted == labels.data).sum()
+        print('test  %d epoch loss: %.3f  acc: %.3f ' %
+                (epoch + 1, test_loss / test_total, 100 * correct / test_total))
+    torch.save(net, PATH)
+    print("训练结束...")
+~~~
 
-
-def facial_verification(id,path):
-    test_dataset = Test1Dataset(root=path, list=names, transform=data_transform)
-    test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=4, shuffle=False)
-    dataiter = iter(test_loader)
-    images, labels = dataiter.next()
-    images, labels = images.to(device), labels.to(device)
-    
-    outputs = net(images)
-    _, predicted = torch.max(outputs, 1)
-    print(id,names[predicted[0]])
-    return "True" if predicted[0]==id else "False"
+- 测试
 
 ~~~
-##### 测试
-~~~
-net = models.resnet50().to(device)
+
+#load model
+net = torch.load(PATH)
 print('load model')
-net.load_state_dict(torch.load(PATH))
 
+# facial_recognition
 starttime = datetime.datetime.now()
 right = 0
 wrong = 0
 
-for item in os.listdir("../test"):
-
-    test_path = "../test/" + item
-    if facial_recognition(test_path) == item.split('.')[0]:
+for item in os.listdir("cuttest"):
+    test_path = "cuttest/" + item
+    if facial_recognition(test_path) == item:
         right += 1
     else:
         wrong += 1
@@ -210,17 +230,19 @@ print("人脸识别的考察结果：")
 print("人脸识别的准确率是:", accuracy)
 print("整个人脸识别的运行时间是：", (endtime-starttime).seconds, "s")
 
+# facial_verification
+
 tp = 0
 tn = 0
 fp = 0
 fn = 0
-'''
+
 for name in names:
-    test_path = "../test/" + name + ".jpg"
+    test_path = "cuttest/" + name+"/" + name + ".jpg"
     for id in range(len(names)):
         result = facial_verification(id, test_path)
         if name == names[id] and result == "True":
-            tp +=1
+            tp += 1
         elif name == names[id] and result == "False":
             fn += 1
         elif name != names[id] and result == "False":
@@ -233,6 +255,6 @@ print("精度:", tp/(tp+fp))
 print("回归率:", tp/(tp+fn))
 print("特异性:", tn/(tn+fp))
 print("F1值:", 2*tp/(2*tp+fp+fn))
-'''
 ~~~
 
+最终模型预测的准确率在50%左右
