@@ -17,3 +17,15 @@ var all=MathJax.Hub.getAllJax(),i;for(i=0;i<all.length;i+=1){all[i].SourceElemen
 </script>
 
 <link href="/assets/css/rouge.css" rel="stylesheet" />
+
+<script>
+    $("script[type='math/tex']").replaceWith(function () {
+        var tex = $(this).text();
+        return KaTeX.renderToString(tex, { displayMode: false });
+    });
+
+    $("script[type='math/tex; mode=display']").replaceWith(function () {
+        var tex = $(this).html();
+        return KaTeX.renderToString(tex.replace(/%.*/g, ''), { displayMode: true });
+    });
+</script>
