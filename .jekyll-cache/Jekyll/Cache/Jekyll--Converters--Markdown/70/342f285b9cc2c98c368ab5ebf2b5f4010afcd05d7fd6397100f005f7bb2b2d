@@ -1,4 +1,4 @@
-I"�<!-- 图形学中的向量一般是4维的，矩阵一般是4×4的，我们定义```Vector4f```，```Matrix4f```来表示这两种数据结构 -->
+I"	<!-- 图形学中的向量一般是4维的，矩阵一般是4×4的，我们定义```Vector4f```，```Matrix4f```来表示这两种数据结构 -->
 
 <h1 id="矩阵变换">矩阵变换</h1>
 
@@ -150,6 +150,8 @@ cos\phi&0&sin\phi\\
 <h4 id="沿任意轴的旋转rodrigues-rotation-formula">沿任意轴的旋转/Rodrigues’ Rotation Formula</h4>
 
 <p>和二维绕任意点旋转类似，我们将旋转轴<script type="math/tex">n</script>旋转至与坐标轴重合（以<script type="math/tex">x</script>轴为例），然后绕<script type="math/tex">x</script>轴旋转<script type="math/tex">{\alpha}</script>，再旋转轴旋转回原来的位置</p>
+
+<p><img src="https://pic.downk.cc/item/5f0aebed14195aa5941fe522.jpg" widht="200" height="200" /></p>
 
 <p>整个流程如下</p>
 
