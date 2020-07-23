@@ -1,4 +1,4 @@
-I"_<p>将三维模型显示在屏幕上一般需要以下几个步骤</p>
+I"a<p>将三维模型显示在屏幕上一般需要以下几个步骤</p>
 
 <p><img src="https://pic.downk.cc/item/5f0407f214195aa5946cc07c.png" alt="" /></p>
 
@@ -105,8 +105,8 @@ px''=\frac{px}{pz}\frac{1}{tan(\frac{fov}{2})·aspect\_ratio}</script></p>
 <p>所以z’坐标可以直接保存p点的z值。因为在光栅化之前，我们需要对z坐标的倒数进行插值，所以可以将z’‘写成z的一次表达式形式，如下
 <script type="math/tex">\\z''=\frac{a}{pz}+b</script></p>
 
-<p>将z端点带入，近平面z=near时为0，z=far时为1
-<script type="math/tex">\\0=\frac{a}{z_{near}}+b\\
+<p>将z端点带入，近平面z=near时为-1，z=far时为1
+<script type="math/tex">\\-1=\frac{a}{z_{near}}+b\\
 1=\frac{a}{z_{far}}+b</script></p>
 
 <p>解得
