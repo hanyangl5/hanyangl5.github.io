@@ -8,6 +8,25 @@ layout: default
 
 {% if site.disqus-id %} {% include comments.html %} {% endif %}
 
+<head>
+    ..
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    ...
+</head>
+
+<body>
+    ...
+    <div id="vcomments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            appId: 'JB9cMBUcioVbVgy3h6CCIeNA-gzGzoHsz',
+            appKey: 'oOiqbu2UeaQW9as9IctHiCYb'
+        })
+    </script>
+</body>
+
+
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({tex2jax:{processEscapes: true, inlineMath: [ ['$','$'], ["\\(","\\)"] ], skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}});
 MathJax.Hub.Config({TeX:{extensions: ["cancel.js", "enclose.js"],
