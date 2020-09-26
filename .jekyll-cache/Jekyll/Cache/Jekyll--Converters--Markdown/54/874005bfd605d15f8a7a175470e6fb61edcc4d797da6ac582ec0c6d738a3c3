@@ -1,4 +1,4 @@
-I"q<h3 id="bresenham直线生成算法">bresenham直线生成算法</h3>
+I"<h3 id="bresenham直线生成算法">bresenham直线生成算法</h3>
 
 <p>bresenham是一种高效的直线绘制的算法，也是最常用的直线绘制算法</p>
 
@@ -7,28 +7,27 @@
 <p>算法步骤伪代码</p>
 
 <blockquote>
-  <p>计算<script type="math/tex">dx = abs(x2 - x1), dy = abs(y2 - y1)\\</script>
-计算直线的斜率<script type="math/tex">m = dy / dx\\</script>
-<script type="math/tex">% <![CDATA[
-putpixel(x, y)// ouput\ first\ pixel\\
-if \ m > 1\\
+  <p>计算\(dx = abs(x2 - x1), dy = abs(y2 - y1)\\\)
+计算直线的斜率\(m = dy / dx\\\)
+\(putpixel(x, y)// ouput\ first\ pixel\\
+if \ m &gt; 1\\
     \qquad pk = (2dy - dx)\\
-    \qquad for\  x = x1; x < x2; x++\\
-    \qquad    if\  pk < 0\\
+    \qquad for\  x = x1; x &lt; x2; x++\\
+    \qquad    if\  pk &lt; 0\\
     \qquad  \qquad      pk = pk + 2dy\\
-    \qquad    if\  pk > 0\\
+    \qquad    if\  pk &gt; 0\\
     \qquad    \qquad    pk = pk + 2dy − 2dx\\
     \qquad    \qquad    y++\\
     \qquad    putpixel(x,  y)\\
-if\ m < 1\\
+if\ m &lt; 1\\
   \qquad  pk = (2dx - dy)\\
-  \qquad  for\  y = y1; y < y2; y++\\
-  \qquad      if\  pk < 0\\
+  \qquad  for\  y = y1; y &lt; y2; y++\\
+  \qquad      if\  pk &lt; 0\\
   \qquad     \qquad     |pk = pk + 2dx\\
-  \qquad      if\  pk > 0\\
+  \qquad      if\  pk &gt; 0\\
   \qquad     \qquad     pk = pk + 2dx − 2dy\\
   \qquad     \qquad     x++\\
-  \qquad      putpixel(x, y) %]]></script></p>
+  \qquad      putpixel(x, y)\)</p>
 </blockquote>
 
 <p>直线生成算法用于绘制线框图</p>
@@ -69,7 +68,7 @@ if\ m < 1\\
 <p>经过光栅化的过程，我们已经可以绘制出基本的图形了，但仍有一个问题需要解决，后绘制的图形总是在先绘制的图形前面，也就是我们总能看到最后绘制的图形，这与现实是不相符的，我们用一个数组记录屏幕上每个像素的深度值</p>
 
 <p>由点的重心坐标，对三角形三个点的z值插值
-<script type="math/tex">zp=\alpha\ v1.z+\beta\ v2.z+\gamma\ v3.z</script></p>
+\(zp=\alpha\ v1.z+\beta\ v2.z+\gamma\ v3.z\)</p>
 
 <p>如果$zp$值小于深度缓冲中相应位置存储的$z$值，将$zp$写入深度缓冲，并绘制出像素的颜色</p>
 
