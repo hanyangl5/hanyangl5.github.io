@@ -1,4 +1,4 @@
-I"<h3 id="intro">Intro</h3>
+I"<h3 id="intro">Intro</h3>
 <p>本文章将总结braynzarsoft的dx12教程，dx12龙书和微软官方的文档/案例，来记录笔者学习dx12的过程，本系列文章部分翻译自<a href="https://docs.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-guide">Direct3D 12 programming guide</a>，尽量保留原技术名词与术语，笔者才疏学浅，如有错误请斧正，特此感谢。
 <!-- dx12龙书译本晦涩难懂，各种名词的解释，渲染流程讲很混乱，书中的代码写的跨度也很大，不太好理解， --></p>
 
@@ -81,4 +81,5 @@ Direct3D 12相比之前的版本更快更高效，Direct3D 12 提供更丰富的
 
 <p>调试曾提供了额外的参数用于对参数和连续性的校验（validating shader linkage and resource binding, validating parameter consistency, and reporting error descriptions）
 当调试层列出内存泄漏时，会输出对象接口指针的列表及其名称。 默认名称是”<unnamed>"，可以使用`ID3D12Object::SetName`方法设置名称方便程序调试。</unnamed></p>
+
 :ET
