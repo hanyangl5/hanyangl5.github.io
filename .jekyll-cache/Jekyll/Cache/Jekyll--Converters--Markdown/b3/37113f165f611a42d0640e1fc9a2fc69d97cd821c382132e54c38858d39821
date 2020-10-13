@@ -1,0 +1,85 @@
+I"<h3 id="intro">Intro</h3>
+<p>本文章将总结braynzarsoft的dx12教程，dx12龙书和微软官方的文档/案例，来记录笔者学习dx12的过程，本系列文章部分翻译自<a href="https://docs.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-guide">Direct3D 12 programming guide</a>，尽量保留原技术名词与术语，笔者才疏学浅，如有错误请斧正，特此感谢。
+<!-- dx12龙书译本晦涩难懂，各种名词的解释，渲染流程讲很混乱，书中的代码写的跨度也很大，不太好理解， --></p>
+
+<hr />
+
+<h3 id="什么是direct3d-12">什么是Direct3D 12</h3>
+
+<p>Direct3D 12是新一代的Direct3D（DirectX中的3D图形API，DirectX不仅有图形API，还有如数学库和碰撞检测库等）
+Direct3D 12相比之前的版本更快更高效，Direct3D 12 提供更丰富的场景、更多的对象、更复杂的效果，并且能全面利用现代 GPU 硬件</p>
+
+<hr />
+
+<h3 id="为什么direct3d-12-更快更高效">为什么Direct3D 12 更快更高效</h3>
+
+<p>Direct3D 12独特之处在于它相比之前的版本，提供了更底层的硬件抽象，这能显著的提升多核cpu在应用上的效果，例如，你可以自己为Direct3D 12编写内存管理机制，此外，使用Direct3D 12的新特性如command queues，command lists，descriptor heaps，和pipeline state objects可以使你的程序不局限于GPU瓶颈</p>
+
+<p>Direct3D 12为高级图形程序员使用而设计，它需要大量的图形专业知识，和高水平的fine-tuning能力，Direct3D 12充分使用了多线程，GPU/CPU同步，不同目的地传输和复用资源，这些特性需要程序员具有相当程度上的关于内存管理的知识。</p>
+
+<p>（此外，Direct3D 11 也是另一种选择，Direct3D 12中的某些新特性也会在Direct3D 11中支持，Direct3D 11是一个足够底层的图形API，Direct3D 12比它更加底层。</p>
+
+<hr />
+
+<h3 id="环境配置">环境配置</h3>
+
+<p>Direct3D 12的头文件包括在Windows 10 SDK中，如果你已安装Windows 10 SDK和Visual Studio，那么环境配置阶段就完成了</p>
+
+<ul>
+  <li>头文件和库</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>头文件</th>
+      <th>描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>D3d12.h</td>
+      <td>Direct3D 12 API头文件</td>
+    </tr>
+    <tr>
+      <td>D3d12.lib</td>
+      <td>Direct3D 12 API静态链接库</td>
+    </tr>
+    <tr>
+      <td>D3d12.dll</td>
+      <td>Direct3D 12 API动态链接库</td>
+    </tr>
+    <tr>
+      <td>D3d12SDKLayers.h</td>
+      <td>Direct3D 12 debug头文件</td>
+    </tr>
+    <tr>
+      <td>D3d12SDKLayers.dll</td>
+      <td>Direct3D 12 debug动态链接库</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>帮助函数 Helper Structure</li>
+</ul>
+
+<p>Helper Structure是微软提供的一套基于Direct3D 12结构体的帮助函数，以便程序员以更简洁的方式的初始化Direct3D 12结构体 <a href="https://github.com/Microsoft/DirectX-Graphics-Samples/tree/master/Libraries/D3DX12">链接</a></p>
+
+<ul>
+  <li>内存管理库 Memory Management Library</li>
+</ul>
+
+<p>微软也提供了Direct3D相应的内存管理库
+<a href="https://github.com/microsoft/DirectX-Graphics-Samples/tree/master/Libraries/D3DX12Residency">链接</a></p>
+
+<p>此外，微软还提供了DirectXMath，DirectXMesh等库来辅助Direct3D 12程序的编写</p>
+
+<ul>
+  <li>调式层  Debug Layer</li>
+</ul>
+
+<p>调试曾提供了额外的参数用于对参数和连续性的校验（validating shader linkage and resource binding, validating parameter consistency, and reporting error descriptions）
+当调试层列出内存泄漏时，会输出对象接口指针的列表及其名称。 默认名称是”<unnamed>"，可以使用`ID3D12Object::SetName`方法设置名称方便程序调试。</unnamed></p>
+
+:ET

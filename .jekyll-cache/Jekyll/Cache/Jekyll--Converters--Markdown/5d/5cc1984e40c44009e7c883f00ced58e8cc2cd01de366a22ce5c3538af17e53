@@ -1,0 +1,81 @@
+I"U<p>总结自《深入理解C++对象模型》第一章-关于对象</p>
+
+<h3 id="c对象模式">C++对象模式</h3>
+
+<p>在C++中如果一个class/struct 是POD（plain old data），即没有显式构造/析构/拷贝构造函数和virtual函数，那么其内存布局将会和C语言相同，元素按照声明的顺序顺序排列。当类内含virtual函数时，每一个class会产生一个virtual pointer 指向virtual table，virtual table包含了虚函数的地址（经笔者验证gcc-8.1.0中vptr被放置在类的首部）</p>
+
+<p>考虑如下代码，我们有两个含虚函数的基类<code class="highlighter-rouge">B1</code>，<code class="highlighter-rouge">B2</code>，一个继承<code class="highlighter-rouge">B1</code>，<code class="highlighter-rouge">B2</code>
+的子类<code class="highlighter-rouge">D</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// from microsoft docs
+class B1{
+public:
+    virtual ~B1() {}
+    void f0() {}
+    virtual void f1() {}
+    int int_in_b1;
+};
+class B2{
+public:
+    virtual ~B2() {}
+    virtual void f2() {}
+    int int_in_b2;
+};
+class D : public B1, public B2{
+public:
+    void d() {}
+    void f2() override {}
+    int int_in_d;
+};
+
+int main()
+{
+    D *d = new D();
+    std::cout &lt;&lt; d &lt;&lt; "\n"
+              &lt;&lt; &amp;d-&gt;int_in_b1 &lt;&lt; "\n"
+              &lt;&lt; &amp;d-&gt;int_in_b2 &lt;&lt; "\n"
+              &lt;&lt; &amp;d-&gt;int_in_d &lt;&lt; "\n";
+    std::cout &lt;&lt; sizeof(*d);
+}
+</code></pre></div></div>
+<p>gcc 8.1.0 x86_64-w64-mingw32下的测试结果，我们可以通过测试结果推断D的内存布局</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x721320   // 0 : vptr for b1 table
+0x721328   // 8 : int_in_b1
+           // 12: 4 padding bytes
+           // 16:vptr for b2 table
+0x721338   // 24:int_in_b2
+0x72133c   // 28_int_ind
+32
+</code></pre></div></div>
+
+<h3 id="指针的类型">指针的类型</h3>
+
+<p>指针的值是其所指向对象的地址，指针的类型告诉了编译器解释如何解释某个地址中的内存。
+如果我们有一个基类<code class="highlighter-rouge">A</code>，一个继承自<code class="highlighter-rouge">A</code>的子类<code class="highlighter-rouge">B</code>，我们通过如下方式声明两个指针。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>B b;
+A *pa = &amp;b;
+B *pb = &amp;b;
+</code></pre></div></div>
+<p>指针<code class="highlighter-rouge">pa</code>，<code class="highlighter-rouge">pb</code>都指向<code class="highlighter-rouge">b</code>的首地址，它们的差别是，<code class="highlighter-rouge">pa</code>只覆盖了大小为<code class="highlighter-rouge">sizeof(A)</code>的区域。消除此差别的方式是通过类型转换的方式将<code class="highlighter-rouge">pa</code>转换成<code class="highlighter-rouge">B*</code>，即改变编译器解释地址的方式。</p>
+
+<!-- 
+virtual class 中会有一个virtual pointer 指向virtual table作为class的第一个元素，virtual table包含了虚函数的地址
+
+gcc-8.1.0中vptr被放置在类的首部
+
+在implemention中，basic class
+
+usual implementations, basic does not get derived's vptr; *basic's vptr will point to derived's vtable
+
+The virtual method table is the same for all objects belonging to the same class -->
+<!-- 虚函数作用
+support dynamic dispatch 
+or run-time method binding -->
+
+<!-- binary tree dispatch
+
+Whenever virtual function is called using base class reference or pointer it cannot be inlined (because call is resolved at runtime), but whenever called using the object (without reference or pointer) of that class, can be inlined because compiler knows the exact class of the object at compile time. -->
+
+<h3 id="reference">Reference</h3>
+
+<p>《深入理解C++对象模型》- Stanley B。 Lippman</p>
+:ET

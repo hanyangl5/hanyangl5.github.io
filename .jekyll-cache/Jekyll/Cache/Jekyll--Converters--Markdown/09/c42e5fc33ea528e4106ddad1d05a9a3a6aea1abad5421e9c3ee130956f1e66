@@ -1,4 +1,4 @@
-I"a<p>将三维模型显示在屏幕上一般需要以下几个步骤</p>
+I"�<p>将三维模型显示在屏幕上一般需要以下几个步骤</p>
 
 <p><img src="https://pic.downk.cc/item/5f0407f214195aa5946cc07c.png" alt="" /></p>
 
@@ -13,52 +13,50 @@
 </blockquote>
 
 <p><strong>Model矩阵</strong>
-<script type="math/tex">\\M=R(\alpha) T(t)</script></p>
+\(\\M=R(\alpha) T(t)\)</p>
 
 <h3 id="视图变换">视图变换</h3>
 
 <p>我们只需要渲染在摄像机视野范围内的物体</p>
 
-<p>我们希望 <script type="math/tex">\vec{eyepos}-\vec {at}</script>指向<script type="math/tex">z</script>轴负方向，即相机朝向的方向是屏幕里侧</p>
+<p>我们希望 \(\vec{eyepos}-\vec {at}\)指向\(z\)轴负方向，即相机朝向的方向是屏幕里侧</p>
 
 <p><img src="https://www.realtimerendering.com/figures/RTR4.02.04.png" alt="" /></p>
 
 <p><strong>构建View矩阵</strong></p>
 
-<p>已知三个向量<script type="math/tex">eyepos,at,up</script>
+<p>已知三个向量\(eyepos,at,up\)
 根据空间几何的知识可以推算出视图坐标系的坐标基
-<script type="math/tex">\\zaxis=eyepos-at\\ 
+\(\\zaxis=eyepos-at\\ 
 xaxis=up\times zaxis\\ 
-yaxis=zaxis\times xaxis</script>
-<script type="math/tex">% <![CDATA[
-\\V=\begin{bmatrix}
-xaxis_x&xaxis_y&xaxis_z&0\\
-yaxis_x&yaxis_y&yaxis_z&0\\
-zaxis_x&zaxis_y&zaxis_z&0\\
-0&0&0&1
-\end{bmatrix} %]]></script>
+yaxis=zaxis\times xaxis\)
+\(\\V=\begin{bmatrix}
+xaxis_x&amp;xaxis_y&amp;xaxis_z&amp;0\\
+yaxis_x&amp;yaxis_y&amp;yaxis_z&amp;0\\
+zaxis_x&amp;zaxis_y&amp;zaxis_z&amp;0\\
+0&amp;0&amp;0&amp;1
+\end{bmatrix}\)
 将摄像机平移到原点
-<script type="math/tex">% <![CDATA[
-\\V=\begin{bmatrix}
-xaxis_x&xaxis_y&xaxis_z&-dot(xaxis,eyepos)\\
-yaxis_x&yaxis_y&yaxis_z&-dot(yaxis,eyepos)\\
-zaxis_x&zaxis_y&zaxis_z&-dot(zaxis,eyepos)\\
-0&0&0&1
-\end{bmatrix} %]]></script></p>
+\(\\V=\begin{bmatrix}
+xaxis_x&amp;xaxis_y&amp;xaxis_z&amp;-dot(xaxis,eyepos)\\
+yaxis_x&amp;yaxis_y&amp;yaxis_z&amp;-dot(yaxis,eyepos)\\
+zaxis_x&amp;zaxis_y&amp;zaxis_z&amp;-dot(zaxis,eyepos)\\
+0&amp;0&amp;0&amp;1
+\end{bmatrix}\)</p>
 
-<p>实际管线中是把世界坐标中的物体转换到摄像机坐标系中，因此要左乘V的逆矩阵(<script type="math/tex">V^{-1}V^{-T}=I，V^T=V^{-1}</script>)
-<script type="math/tex">% <![CDATA[
-\\View=V^{-1}=\begin{bmatrix}
-xaxis_x&yaxis_x&zaxis_x&0\\
-xaxis_y&yaxis_y&zaxis_y&0\\
-xaxis_z&yaxis_z&zaxis_z&0\\
--dot(xaxis,eyepos)&-dot(yaxis,eyepos)&-dot(zaxis,eyepos)&1
-\end{bmatrix} %]]></script></p>
+<p>实际管线中是把世界坐标中的物体转换到摄像机坐标系中，因此要左乘V的逆矩阵(\(V^{-1}V^{-T}=I，V^T=V^{-1}\))
+\(\\View=V^{-1}=\begin{bmatrix}
+xaxis_x&amp;yaxis_x&amp;zaxis_x&amp;0\\
+xaxis_y&amp;yaxis_y&amp;zaxis_y&amp;0\\
+xaxis_z&amp;yaxis_z&amp;zaxis_z&amp;0\\
+-dot(xaxis,eyepos)&amp;-dot(yaxis,eyepos)&amp;-dot(zaxis,eyepos)&amp;1
+\end{bmatrix}\)</p>
 
 <h3 id="投影变换">投影变换</h3>
 
-<p>投影变换我们仅考虑透视投影，我们的摄像机所看到的范围是一个视锥体，我们希望把视锥体内部的物体映射到齐次裁剪空间内，显示再屏幕上，视锥体外的物体剔除掉</p>
+<p>投影变换我们仅考虑透视投影，我们的摄像机所看到的范围是一个视锥体</p>
 
+<!-- ，我们希望把视锥体内部的物体映射到齐次裁剪空间内，显示再屏幕上，视锥体外的物体剔除掉 -->
 <!-- 
 <!-- ![](https://www.realtimerendering.com/figures/thumb/RTR4.02.05.jpg) -->
 <!-- 
@@ -81,46 +79,42 @@ $$\\P_{orthographic }\begin{bmatrix}
 在游戏中，我们常见的调整视野的方式有调节fov（field of view），分辨率（width，height），在构造投影矩阵也应使用这些参数 -->
 
 <p>设投影变换前的点$p(px,py,pz)$，第一步我们将视锥体内的点映射到近平面，根据相似三角形得到下面两个等式(z坐标均为负值)
-<script type="math/tex">\frac{px}{pz}=\frac{px'}{z_{near}}\\
-\frac{py}{pz}=\frac{py'}{z_{near}}\\</script></p>
+\(\frac{px}{pz}=\frac{px'}{z_{near}}\\
+\frac{py}{pz}=\frac{py'}{z_{near}}\\\)</p>
 
 <p>将矩形内的x，y映射成[-1,1]
-<script type="math/tex">\frac{py'}{H}=\frac{py''}{2}\\
-py''=\frac{py}{pz}\frac{1}{tan(\frac{fov}{2})}\\</script>
-<script type="math/tex">\frac{px'}{H·aspect\_ratio}=\frac{px''}{2}\\
-px''=\frac{px}{pz}\frac{1}{tan(\frac{fov}{2})·aspect\_ratio}</script></p>
+\(\frac{py'}{H}=\frac{py''}{2}\\
+py''=\frac{py}{pz}\frac{1}{tan(\frac{fov}{2})}\\\)
+\(\frac{px'}{H·aspect\_ratio}=\frac{px''}{2}\\
+px''=\frac{px}{pz}\frac{1}{tan(\frac{fov}{2})·aspect\_ratio}\)</p>
 
 <p>这样我们就获得了变换后的x，y坐标，也就得到透视矩阵的前两行
 我们希望w保存z坐标，即w=-z
-<script type="math/tex">% <![CDATA[
-\\\begin{bmatrix}
-  \frac{1}{tan(\frac{fov}{2})·aspect\_ratio}&0&0&0\\
-  0&\frac{1}{tan(\frac{fov}{2})}&0&0\\
-  .&.&.&.\\
-  .&.&-1&.
-\end{bmatrix} %]]></script></p>
+\(\\\begin{bmatrix}
+  \frac{1}{tan(\frac{fov}{2})·aspect\_ratio}&amp;0&amp;0&amp;0\\
+  0&amp;\frac{1}{tan(\frac{fov}{2})}&amp;0&amp;0\\
+  .&amp;.&amp;.&amp;.\\
+  .&amp;.&amp;-1&amp;.
+\end{bmatrix}\)</p>
 
 <p>当Frustum内的点投影到近剪裁平面的时候，所有位于线段p’p上的点，最终都会投影到p’点。</p>
 
-<p>所以z’坐标可以直接保存p点的z值。因为在光栅化之前，我们需要对z坐标的倒数进行插值，所以可以将z’‘写成z的一次表达式形式，如下
-<script type="math/tex">\\z''=\frac{a}{pz}+b</script></p>
+<p>我们当然可以直接取p点的z值，不过在图形API中，为了方便光栅化阶段对屏幕空间的坐标插值，将z映射为1/z的非线性形式，将z’‘写成1/z的一次表达式形式，如下
+\(\\z''=\frac{a\ pz+b}{-pz}\)</p>
 
-<p>将z端点带入，近平面z=near时为-1，z=far时为1
-<script type="math/tex">\\-1=\frac{a}{z_{near}}+b\\
-1=\frac{a}{z_{far}}+b</script></p>
+<p>将z端点带入，近平面z=near时为-1，z=far时为1</p>
 
 <p>解得
-<script type="math/tex">\\a=\frac{-(z_{near}+z_{far})}{z_{far}-z_{near}}\\
-b=\frac{-2z_{near}z_{far}}{z_{far}-z_{near}}</script></p>
+\(\\a=\frac{-(z_{near}+z_{far})}{z_{far}-z_{near}}\\
+b=\frac{-2z_{near}z_{far}}{z_{far}-z_{near}}\)</p>
 
 <p>最终的透视投影矩阵
-<script type="math/tex">% <![CDATA[
-\\P_{perspective}=\begin{bmatrix}
-\frac{1}{aspect\_ratio·tan(\frac{fov}{2})}&0&0&0\\
-0&\frac{1}{tan(\frac{fov}{2})}&0&0&\\
-0&0&\frac{-(z_{near}+z_{far})}{z_{far}-z_{near}}&\frac{-2z_{near}z_{far}}{z_{far}-z_{near}}\\
-0&0&-1&0
-\end{bmatrix} %]]></script></p>
+\(\\P_{perspective}=\begin{bmatrix}
+\frac{1}{aspect\_ratio·tan(\frac{fov}{2})}&amp;0&amp;0&amp;0\\
+0&amp;\frac{1}{tan(\frac{fov}{2})}&amp;0&amp;0&amp;\\
+0&amp;0&amp;\frac{-(z_{near}+z_{far})}{z_{far}-z_{near}}&amp;\frac{-2z_{near}z_{far}}{z_{far}-z_{near}}\\
+0&amp;0&amp;-1&amp;0
+\end{bmatrix}\)</p>
 
 <h3 id="裁剪">裁剪</h3>
 
@@ -139,7 +133,7 @@ b=\frac{-2z_{near}z_{far}}{z_{far}-z_{near}}</script></p>
 <p>然而，在投影空间中，情况就不再如此，例如，当火车铁路远离眼睛时，上图的铁路变得越来越窄。最后，两个平行导轨在地平线上相遇，这个点的距离无穷大</p>
 
 <p>为了从同裁剪坐标(x,y,w)转换为笛卡尔坐标，我们只需将x和y 除以w;
-<script type="math/tex">\\
+\(\\
 \begin{bmatrix}x\\
 y\\z
  \end{bmatrix}  
@@ -147,17 +141,15 @@ y\\z
 \frac{x}{z}\\
 \frac{y}{z}\\
 \frac{z}{z}
-\end{bmatrix}</script></p>
+\end{bmatrix}\)</p>
 
 <h3 id="屏幕映射">屏幕映射</h3>
 
 <p><img src="https://www.realtimerendering.com/figures/thumb/RTR4.02.07.jpg" alt="" /></p>
 
 <p>将区间为[-1,1]的x，y坐标映射到屏幕空间上
-<script type="math/tex">\\x=\frac{1}{2}w*(x+1)\\
-y=\frac{1}{2}h*(y+1)</script></p>
-
-<h3 id="总结">总结</h3>
+\(\\x=\frac{1}{2}w*(x+1)\\
+y=\frac{1}{2}h*(y+1)\)</p>
 
 <p>以上这些步骤也是渲染管线中几何阶段的主要步骤，下一章我们将介绍光栅化的过程</p>
 
@@ -168,5 +160,6 @@ MV^-1^P做透视除法显示正常 -->
 
 <p><strong>reference:</strong></p>
 
-<p>《Real-Time Rendering Fourth Edition》</p>
+<p>《Real-Time Rendering Fourth Edition》
+https://www.zhihu.com/question/38356223</p>
 :ET

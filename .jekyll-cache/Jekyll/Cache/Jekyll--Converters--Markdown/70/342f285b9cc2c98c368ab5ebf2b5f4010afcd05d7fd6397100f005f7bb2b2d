@@ -1,14 +1,13 @@
-I"	<!-- 图形学中的向量一般是4维的，矩阵一般是4×4的，我们定义```Vector4f```，```Matrix4f```来表示这两种数据结构 -->
+I"<<!-- 图形学中的向量一般是4维的，矩阵一般是4×4的，我们定义```Vector4f```，```Matrix4f```来表示这两种数据结构 -->
 
 <h1 id="矩阵变换">矩阵变换</h1>
 
 <h2 id="平移">平移</h2>
 
-<p>平移操作可以把空间中的一个点<script type="math/tex">p(p_x,p_y,p_z,1)</script>沿<script type="math/tex">t(t_x,t_y,t_z)</script>方向移动一段距离，需将点p左乘变换矩阵<script type="math/tex">T(t)</script>,
-<script type="math/tex">% <![CDATA[
-\\T(t)=\begin{bmatrix}1 & 0 & 0 & t_x\\0&1&0&t_y\\0&0&1&t_z\\0&0&0&1\\\end{bmatrix} %]]></script></p>
+<p>平移操作可以把空间中的一个点\(p(p_x,p_y,p_z,1)\)沿\(t(t_x,t_y,t_z)\)方向移动一段距离，需将点p左乘变换矩阵\(T(t)\),
+\(\\T(t)=\begin{bmatrix}1 &amp; 0 &amp; 0 &amp; t_x\\0&amp;1&amp;0&amp;t_y\\0&amp;0&amp;1&amp;t_z\\0&amp;0&amp;0&amp;1\\\end{bmatrix}\)</p>
 
-<p>平移后点p的坐标为<script type="math/tex">p'=(p_x+t_x, p_y +t_y, p_z +t_z, 1)</script></p>
+<p>平移后点p的坐标为\(p'=(p_x+t_x, p_y +t_y, p_z +t_z, 1)\)</p>
 
 <hr />
 
@@ -19,21 +18,20 @@
 <h4 id="绕原点的二维旋转">绕原点的二维旋转</h4>
 
 <p><img src="D:\onedrive\Program\blog draft\figures\r2d.png" alt="" />
-我们要将p绕旋转<script type="math/tex">\phi</script>到点<script type="math/tex">q</script>,即需要一个矩阵R，使得</p>
+我们要将p绕旋转\(\phi\)到点\(q\),即需要一个矩阵R，使得</p>
 
-<p><script type="math/tex">q=R*p \\
+<p>\(q=R*p \\
 \begin{bmatrix}rcos(\theta+\phi)\\ 
 rsin(\theta+\phi)\end{bmatrix}=R\begin{bmatrix}rcos\theta\\ 
-rsin\theta\end{bmatrix}\\</script>
-<script type="math/tex">\begin{bmatrix}rcos\theta cos\phi-rsin\theta sin\phi\\
+rsin\theta\end{bmatrix}\\\)
+\(\begin{bmatrix}rcos\theta cos\phi-rsin\theta sin\phi\\
 rsin\theta cos\phi+rcos\theta sin\phi\end{bmatrix}=R\begin{bmatrix} rcos\theta\\ 
-rsin\theta\end{bmatrix}\\</script>
+rsin\theta\end{bmatrix}\\\)
 解得
-<script type="math/tex">% <![CDATA[
-R=\begin{bmatrix}
-cos\phi & -sin\phi\\ 
-sin\phi& cos\phi
-\end{bmatrix} %]]></script></p>
+\(R=\begin{bmatrix}
+cos\phi &amp; -sin\phi\\ 
+sin\phi&amp; cos\phi
+\end{bmatrix}\)</p>
 
 <h4 id="绕任意点的二维旋转">绕任意点的二维旋转</h4>
 
@@ -55,29 +53,28 @@ sin\phi& cos\phi
 
 <p><img src="https://pic.downk.cc/item/5f03669014195aa5942e4945.jpg" height="200" width="200" /></p>
 
-<p><script type="math/tex">q=R_z*p\\</script>
-<script type="math/tex">\begin{bmatrix}
+<p>\(q=R_z*p\\\)
+\(\begin{bmatrix}
 rcos(\theta+\phi)\\ 
 rsin(\theta+\phi)\\ 0
 \end{bmatrix}
 =R_z
 \begin{bmatrix}rcos\theta\\ 
-rsin\theta\\ 0\end{bmatrix}\\</script>
-<script type="math/tex">\begin{bmatrix}
+rsin\theta\\ 0\end{bmatrix}\\\)
+\(\begin{bmatrix}
 rcos\theta cos\phi-rsin\theta sin\phi\\
 rsin\theta cos\phi+rcos\theta sin\phi\\0\\
 \end{bmatrix}
 =R_z
 \begin{bmatrix} rcos\theta\\
 rsin\theta\\0 \\
-\end{bmatrix}\\</script>
+\end{bmatrix}\\\)
 解得
-<script type="math/tex">% <![CDATA[
-R_z=\begin{bmatrix}
-cos\phi & -sin\phi&0\\ 
-sin\phi& cos\phi&0\\
-0&0&1
-\end{bmatrix} %]]></script></p>
+\(R_z=\begin{bmatrix}
+cos\phi &amp; -sin\phi&amp;0\\ 
+sin\phi&amp; cos\phi&amp;0\\
+0&amp;0&amp;1
+\end{bmatrix}\)</p>
 
 <ul>
   <li>绕x轴旋转</li>
@@ -85,8 +82,8 @@ sin\phi& cos\phi&0\\
 
 <p><img src="https://pic.downk.cc/item/5f03669014195aa5942e493b.jpg" height="200" width="200" /></p>
 
-<p><script type="math/tex">q=R_x*p\\</script>
-<script type="math/tex">\begin{bmatrix}
+<p>\(q=R_x*p\\\)
+\(\begin{bmatrix}
 0\\
 rcos(\theta+\phi)\\ 
 rsin(\theta+\phi)
@@ -96,21 +93,20 @@ rsin(\theta+\phi)
 0\\
 rcos\theta\\ 
 rsin\theta
-\end{bmatrix}\\</script>
-<script type="math/tex">\begin{bmatrix}
+\end{bmatrix}\\\)
+\(\begin{bmatrix}
 0\\rcos\theta cos\phi-rsin\theta sin\phi\\
 rsin\theta cos\phi+rcos\theta sin\phi
 \end{bmatrix}
 =M\begin{bmatrix} 0\\rcos\theta\\ 
-rsin\theta\end{bmatrix}</script></p>
+rsin\theta\end{bmatrix}\)</p>
 
 <p>解得
-<script type="math/tex">% <![CDATA[
-R_x=\begin{bmatrix}
-1&0&0\\
-0&cos\phi&-sin\phi\\
-0&sin\phi&cos\phi
-\end{bmatrix} %]]></script></p>
+\(R_x=\begin{bmatrix}
+1&amp;0&amp;0\\
+0&amp;cos\phi&amp;-sin\phi\\
+0&amp;sin\phi&amp;cos\phi
+\end{bmatrix}\)</p>
 
 <ul>
   <li>绕y轴旋转</li>
@@ -118,72 +114,68 @@ R_x=\begin{bmatrix}
 
 <p><img src="https://pic.downk.cc/item/5f03669014195aa5942e4940.jpg" height="200" width="200" /></p>
 
-<p><script type="math/tex">q=R_y*p \\</script>
-<script type="math/tex">\begin{bmatrix}
+<p>\(q=R_y*p \\\)
+\(\begin{bmatrix}
 rsin(\theta+\phi)\\0\\rcos(\theta+\phi)
 \end{bmatrix}
 =R_y
 \begin{bmatrix}
 rsin\theta\\0\\rcos\theta
-\end{bmatrix}\\</script>
-<script type="math/tex">\begin{bmatrix}
+\end{bmatrix}\\\)
+\(\begin{bmatrix}
 rsin\theta cos\phi+rcos\theta sin\phi\\0\\rcos\theta cos\phi-rsin\theta sin\phi
 \end{bmatrix}
 =R_y
 \begin{bmatrix}
 rsin\theta\\0\\rcos\theta
-\end{bmatrix}</script></p>
+\end{bmatrix}\)</p>
 
 <p>解得
-<script type="math/tex">% <![CDATA[
-R_y=\begin{bmatrix}
-cos\phi&0&sin\phi\\
-0&1&0\\
--sin\phi&0&cos\phi
-\end{bmatrix} %]]></script></p>
+\(R_y=\begin{bmatrix}
+cos\phi&amp;0&amp;sin\phi\\
+0&amp;1&amp;0\\
+-sin\phi&amp;0&amp;cos\phi
+\end{bmatrix}\)</p>
 
-<p>将上述三个旋转矩阵<script type="math/tex">R_x,R_y,R_z</script>组合起来
-<script type="math/tex">R_{x,y,z}(\alpha,\beta,\gamma)=R_x(\alpha)R_y(\beta)R_z(\gamma)</script></p>
+<p>将上述三个旋转矩阵\(R_x,R_y,R_z\)组合起来
+\(R_{x,y,z}(\alpha,\beta,\gamma)=R_x(\alpha)R_y(\beta)R_z(\gamma)\)</p>
 
 <p>这样的旋转也叫Euler旋转</p>
 
 <h4 id="沿任意轴的旋转rodrigues-rotation-formula">沿任意轴的旋转/Rodrigues’ Rotation Formula</h4>
 
-<p>和二维绕任意点旋转类似，我们将旋转轴<script type="math/tex">n</script>旋转至与坐标轴重合（以<script type="math/tex">x</script>轴为例），然后绕<script type="math/tex">x</script>轴旋转<script type="math/tex">{\alpha}</script>，再旋转轴旋转回原来的位置</p>
+<p>和二维绕任意点旋转类似，我们将旋转轴\(n\)旋转至与坐标轴重合（以\(x\)轴为例），然后绕\(x\)轴旋转\({\alpha}\)，再旋转轴旋转回原来的位置</p>
 
 <p><img src="https://pic.downk.cc/item/5f0aebed14195aa5941fe522.jpg" widht="200" height="200" /></p>
 
 <p>整个流程如下</p>
 
-<p><script type="math/tex">q=M^TR_x(\alpha)Mp\\</script>
-<script type="math/tex">cos\theta=\frac{z}{\sqrt{y^2+z^2}}\\
-sin\theta=\frac{y}{\sqrt{y^2+z^2}}\\</script>
-<script type="math/tex">% <![CDATA[
-R_x(\theta)=\begin{bmatrix}
-1&0&0&0\\
-0&\frac{z}{\sqrt{y^2+z^2}}&-\frac{y}{\sqrt{y^2+z^2}}&0\\
-0&\frac{y}{\sqrt{y^2+z^2}}&\frac{z}{\sqrt{y^2+z^2}}&0\\
-0&0&0&1
-\end{bmatrix}\\ %]]></script>
-<script type="math/tex">cos\phi=\frac{x}{\sqrt{x^2+y^2+z^2}} \\ 
-sin\phi=\frac{\sqrt{y^2+z^2}}{\sqrt{x^2+y^2+z^2}}\\</script>
-<script type="math/tex">% <![CDATA[
-R_y(\phi)=\begin{bmatrix}
-\frac{x}{\sqrt{x^2+y^2+z^2}}&0&\frac{\sqrt{y^2+z^2}}{\sqrt{x^2+y^2+z^2}}&0\\
-0&1&0&0\\
--\frac{\sqrt{y^2+z^2}}{\sqrt{x^2+y^2+z^2}}&0&\frac{x}{\sqrt{x^2+y^2+z^2}}&0\\
-0&0&0&1
-\end{bmatrix}\\ %]]></script>
-<script type="math/tex">R=R_x(-\theta)R_y(-\phi)R_x(\alpha)R_y(\phi)R_x(\theta)</script></p>
+<p>\(q=M^TR_x(\alpha)Mp\\\)
+\(cos\theta=\frac{z}{\sqrt{y^2+z^2}}\\
+sin\theta=\frac{y}{\sqrt{y^2+z^2}}\\\)
+\(R_x(\theta)=\begin{bmatrix}
+1&amp;0&amp;0&amp;0\\
+0&amp;\frac{z}{\sqrt{y^2+z^2}}&amp;-\frac{y}{\sqrt{y^2+z^2}}&amp;0\\
+0&amp;\frac{y}{\sqrt{y^2+z^2}}&amp;\frac{z}{\sqrt{y^2+z^2}}&amp;0\\
+0&amp;0&amp;0&amp;1
+\end{bmatrix}\\\)
+\(cos\phi=\frac{x}{\sqrt{x^2+y^2+z^2}} \\ 
+sin\phi=\frac{\sqrt{y^2+z^2}}{\sqrt{x^2+y^2+z^2}}\\\)
+\(R_y(\phi)=\begin{bmatrix}
+\frac{x}{\sqrt{x^2+y^2+z^2}}&amp;0&amp;\frac{\sqrt{y^2+z^2}}{\sqrt{x^2+y^2+z^2}}&amp;0\\
+0&amp;1&amp;0&amp;0\\
+-\frac{\sqrt{y^2+z^2}}{\sqrt{x^2+y^2+z^2}}&amp;0&amp;\frac{x}{\sqrt{x^2+y^2+z^2}}&amp;0\\
+0&amp;0&amp;0&amp;1
+\end{bmatrix}\\\)
+\(R=R_x(-\theta)R_y(-\phi)R_x(\alpha)R_y(\phi)R_x(\theta)\)</p>
 
 <p>最终旋转矩阵
-<script type="math/tex">% <![CDATA[
-R=\begin{bmatrix}
-  cos\alpha+(1-cos\alpha)n_x^2&(1-cos\alpha)n_xn_y-n_zsin\alpha&(1-cos\alpha)n_xn_y+n_ysin\alpha\\ 
-(1-cos\alpha)n_xn_y+n_zsin\alpha&cos\alpha+(1-cos\alpha)n_y^2&(1-cos\alpha)n_yn_z-nx_sin\alpha\\
-(1-cos\alpha)n_xn_z-n_ysin\alpha&(1-cos\alpha)n_yn_z+n_xsin\alpha&cos\alpha+(1-cos\alpha)n_z^2
+\(R=\begin{bmatrix}
+  cos\alpha+(1-cos\alpha)n_x^2&amp;(1-cos\alpha)n_xn_y-n_zsin\alpha&amp;(1-cos\alpha)n_xn_y+n_ysin\alpha\\ 
+(1-cos\alpha)n_xn_y+n_zsin\alpha&amp;cos\alpha+(1-cos\alpha)n_y^2&amp;(1-cos\alpha)n_yn_z-nx_sin\alpha\\
+(1-cos\alpha)n_xn_z-n_ysin\alpha&amp;(1-cos\alpha)n_yn_z+n_xsin\alpha&amp;cos\alpha+(1-cos\alpha)n_z^2
 \end{bmatrix}\\
-=cos(\alpha)I+(1-cos\alpha)nn^T+sin\alpha %]]></script></p>
+=cos(\alpha)I+(1-cos\alpha)nn^T+sin\alpha\)</p>
 
 <!-- #### 四元数旋转 -->
 
@@ -191,15 +183,14 @@ R=\begin{bmatrix}
 
 <h3 id="缩放">缩放</h3>
 
-<p>缩放矩阵的形式如下，可以将某个点沿<script type="math/tex">x,y,z</script>轴分别缩放<script type="math/tex">s_x,s_y,s_z</script>倍</p>
+<p>缩放矩阵的形式如下，可以将某个点沿\(x,y,z\)轴分别缩放\(s_x,s_y,s_z\)倍</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-S(s)=\begin{bmatrix}
-  s_x & 0 & 0 & 0\\
-  0&s_y&0&0\\
-  0&0&s_z&0\\
-  0&0&0&1\\
-  \end{bmatrix} %]]></script>
+\[S(s)=\begin{bmatrix}
+  s_x &amp; 0 &amp; 0 &amp; 0\\
+  0&amp;s_y&amp;0&amp;0\\
+  0&amp;0&amp;s_z&amp;0\\
+  0&amp;0&amp;0&amp;1\\
+  \end{bmatrix}\]
 
 <hr />
 
