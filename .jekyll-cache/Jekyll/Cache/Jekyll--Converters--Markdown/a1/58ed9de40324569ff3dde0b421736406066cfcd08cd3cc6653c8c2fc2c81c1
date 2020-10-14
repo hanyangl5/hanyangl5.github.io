@@ -1,10 +1,10 @@
-I"^<h1 id="纹理">纹理</h1>
+I"�<h1 id="纹理">纹理</h1>
 
 <hr />
 
 <h3 id="纹理类">纹理类</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef TEXTURE
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef TEXTURE
 #define TEXTURE 
 
 
@@ -45,7 +45,7 @@ class checker_texture : public texture {
 
 <p>修改材质类中相关代码</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class lambertian : public material {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class lambertian : public material {
     public:
         lambertian(texture *a) : albedo(a) {}
         virtual bool scatter(const ray&amp; r_in, const hit_record&amp; rec,
@@ -69,7 +69,7 @@ class checker_texture : public texture {
 
 <p>以下代码定义了纯色和棋盘两种不同的材质</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *two_spheres() {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *two_spheres() {
     texture *checker = new checker_texture(
         new constant_texture(vec3(0.2, 0.3, 0.1)),
         new constant_texture(vec3(0.9, 0.9, 0.9))
@@ -97,7 +97,7 @@ class checker_texture : public texture {
 
 <p>顺手写了一个根据交点坐标渲染渐变颜色的纹理</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class rainbow_texture:public texture
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class rainbow_texture:public texture
 {
 public:
     rainbow_texture(){};

@@ -1,4 +1,4 @@
-I"�<h1 id="纹理映射">纹理映射</h1>
+I"{<h1 id="纹理映射">纹理映射</h1>
 
 <p>纹理映射，就是通过读取一张图片，使用uv映射的方法，直接将一张图片的纹理绘制在物体表面。</p>
 
@@ -16,13 +16,13 @@
 
 <p>我们用stb_image这个库来读取图片纹理，在使用前，需要进行初始化</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#define STB_IMAGE_IMPLEMENTATION
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 </code></pre></div></div>
 
 <p>可以用stbi_load函数将纹理数据存入data中</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Basic usage
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Basic usage
 //    int x,y,n;
 //    unsigned char *data = stbi_load(filename, &amp;x, &amp;y, &amp;n, 0);
 //    // ... process data if not NULL ...
@@ -51,29 +51,29 @@
 
 <p>设 <strong>r=1</strong>，则</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float theta = asin(p.y());
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float theta = asin(p.y());
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float phi = atan2(p.z(), p.x());
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float phi = atan2(p.z(), p.x());
 </code></pre></div></div>
 
 <p>接下来我们要将ϕ，θ映射到(0,1)内</p>
 
 <p>纹理坐标的u对应ϕ，ϕ的范围是从[-π,π]，映射到[0,1]之间，即：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>u = float(1 - (phi + M_PI) / (2 * M_PI));
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>u = float(1 - (phi + M_PI) / (2 * M_PI));
 </code></pre></div></div>
 
 <p>上面除了个1是颠倒一下，以让球面图片向上。</p>
 
 <p>v值对应θ，θ的范围是从[-π/2,π/2],映射到[0,1]之间，即：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v = float((theta + M_PI / 2) / M_PI);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v = float((theta + M_PI / 2) / M_PI);
 </code></pre></div></div>
 
 <p>由上整理成一个根据交点p求uv的函数为：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void get_sphere_uv(const vec3&amp; p, float&amp; u, float&amp; v)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void get_sphere_uv(const vec3&amp; p, float&amp; u, float&amp; v)
 {
     float phi = atan2(p.z(), p.x());
     float theta = asin(p.y());
@@ -88,7 +88,7 @@
 
 <h3 id="图片纹理类">图片纹理类</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef IMAGETEXTURE
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef IMAGETEXTURE
 #define IMAGETEXTURE
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -125,7 +125,7 @@ vec3 image_texture::value(float u, float v, const vec3&amp; p) const {
 
 <p>修改hittable.h</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void get_sphere_uv(const vec3&amp; p, float&amp; u, float&amp; v) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void get_sphere_uv(const vec3&amp; p, float&amp; u, float&amp; v) {
     float phi = atan2(p.z(), p.x());
     float theta = asin(p.y());
     u = 1-(phi + M_PI) / (2*M_PI);
@@ -146,7 +146,7 @@ struct hit_record {
 
 <p>get_sphere_uv获取撞击点的坐标</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool sphere::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool sphere::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const {
     vec3 oc = r.origin() - center;
     float a = dot(r.direction(), r.direction());
     float b = dot(oc, r.direction());
@@ -182,7 +182,7 @@ struct hit_record {
 
 <p>反射求取图片对应出的像素值</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class lambertian : public material {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class lambertian : public material {
     public:
         lambertian(texture *a) : albedo(a) {}
         virtual bool scatter(const ray&amp; r_in, const hit_record&amp; rec, vec3&amp; attenuation, ray&amp; scattered) const  {
@@ -199,7 +199,7 @@ struct hit_record {
 
 <p>读取并生成纹理</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable* texture_spheres(){
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable* texture_spheres(){
     int nx, ny, nn;
     unsigned char *tex_data = stbi_load("earthmap.jpg", &amp;nx, &amp;ny, &amp;nn, 0);
     material *mat = new lambertian(new image_texture(tex_data, nx, ny));

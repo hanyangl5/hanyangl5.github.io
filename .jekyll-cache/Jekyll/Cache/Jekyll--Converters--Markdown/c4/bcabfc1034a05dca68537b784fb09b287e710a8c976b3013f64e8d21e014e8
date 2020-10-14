@@ -1,4 +1,4 @@
-I"�<h1 id="抗锯齿">抗锯齿</h1>
+I"1<h1 id="抗锯齿">抗锯齿</h1>
 
 <hr />
 
@@ -10,7 +10,7 @@
 
 <p>可以看出，在球体的边缘会有明显的锯齿感，减少锯齿感的方法是，在计算某一个像素的颜色时，计算它邻近的区域内多个采样点的颜色，并求平均值，因此我们引入一个random类</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef RANDOMH
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef RANDOMH
 #define RANDOMH
 
 #include &lt;cstdlib&gt;
@@ -27,7 +27,7 @@ inline double random_double() {
 
 <h3 id="camera类">camera类</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef CAMERAH
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef CAMERAH
 #define CAMERAH
 
 #include "ray.h"
@@ -58,7 +58,7 @@ class camera {
 <hr />
 
 <p>修改后的main函数</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
 #include "sphere.h"
 #include "hittablelist.h"
 #include "camera.h"

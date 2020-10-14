@@ -1,4 +1,4 @@
-I"�><h1 id="矩形-光照-变换">矩形 光照 变换</h1>
+I"n?<h1 id="矩形-光照-变换">矩形 光照 变换</h1>
 
 <hr />
 
@@ -8,14 +8,14 @@
 
 <p>在material类中添加虚函数emitted，默认返回黑色</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>virtual vec3 emitted(float u, float v, const vec3&amp; p) const {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>virtual vec3 emitted(float u, float v, const vec3&amp; p) const {
     return vec3(0,0,0);
 }
 </code></pre></div></div>
 
 <p>diffuse_light类</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class diffuse_light : public material {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class diffuse_light : public material {
     public:
         diffuse_light(texture *a) : emit(a) {}
         virtual bool scatter(const ray&amp; r_in, const hit_record&amp; rec,
@@ -29,7 +29,7 @@
 
 <p>color函数</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec3 color(const ray&amp; r, hittable *world, int depth) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec3 color(const ray&amp; r, hittable *world, int depth) {
     hit_record rec;
     if (world-&gt;hit(r, 0.001, MAXFLOAT, rec)) {
         ray scattered;
@@ -71,7 +71,7 @@
 
 <h3 id="xyz_rech">xyz_rec.h</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef XYZRECT
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef XYZRECT
 #define XYZRECT 
 
 #include "hittable.h"
@@ -188,7 +188,7 @@ bool yz_rect::bounding_box(float t_min, float t_max, aabb&amp; box) const {
 
 <p>flip_normals.h</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class flip_normals : public hittable {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class flip_normals : public hittable {
     public:
         flip_normals(hittable *p) : ptr(p) {}
 
@@ -215,7 +215,7 @@ bool yz_rect::bounding_box(float t_min, float t_max, aabb&amp; box) const {
 
 <p>接下来渲染一个cornell_box</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *cornell_box() {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *cornell_box() {
     hittable **list = new hittable*[50];
     int i = 0;
     material *red = new lambertian(new constant_texture(vec3(0.65, 0.05, 0.05)));
@@ -238,7 +238,7 @@ bool yz_rect::bounding_box(float t_min, float t_max, aabb&amp; box) const {
 }
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec3 lookfrom(278, 278, -800);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec3 lookfrom(278, 278, -800);
 vec3 lookat(278,278,0);
 float dist_to_focus = 10.0;
 float aperture = 0.0;
@@ -254,7 +254,7 @@ camera cam(lookfrom, lookat, vec3(0,1,0), vfov, float(nx)/float(ny),aperture, di
 
 <p>长方体类的定义只需要定义8个相邻的矩形即可</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class box: public hittable {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class box: public hittable {
     public:
         box() {}
         box(const vec3&amp; p0, const vec3&amp; p1, material *ptr);
@@ -294,7 +294,7 @@ bool box::hit(const ray&amp; r, float t0, float t1, hit_record&amp; rec) const {
 
 <p>translate.h</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef TRANSLATE
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef TRANSLATE
 #define TRANSLATE 
 
 class translate : public hittable {
@@ -336,13 +336,13 @@ bool translate::bounding_box(float t0, float t1, aabb&amp; box) const {
 
 <p>旋转角度为θ</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x'=cos(θ)*x-sin(θ)*y
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x'=cos(θ)*x-sin(θ)*y
 y'=sin(θ)*x+cos(θ)*y
 </code></pre></div></div>
 
 <p>rotate.h</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef ROTATE
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef ROTATE
 #define ROTATE 
 
 class rotate_y : public hittable {
@@ -419,7 +419,7 @@ bool rotate_y::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; r
 
 <h3 id="test-1">test</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *cornell_box() {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *cornell_box() {
     hittable **list = new hittable*[50];
     int i = 0;
     material *red = new lambertian(new constant_texture(vec3(0.65, 0.05, 0.05)));

@@ -1,4 +1,4 @@
-I"k+<h1 id="层次包围盒">层次包围盒</h1>
+I"u,<h1 id="层次包围盒">层次包围盒</h1>
 
 <hr />
 
@@ -10,7 +10,7 @@
 
 <p>对多个物体，用bounding volume的关键就是，找到一个包围了所有物体的包围盒，如果光线和包围盒没有交点，那光线和这些物体都不相交，判断碰撞的伪代码如下</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (ray hits bounding object)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (ray hits bounding object)
     return whether ray hits bounded objects
 else
     return false
@@ -22,7 +22,7 @@ else
 
 <p>对此层级检测碰撞的伪代码为</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if(hit purple) //紫色
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if(hit purple) //紫色
     hit0 = hits blue enclosed objects
     hit1 = hits red enclosed objects
     if(hit0 or hit1)
@@ -61,7 +61,7 @@ else
 
 <p><img src="https://raytracing.github.io/images/fig-2-3-04.jpg" alt="" /></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>两个区间的左端点最大值小于右端点的最小值
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>两个区间的左端点最大值小于右端点的最小值
 　　有交点
 反之
 　　无交点
@@ -75,7 +75,7 @@ else
 
 <h3 id="aabbh">aabb.h</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef AABB
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef AABB
 #define AABB 
 
 #include "hittable.h"
@@ -116,7 +116,7 @@ inline bool aabb::hit(const ray&amp; r, float tmin, float tmax) const {
 
 <p>接下来我们在hittable.h中添加bounding_box纯虚函数，这样，在每个物体在计算时都会有一个包围盒了</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class hittable {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class hittable {
     public:
         virtual bool hit(
             const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const = 0;
@@ -126,7 +126,7 @@ inline bool aabb::hit(const ray&amp; r, float tmin, float tmax) const {
 
 <p>sphere的包围盒：球心加半径</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool sphere::bounding_box(float t0, float t1, aabb&amp; box) const {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool sphere::bounding_box(float t0, float t1, aabb&amp; box) const {
     box = aabb(center - vec3(radius, radius, radius),
                center + vec3(radius, radius, radius));
     return true;
@@ -135,7 +135,7 @@ inline bool aabb::hit(const ray&amp; r, float tmin, float tmax) const {
 
 <p>moving sphere的包围盒：对t0时刻的box和t1时刻的box，取一个更大的boundingbox</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool moving_sphere::bounding_box(float t0, float t1, aabb&amp; box) const {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool moving_sphere::bounding_box(float t0, float t1, aabb&amp; box) const {
     aabb box0(center(t0) - vec3(radius, radius, radius),
               center(t0) + vec3(radius, radius, radius));
     aabb box1(center(t1) - vec3(radius, radius, radius),
@@ -147,7 +147,7 @@ inline bool aabb::hit(const ray&amp; r, float tmin, float tmax) const {
 
 <p>hittable_list的包围盒：对list的每个物体计算surrounding_box，并叠加，最终返回一个包含所有物体的包围盒</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool hittable_list::bounding_box(float t0, float t1, aabb&amp; box) const {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool hittable_list::bounding_box(float t0, float t1, aabb&amp; box) const {
     if (list_size &lt; 1) return false;
     aabb temp_box;
     bool first_true = list[0]-&gt;bounding_box(t0, t1, temp_box);
@@ -166,7 +166,7 @@ inline bool aabb::hit(const ray&amp; r, float tmin, float tmax) const {
 }
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//两个包围盒叠加生成的包围盒
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//两个包围盒叠加生成的包围盒
 aabb surrounding_box(aabb box0, aabb box1) {
     vec3 small( ffmin(box0.min().x(), box1.min().x()),
                 ffmin(box0.min().y(), box1.min().y()),
@@ -180,7 +180,7 @@ aabb surrounding_box(aabb box0, aabb box1) {
 
 <h3 id="bvhh">bvh.h</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class bvh_node : public hittable {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class bvh_node : public hittable {
     public:
         bvh_node() {}
         bvh_node(hittable **l, int n, float time0, float time1);
@@ -201,7 +201,7 @@ bool bvh_node::bounding_box(float t0, float t1, aabb&amp; b) const {
 
 <p>hit函数中，如果光线击中了节点的包围盒，对于左右子树进行递归操作，直到射到叶子节点，击中重叠的部分，击中的数据用引用rec传出去。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool bvh_node::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool bvh_node::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec) const {
     if (box.hit(r, t_min, t_max)) {
         hit_record left_rec, right_rec;
         bool hit_left = left-&gt;hit(r, t_min, t_max, left_rec);
@@ -231,12 +231,12 @@ bool bvh_node::bounding_box(float t0, float t1, aabb&amp; b) const {
 
 <p>我们要将对象列表bvh_node分为两个子列表，如果划分得很好，代码的运行速度就会快很多，最佳是满二叉树的情况，步骤如下：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>随机选择一个轴
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>随机选择一个轴
 使用qsort对物体进行排序
 在每个子树中放一半物体
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bvh_node::bvh_node(hittable **l, int n, float time0, float time1) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bvh_node::bvh_node(hittable **l, int n, float time0, float time1) {
     int axis = int(3*random_double());
 
     if (axis == 0)
@@ -272,7 +272,7 @@ bool bvh_node::bounding_box(float t0, float t1, aabb&amp; b) const {
 
 <p>compare函数</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int box_x_compare (const void * a, const void * b) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int box_x_compare (const void * a, const void * b) {
     aabb box_left, box_right;
     hittable *ah = *(hittable**)a;
     hittable *bh = *(hittable**)b;

@@ -1,4 +1,4 @@
-I"3<!-- # Accustoming yourself to c++ -->
+I"t4<!-- # Accustoming yourself to c++ -->
 
 <h2 id="1-accustoming-yourself-to-c">1, Accustoming yourself to c++</h2>
 
@@ -11,21 +11,21 @@
 
 <p>#define 是预处理器指令，在定义常量时，在编译期之前就被预处理器移走，不被编译器看到，声明单纯的常量尽量用const 常量代替</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const int num = 10;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const int num = 10;
 </code></pre></div></div>
 
 <p>类内常量的创建方式</p>
 
 <ul>
   <li>static const 常量
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class A{
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class A{
   static const int num;
   int arr[num];
 }
 </code></pre></div>    </div>
   </li>
   <li>enum hack
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class A{
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class A{
   enum {num = 5};
   int arr[num];
 }
@@ -47,11 +47,11 @@
 
 <p>const修饰指针时判断常量的方式
 const出现在星号左边：被指物是常量</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const int* p = nullptr;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const int* p = nullptr;
 int const* p = nullptr;
 </code></pre></div></div>
 <p>const出现在星号右边：指针自身是常量</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int* const p = nullptr;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int* const p = nullptr;
 </code></pre></div></div>
 
 <h3 id="4-确定对象使用前已先被初始化">4. 确定对象使用前已先被初始化</h3>
@@ -76,7 +76,7 @@ int const* p = nullptr;
 
 <p>一个如下所示的空类</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Empty {};
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Empty {};
 </code></pre></div></div>
 
 <p>经C++处理过后，编译器会自动为其添加默认的构造函数，析构函数，拷贝构造函数和copy assignment运算符，且都是public的，如果人为的定义了某个函数，编译器就不会提供默认的函数，在默认构造函数中，编译器会调用base class 和 non-static成员变量的构造函数</p>
@@ -149,12 +149,12 @@ const
 
 <h3 id="16-成对使用new和delete时采用相同的形式">16. 成对使用new和delete时采用相同的形式</h3>
 
-<p><code class="highlighter-rouge">new</code>搭配<code class="highlighter-rouge">delete</code>，<code class="highlighter-rouge">new</code>中使用<code class="highlighter-rouge">[]</code>， <code class="highlighter-rouge">delete</code>中也使用<code class="highlighter-rouge">[]</code>
-delete加上 <code class="highlighter-rouge">[]</code> 后编译器会认为指针指向数组，否则它将认定指针指向单一对象</p>
+<p><code class="language-plaintext highlighter-rouge">new</code>搭配<code class="language-plaintext highlighter-rouge">delete</code>，<code class="language-plaintext highlighter-rouge">new</code>中使用<code class="language-plaintext highlighter-rouge">[]</code>， <code class="language-plaintext highlighter-rouge">delete</code>中也使用<code class="language-plaintext highlighter-rouge">[]</code>
+delete加上 <code class="language-plaintext highlighter-rouge">[]</code> 后编译器会认为指针指向数组，否则它将认定指针指向单一对象</p>
 <h3 id="17-以独立语句将newed对象置入智能指针">17. 以独立语句将newed对象置入智能指针</h3>
 
 <p>考虑如下函数</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int priority();
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int priority();
 void processWidget(std::shared_ptr&lt;Widget&gt; (new Widget),priority());
 </code></pre></div></div>
 
@@ -208,10 +208,10 @@ pass-by-renference-to-const
 <h3 id="24-若所有参数都需要类型转换请为此采用non-member函数">24. 若所有参数都需要类型转换，请为此采用non-member函数</h3>
 
 <p>考虑Rational类内重载的operator*</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rational operator*(const Rational&amp; rhs) const;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rational operator*(const Rational&amp; rhs) const;
 </code></pre></div></div>
 <p>你可以以如下形式调用operator*</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rational a, b, result;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rational a, b, result;
 result = a * b; 
 result = a * 2; // 隐式类型转换
 result = 2 * a; // error
@@ -221,7 +221,7 @@ result = 2 * a; // error
 第三条语句不能通过编译，因为只有当参数位于参数列时才是隐式转换的合格参与者，*this对象不是隐式转换的合格参与者
 <!-- 如果将构造函数声明为explicit以禁止隐式类型转换，下面的两条语句都不能通过编译 --></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rational operator*(const Rational&amp; lhs, const Rational&amp; rhs);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rational operator*(const Rational&amp; lhs, const Rational&amp; rhs);
 </code></pre></div></div>
 <p>将这个函数声明为non-member函数后，运算符左右两边的对象均可以被隐式转换</p>
 
@@ -235,14 +235,14 @@ result = 2 * a; // error
 
 <p>Ex
 定义于循环外</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Widget w;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Widget w;
 for (unsigned int i = 0; i &lt; n; ++i)
 {
     w = 取决于i的某个值;
 }
 </code></pre></div></div>
 <p>定义于循环内</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (unsigned int i = 0; i &lt; n; ++i)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (unsigned int i = 0; i &lt; n; ++i)
 {
     Wiget w = 取决于i的某个值;
 }

@@ -1,8 +1,8 @@
-I"<h1 id="向量类-vec3h">向量类 vec3.h</h1>
+I"E<h1 id="向量类-vec3h">向量类 vec3.h</h1>
 
 <p>我们构造的向量类如下</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;iostream&gt;
 #include &lt;cmath&gt;
 #include &lt;cstdlib&gt;
 
@@ -38,7 +38,7 @@ public:
 </code></pre></div></div>
 
 <p>类成员函数的实例化</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inline std::istream&amp; operator&gt;&gt;(std::istream &amp;is, vec3 &amp;t) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inline std::istream&amp; operator&gt;&gt;(std::istream &amp;is, vec3 &amp;t) {
     is &gt;&gt; t.e[0] &gt;&gt; t.e[1] &gt;&gt; t.e[2];
     return is;
 }
@@ -150,7 +150,7 @@ inline vec3 unit_vector(vec3 v) {
 
 <p>我们更改main函数中的代码来测试一下</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
 #include "vec3.h"
 int main() {
 

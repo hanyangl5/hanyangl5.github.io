@@ -1,4 +1,4 @@
-I"�<h1 id="dielectrics">Dielectrics</h1>
+I"(<h1 id="dielectrics">Dielectrics</h1>
 
 <h3 id="折射向量">折射向量</h3>
 
@@ -12,7 +12,7 @@
 
 <p>计算折射方向的代码如下</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool refract(const vec3&amp; v, const vec3&amp; n, float ni_over_nt, vec3&amp; refracted) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool refract(const vec3&amp; v, const vec3&amp; n, float ni_over_nt, vec3&amp; refracted) {
     vec3 uv = unit_vector(v);
     float dt = dot(uv, n);
     float discriminant = 1.0 - ni_over_nt*ni_over_nt*(1-dt*dt);
@@ -33,7 +33,7 @@
 
 <p>照射到物体上的光并不会全部发生折射，有一部分光会发生反射，计算反射稀疏的代码如下</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float schlick(float cosine, float ref_idx) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float schlick(float cosine, float ref_idx) {
     float r0 = (1-ref_idx) / (1+ref_idx);
     r0 = r0*r0;
     return r0 + (1-r0)*pow((1 - cosine),5);
@@ -50,7 +50,7 @@
 
 <h3 id="电解质类deilectric">电解质类deilectric</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class dielectric : public material {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class dielectric : public material {
     public:
         dielectric(float ri) : ref_idx(ri) {}
         virtual bool scatter(const ray&amp; r_in, const hit_record&amp; rec,
@@ -102,7 +102,7 @@
 
 <p>修改main函数</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>list[0] = new sphere(vec3(0,0,-1), 0.5, new metal(vec3(0.1, 0.2, 0.5),1));
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>list[0] = new sphere(vec3(0,0,-1), 0.5, new metal(vec3(0.1, 0.2, 0.5),1));
 list[1] = new sphere(vec3(0,-100.5,-1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
 list[2] = new sphere(vec3(1,0,-1), 0.5, new metal(vec3(0.8, 0.6, 0.2), 0.3));
 list[3] = new sphere(vec3(-1,0,-1), 0.5, new dielectric(1.5));

@@ -1,9 +1,9 @@
-I"�<h1 id="球体-表面法线-多物体">球体 表面法线 多物体</h1>
+I"�<h1 id="球体-表面法线-多物体">球体 表面法线 多物体</h1>
 
 <hr />
 
 <h3 id="hittable类">hittable类</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef HITTABLEH
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef HITTABLEH
 #define HITTABLEH
 
 #include "ray.h"
@@ -31,7 +31,7 @@ class hittable  {
 
 <h3 id="球体类-sphereh">球体类 sphere.h</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef SPHEREH
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef SPHEREH
 #define SPHEREH
 
 #include "hittable.h"
@@ -106,7 +106,7 @@ bool sphere::hit(const ray&amp; r, float t_min, float t_max, hit_record&amp; rec
 
 <h3 id="hittablelist类-多物体">hittablelist类 多物体</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef HITTABLELISTH
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef HITTABLELISTH
 #define HITTABLELISTH
 
 #include "hittable.h"
@@ -146,7 +146,7 @@ bool hittable_list::hit(const ray&amp; r, float t_min, float t_max,
 
 <p>修改后的main函数</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
 #include "sphere.h"
 #include "hittablelist.h"
 #include&lt;cfloat&gt;

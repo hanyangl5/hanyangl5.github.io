@@ -1,4 +1,4 @@
-I"( <h1 id="三角形的绘制">三角形的绘制</h1>
+I"�!<h1 id="三角形的绘制">三角形的绘制</h1>
 
 <hr />
 
@@ -6,7 +6,7 @@
 
 <p>要绘制一个三角形，首先我们要定义一个float类型的数组来储存三角形的三个顶点，我们将三个顶点的z坐标均设为0以表示我们要绘制的三角形是一个平面图形</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float vertices[] = {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float vertices[] = {
     -0.5f, -0.5f, 0.0f,
      0.5f, -0.5f, 0.0f,
      0.0f,  0.5f, 0.0f
@@ -19,39 +19,39 @@
 
 <h2 id="顶点缓冲对象">顶点缓冲对象</h2>
 
-<p>定义顶点数据后，我们会把它作为输入发送给顶点着色器，它会在GPU上创建一片内存储存我们的顶点数据，我们用顶点缓冲对象（<a href="https://en.wikipedia.org/wiki/Vertex_buffer_object">Vertex Buffer Object</a>，简称VBO）来操作这片内存，VBO实质上是一个<code class="highlighter-rouge">unsigned int</code>型变量，我们用<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenBuffers.xhtml"><code class="highlighter-rouge">glGenBuffer()</code></a>函数创建缓冲并将缓冲的ID返回给VBO</p>
+<p>定义顶点数据后，我们会把它作为输入发送给顶点着色器，它会在GPU上创建一片内存储存我们的顶点数据，我们用顶点缓冲对象（<a href="https://en.wikipedia.org/wiki/Vertex_buffer_object">Vertex Buffer Object</a>，简称VBO）来操作这片内存，VBO实质上是一个<code class="language-plaintext highlighter-rouge">unsigned int</code>型变量，我们用<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenBuffers.xhtml"><code class="language-plaintext highlighter-rouge">glGenBuffer()</code></a>函数创建缓冲并将缓冲的ID返回给VBO</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLuint VBO;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLuint VBO;
 glGenBuffers(1, &amp;VBO);
 </code></pre></div></div>
 
-<p>调用<code class="highlighter-rouge">glGenBuffer()</code>后，我们得到了缓冲对象的ID，但它还不是真正的缓冲对象，在缓冲对象的ID和缓冲类型通过<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml"><code class="highlighter-rouge">glBindBuffer()</code></a>函数绑定后，其对应的缓冲对象才会被创建出来</p>
+<p>调用<code class="language-plaintext highlighter-rouge">glGenBuffer()</code>后，我们得到了缓冲对象的ID，但它还不是真正的缓冲对象，在缓冲对象的ID和缓冲类型通过<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml"><code class="language-plaintext highlighter-rouge">glBindBuffer()</code></a>函数绑定后，其对应的缓冲对象才会被创建出来</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glBindBuffer(GL_ARRAY_BUFFER, VBO);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glBindBuffer(GL_ARRAY_BUFFER, VBO);
 </code></pre></div></div>
 
-<p>上文代码中的<code class="highlighter-rouge">GL_ARRAY_BUFFER</code>就是一个缓冲对象类型，一个缓冲类型只能和一个缓冲对象绑定，如果新的缓冲对象绑定了已绑定的缓冲对象类型，那么先前的绑定将会销毁。在OpenGL红宝书中给出了一个恰当的比喻：绑定对象的过程就像设置铁路的道岔开关，每一个缓冲类型中的各个对象就像不同的轨道一样，我们将开关设置为其中一个状态，那么之后的列车都会驶入这条轨道。</p>
+<p>上文代码中的<code class="language-plaintext highlighter-rouge">GL_ARRAY_BUFFER</code>就是一个缓冲对象类型，一个缓冲类型只能和一个缓冲对象绑定，如果新的缓冲对象绑定了已绑定的缓冲对象类型，那么先前的绑定将会销毁。在OpenGL红宝书中给出了一个恰当的比喻：绑定对象的过程就像设置铁路的道岔开关，每一个缓冲类型中的各个对象就像不同的轨道一样，我们将开关设置为其中一个状态，那么之后的列车都会驶入这条轨道。</p>
 
-<p>此后，我们使用的任何（在GL_ARRAY_BUFFER目标上的）缓冲调用都会用来配置当前绑定的缓冲(VBO)。然后我们可以调用<code class="highlighter-rouge">glBufferData()</code>函数，它会把之前定义的顶点数据复制到缓冲的内存中</p>
+<p>此后，我们使用的任何（在GL_ARRAY_BUFFER目标上的）缓冲调用都会用来配置当前绑定的缓冲(VBO)。然后我们可以调用<code class="language-plaintext highlighter-rouge">glBufferData()</code>函数，它会把之前定义的顶点数据复制到缓冲的内存中</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 </code></pre></div></div>
 
 <hr />
 
 <p>## 顶点数组对象</p>
 
-<p>顶点数组对象（VAO）也是一个 OpenGL 对象，它存储提供顶点数据所需的所有状态，即告诉OpenGL如何读取VBO中所储存的定点数据，创建VAO的方式和VBO类似，通过<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/"><code class="highlighter-rouge">glGenVertexArrays()</code></a>，<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindVertexArray.xhtml"><code class="highlighter-rouge">glBindVertexArray()</code></a>创建并绑定</p>
+<p>顶点数组对象（VAO）也是一个 OpenGL 对象，它存储提供顶点数据所需的所有状态，即告诉OpenGL如何读取VBO中所储存的定点数据，创建VAO的方式和VBO类似，通过<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/"><code class="language-plaintext highlighter-rouge">glGenVertexArrays()</code></a>，<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindVertexArray.xhtml"><code class="language-plaintext highlighter-rouge">glBindVertexArray()</code></a>创建并绑定</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLunit VAO;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLunit VAO;
 glGenVertexArrays(1, &amp;VAO);
 glBindVertexArray(VAO);
 </code></pre></div></div>
 
-<p>我们通过<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml"><code class="highlighter-rouge">glVertexAttribPointer()</code></a>告诉OpenGL如何解析数据
+<p>我们通过<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml"><code class="language-plaintext highlighter-rouge">glVertexAttribPointer()</code></a>告诉OpenGL如何解析数据
 <img src="https://learnopengl-cn.github.io/img/01/04/vertex_attribute_pointer.png" alt="" /></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glVertexAttribPointer(
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glVertexAttribPointer(
    0,                  // attribute 0. No particularreason for 0, but must match the layout in the shader.
    3,                 // size
    GL_FLOAT,          // type
@@ -78,7 +78,7 @@ glEnableVertexAttribArray(0);
 <h3 id="顶点着色器">顶点着色器</h3>
 <p>顶点着色器(Vertex Shader)是几个可编程着色器中的一个。现代OpenGL需要我们至少设置一个顶点和一个片段着色器。我们会配置两个非常简单的着色器来绘制一个三角形</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const char* vertexShaderSource =
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const char* vertexShaderSource =
 "#version 330 core										 \n"
 "layout(location = 0) in vec3 aPos;						  \n"
 "void main() {											\n"
@@ -88,7 +88,7 @@ glEnableVertexAttribArray(0);
 
 <h3 id="片段着色器">片段着色器</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const char* fragmentShaderSource =
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const char* fragmentShaderSource =
 "#version 330 core										  \n"
 "out vec4 FragColor;									  \n"
 "void main(){											  \n"
@@ -98,7 +98,7 @@ glEnableVertexAttribArray(0);
 
 <h3 id="编译着色器">编译着色器</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	unsigned int vertexShader;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &amp;vertexShaderSource, NULL);
 	glCompileShader(vertexShader);
@@ -109,7 +109,7 @@ glEnableVertexAttribArray(0);
 	glCompileShader(fragmentShader);
 </code></pre></div></div>
 <h3 id="调用着色器程序">调用着色器程序</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	unsigned int shaderProgram;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	unsigned int shaderProgram;
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
@@ -123,7 +123,7 @@ glEnableVertexAttribArray(0);
 
 <p>要想绘制我们想要的物体，OpenGL给我们提供了glDrawArrays函数，它使用当前激活的着色器，之前定义的顶点属性配置，和VBO的顶点数据（通过VAO间接绑定）来绘制图元。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//绘制代码（渲染循环中）
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//绘制代码（渲染循环中）
 
 glUseProgram(shaderProgram);
 glBindVertexArray(VAO);

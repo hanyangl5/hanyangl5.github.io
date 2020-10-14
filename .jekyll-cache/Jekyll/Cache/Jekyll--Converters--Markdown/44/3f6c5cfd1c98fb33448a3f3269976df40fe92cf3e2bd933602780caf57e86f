@@ -1,10 +1,10 @@
-I"�<h1 id="封面图的渲染">封面图的渲染</h1>
+I"�<h1 id="封面图的渲染">封面图的渲染</h1>
 
 <hr />
 
 <p>一系列随机的球体</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *random_scene() {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *random_scene() {
     int n = 500;
     hittable **list = new hittable*[n+1];
     list[0] =  new sphere(vec3(0,-1000,0), 1000, new lambertian(vec3(0.5, 0.5, 0.5)));
@@ -48,7 +48,7 @@
 
 <p>修改main函数</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 int main() {
 
     int nx=600,ny=300,ns=100;

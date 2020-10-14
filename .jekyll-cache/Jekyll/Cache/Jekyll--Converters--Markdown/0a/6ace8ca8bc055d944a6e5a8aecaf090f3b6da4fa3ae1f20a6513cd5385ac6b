@@ -1,4 +1,4 @@
-I"(<p>由程序产生噪声的方法大致可以分为两类：</p>
+I"�<p>由程序产生噪声的方法大致可以分为两类：</p>
 
 <ul>
   <li>
@@ -58,7 +58,7 @@
 
 <h3 id="perlinh">perlin.h</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static vec3* perlin_generate() {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static vec3* perlin_generate() {
     vec3 *p = new vec3[256];
     for (int i = 0; i &lt; 256; ++i) {
         double x_random = 2*random_double() - 1;
@@ -72,7 +72,7 @@
 
 <p>perlin_generate返回一个长度为1的随机vec3数组</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void permute(int *p, int n) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void permute(int *p, int n) {
     for (int i = n-1; i &gt; 0; i--) {
         int target = int(random_double()*(i+1));
         int tmp = p[i];
@@ -85,7 +85,7 @@
 
 <p>打乱数组p的顺序，经测试，std::random_shuffle也可以达到同样的效果</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static int* perlin_generate_perm() {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static int* perlin_generate_perm() {
     int * p = new int[256];
     for (int i = 0; i &lt; 256; i++)
         p[i] = i;
@@ -96,7 +96,7 @@
 
 <p>perlin_generate_perm返回一个乱序无重复的从0~255的数组</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inline float perlin_interp(vec3 c[2][2][2], float u, float v, float w) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inline float perlin_interp(vec3 c[2][2][2], float u, float v, float w) {
     //缓和曲线
     float uu = u*u*(3-2*u);
     float vv = v*v*(3-2*v);
@@ -117,7 +117,7 @@
 
 <p>perlin类</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class perlin {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class perlin {
     public:
         float noise(const vec3&amp; p) const;
         static vec3 *ranvec;
@@ -154,7 +154,7 @@ float perlin::noise(const vec3&amp; p) const {
 
 <p>perlin_noise材质</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class noise_texture : public texture {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class noise_texture : public texture {
     public:
         noise_texture() {}
         noise_texture(float sc) : scale(sc) {}
@@ -173,7 +173,7 @@ float perlin::noise(const vec3&amp; p) const {
 
 <h3 id="test">test</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *two_perlin_spheres() {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *two_perlin_spheres() {
     texture* pertext = new noise_texture(10);
     texture* simple=new constant_texture(vec3(0.0,0.0,0.0));
     hittable **list = new hittable*[2];
@@ -183,7 +183,7 @@ float perlin::noise(const vec3&amp; p) const {
 }
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec3 lookfrom(13,4,3);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec3 lookfrom(13,4,3);
 vec3 lookat(0,2,0);
 float dist_to_focus = 10.0;
 float aperture = 0.0;
@@ -201,7 +201,7 @@ hittable* world=two_perlin_spheres();
 
 <h3 id="turb">turb</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float turb(const vec3 &amp;p, int depth = 7) const {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float turb(const vec3 &amp;p, int depth = 7) const {
     float accum = 0;
     vec3 temp_p = p;
     float weight = 1.0;
@@ -215,7 +215,7 @@ hittable* world=two_perlin_spheres();
 }
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class noise_texture : public texture {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class noise_texture : public texture {
     public:
         noise_texture() {}
         noise_texture(float sc) : scale(sc) {}

@@ -1,7 +1,7 @@
-I"�
+I"�
 <p>#封面图的渲染</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *final() {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *final() {
     int nb = 20;
     hittable **list = new hittable*[30];
     hittable **boxlist = new hittable*[10000];

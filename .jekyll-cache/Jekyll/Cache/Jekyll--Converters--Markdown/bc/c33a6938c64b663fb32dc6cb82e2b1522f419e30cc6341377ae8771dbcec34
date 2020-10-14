@@ -1,4 +1,4 @@
-I"�<h1 id="光线-相机-背景">光线 相机 背景</h1>
+I"<h1 id="光线-相机-背景">光线 相机 背景</h1>
 
 <hr />
 
@@ -12,7 +12,7 @@
 
 <p>ray类的代码如下</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef RAYH
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef RAYH
 #define RAYH
 #include "vec3.h"
 
@@ -36,7 +36,7 @@ class ray
 
 <h3 id="color函数">color函数</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec3 color(const ray&amp; r) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vec3 color(const ray&amp; r) {
     vec3 unit_direction = unit_vector(r.direction());
     float t = 0.5*(unit_direction.y() + 1.0);
     return (1.0-t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.5, 0.7, 1.0);
@@ -52,7 +52,7 @@ class ray
 
 <p>使用右手坐标系，我们光线的起点设为(0,0,0)，屏幕的坐下角为(-2,-1,-1)，屏幕的宽，高分别为4，2</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    vec3 lower_left_corner(-2.0, -1.0, -1.0);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    vec3 lower_left_corner(-2.0, -1.0, -1.0);
     vec3 horizontal(4.0, 0.0, 0.0);
     vec3 vertical(0.0, 2.0, 0.0);
     vec3 origin(0.0, 0.0, 0.0);
@@ -66,7 +66,7 @@ class ray
 
 <p>修改后的main函数如下</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
 #include "ray.h"
 
 vec3 color(const ray&amp; r) {

@@ -1,10 +1,10 @@
-I"n'<h1 id="创建窗口">创建窗口</h1>
+I"R(<h1 id="创建窗口">创建窗口</h1>
 
 <hr />
 
 <p>首先，包含OpenGL所用的头文件</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;glad/glad.h&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;glad/glad.h&gt;
 #include &lt;GLFW/glfw3.h&gt;
 </code></pre></div></div>
 
@@ -16,7 +16,7 @@
 
 <!-- more -->
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//初始化函数库
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//初始化函数库
 glfwInit();
 
 //将主版本号(Major)和次版本号(Minor)都设为3
@@ -36,7 +36,7 @@ glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 <p>如果使用的是Mac OS X系统，你还需要加下面这行代码到你的初始化代码中这些配置才能起作用</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef __APPLE__
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef __APPLE__
 glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); 
 #endif
 </code></pre></div></div>
@@ -47,7 +47,7 @@ glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 <p>接下来我们创建一个窗口对象，这个窗口对象存放了所有和窗口相关的数据，而且会被GLFW的其他函数频繁地用到。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
 glfwCreateWindow函数需要窗口的宽和高作为它的前两个参数。第三个参数表示这个窗口的名称
 创建完窗口我们就可以通知GLFW将我们窗口的上下文设置为当前线程的主上下文了。
 
@@ -56,7 +56,7 @@ glfwMakeContextCurrent(window);
 
 <p>GLAD是用来管理OpenGL的函数指针的，在调用任何OpenGL的函数之前我们需要初始化GLAD。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 {
 	std::cout &lt;&lt; "Failed to initialize GLAD" &lt;&lt; std::endl;
 	return -1;
@@ -65,7 +65,7 @@ glfwMakeContextCurrent(window);
 
 <p>在我们开始渲染之前还有一件重要的事情要做，我们必须告诉OpenGL渲染窗口的尺寸大小，即视口(Viewport)，这样OpenGL才只能知道怎样根据窗口大小显示数据和坐标。我们可以通过调用glViewport函数来设置窗口的维度(Dimension)</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glViewport(0, 0, 800, 600);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glViewport(0, 0, 800, 600);
 </code></pre></div></div>
 
 <p>glViewport函数前两个参数控制窗口左下角的位置。第三个和第四个参数控制渲染窗口的宽度和高度（像素）。</p>
@@ -80,7 +80,7 @@ glfwMakeContextCurrent(window);
 
 <p>我们希望程序在我们主动关闭它之前不断绘制图像并能够接受用户输入。因此，我们需要在程序中添加一个while循环，我们可以把它称之为渲染循环(Render Loop)，</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>while(!glfwWindowShouldClose(window))
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>while(!glfwWindowShouldClose(window))
 {
     glfwSwapBuffers(window);
     glfwPollEvents();    
@@ -116,7 +116,7 @@ glfwMakeContextCurrent(window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 这个帧缓冲大小函数需要一个GLFWwindow作为它的第一个参数，以及两个整数表示窗口的新维度。每当窗口改变大小，GLFW会调用这个函数并填充相应的参数供你处理。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
@@ -124,7 +124,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 <p>我们还需要注册这个函数，告诉GLFW我们希望每当窗口调整大小的时候调用这个函数：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 </code></pre></div></div>
 
 <p>当窗口被第一次显示的时候framebuffer_size_callback也会被调用。对于视网膜(Retina)显示屏，width和height都会明显比原输入值更高一点。
@@ -136,7 +136,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 <p>我们同样也希望能够在GLFW中实现一些输入控制，这可以通过使用GLFW的几个输入函数来完成。我们将会使用GLFW的glfwGetKey函数，它需要一个窗口以及一个按键作为输入。这个函数将会返回这个按键是否正在被按下。我们将创建一个processInput函数来让所有的输入代码保持整洁。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void processInput(GLFWwindow *window)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
       glfwSetWindowShouldClose(window, true);
@@ -151,7 +151,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 <p>为了测试一切都正常工作，我们使用一个自定义的颜色清空屏幕。在每个新的渲染迭代开始的时候我们总是希望清屏，否则我们仍能看见上一次迭代的渲染结果（这可能是你想要的效果，但通常这不是）。我们可以通过调用glClear函数来清空屏幕的颜色缓冲，它接受一个缓冲位(Buffer Bit)来指定要清空的缓冲，可能的缓冲位有GL_COLOR_BUFFER_BIT，GL_DEPTH_BUFFER_BIT和GL_STENCIL_BUFFER_BIT。由于现在我们只关心颜色值，所以我们只清空颜色缓冲。除了glClear之外，我们还调用了glClearColor来设置清空屏幕所用的颜色。当调用glClear函数，清除颜色缓冲之后，整个颜色缓冲都会被填充为glClearColor里所设置的颜色。在这里，我们将屏幕设置为了类似黑板的深蓝绿色。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 glClear(GL_COLOR_BUFFER_BIT);
 </code></pre></div></div>
 
@@ -161,7 +161,7 @@ glClear(GL_COLOR_BUFFER_BIT);
 
 <p>当渲染循环结束后我们需要正确释放/删除之前的分配的所有资源。我们可以在main函数的最后调用glfwTerminate函数来完成。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glfwTerminate();
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glfwTerminate();
 return 0;
 </code></pre></div></div>
 

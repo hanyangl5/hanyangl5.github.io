@@ -1,11 +1,11 @@
-I"b<h1 id="输出图片">输出图片</h1>
+I"u<h1 id="输出图片">输出图片</h1>
 
 <p>原文中使用的图片是ppm格式，而大多数电脑中不支持ppm格式的读取，因此我使用了一个开源库svpng，可以将rgb颜色信息直接保存到png文件中</p>
 
 <p>项目地址: <a href="https://github.com/miloyip/svpng">svpng</a></p>
 
 <p>将颜色信息写入png文件的的C++代码如下</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "svpng.inc"
 
 int main() {
 

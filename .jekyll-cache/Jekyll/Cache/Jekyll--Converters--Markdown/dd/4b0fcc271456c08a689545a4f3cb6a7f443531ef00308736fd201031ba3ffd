@@ -1,4 +1,4 @@
-I"�<h1 id="烟雾">烟雾</h1>
+I"�<h1 id="烟雾">烟雾</h1>
 
 <p>光照射到volume上时，既有可能直接穿过，又可能发生反射，折射。光线在烟雾体中能传播多远，是由volume的密度决定的，密度越高，光线穿透性越差，光线传播的距离也越短。</p>
 
@@ -12,7 +12,7 @@
 
 <p>iostropic.h</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class isotropic : public material {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class isotropic : public material {
     public:
         isotropic(texture *a) : albedo(a) {}
         virtual bool scatter(
@@ -35,7 +35,7 @@
 
 <p>constant_medium.h</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class constant_medium : public hittable {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class constant_medium : public hittable {
     public:
         constant_medium(hittable *b, float d, texture *a) : boundary(b), density(d) {
             phase_function = new isotropic(a);
@@ -102,7 +102,7 @@ const {
 
 <h3 id="test">test</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *cornell_smoke() {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hittable *cornell_smoke() {
     hittable **list = new hittable*[8];
     int i = 0;
     material *red = new lambertian(new constant_texture(vec3(0.65, 0.05, 0.05)));
