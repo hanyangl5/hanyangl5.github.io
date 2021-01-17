@@ -1,0 +1,595 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<link rel="stylesheet" href="/github-markdown-css/github-css.css">
+
+<meta content="text/html" charset="UTF-8">
+
+
+<div class="gist">
+    <style class="formula-style">
+        svg.gh-md-to-html-formula {
+            fill: black;
+        }
+    </style>
+    <div class="gist-file"> <!-- This is the class that is responsible for the boxing! -->
+        <div class="gist-data">
+            <div class="js-gist-file-update-container js-task-list-container file-box">
+                <div id="article-cplusplus" class="file">
+                    <div id="file-docker-image-pull-md-readme" class="Box-body readme blob js-code-block-container p-5 p-xl-6"
+                         style="margin-left: 40px; margin-right: 40px; margin-top: 20px; margin-bottom: 20px">
+                        <article class="markdown-body entry-content container-lg" itemprop="text">
+                            <p>一些关于C++的notes，包含Effective C++，inside C++ Object Model，Modern C++ features</p>
+
+<h2>
+<a id="user-content-1-accustoming-yourself-to-c" class="anchor" href="#1-accustoming-yourself-to-c" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1, Accustoming yourself to c++</h2>
+<h3>
+<a id="user-content-1-视c为一个语言联邦" class="anchor" href="#1-%E8%A7%86c%E4%B8%BA%E4%B8%80%E4%B8%AA%E8%AF%AD%E8%A8%80%E8%81%94%E9%82%A6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. 视C++为一个语言联邦</h3>
+<p>C++经过数十年的发展，已经难以用单一语言描述，而是从四个次语言组成的语言联邦
+这个联邦包括：C风格的C++，Object Oriented C++，Template C++，STL</p>
+<h3>
+<a id="user-content-2-用-constenuminilne代替-define" class="anchor" href="#2-%E7%94%A8-constenuminilne%E4%BB%A3%E6%9B%BF-define" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. 用 const，enum，inilne，代替 #define</h3>
+<p>#define 是预处理器指令，在定义常量时，在编译期之前就被预处理器移走，不被编译器看到，声明单纯的常量尽量用const 常量代替</p>
+<pre><code>const int num = 10;
+</code></pre>
+<p>类内常量的创建方式</p>
+<ul>
+<li>static const 常量</li>
+</ul>
+<pre><code>class A{
+    static const int num;
+    int arr[num];
+}
+</code></pre>
+<ul>
+<li>enum hack</li>
+</ul>
+<pre><code>class A{
+    enum {num = 5};
+    int arr[num];
+}
+</code></pre>
+<p>enum hack优点：
+更像#define，不会导致不必要的内存反派
+是一个常量，无reference和pointer</p>
+<blockquote>
+<p>#define无作用域概念，不能在类内使用</p>
+</blockquote>
+<p>template inline函数兼顾安全性和效率，可用于替代形似函数的宏（macro）</p>
+<h3>
+<a id="user-content-3-尽量使用-const" class="anchor" href="#3-%E5%B0%BD%E9%87%8F%E4%BD%BF%E7%94%A8-const" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3. 尽量使用 const</h3>
+<p>const修饰指针时判断常量的方式
+const出现在星号左边：被指物是常量</p>
+<pre><code>const int* p = nullptr;
+int const* p = nullptr;
+</code></pre>
+<p>const出现在星号右边：指针自身是常量</p>
+<pre><code>int* const p = nullptr;
+</code></pre>
+<h3>
+<a id="user-content-4-确定对象使用前已先被初始化" class="anchor" href="#4-%E7%A1%AE%E5%AE%9A%E5%AF%B9%E8%B1%A1%E4%BD%BF%E7%94%A8%E5%89%8D%E5%B7%B2%E5%85%88%E8%A2%AB%E5%88%9D%E5%A7%8B%E5%8C%96" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4. 确定对象使用前已先被初始化</h3>
+<p>永远在对象使用前将它初始化
+确保构造函数将对象的每一个成员都初始化</p>
+<p>推荐使用member initialization（成员初值列）替换赋值动作
+在构造函数中做赋值动作首先调用default构造函数设初值，再对其赋值
+初值列的参数直接被用于构造函数的实参，效率更高</p>
+<p>c++有固定的成员初始化次序，初值列列出的成员变量次序应与class声明次序相同</p>
+<p>C++对不同编译单元的non-local static 对象初始化次序无明确定义
+请以local static 对象替代non-local static 对象</p>
+<hr>
+<h2>
+<a id="user-content-2-constructors-and-assignment-operations" class="anchor" href="#2-constructors-and-assignment-operations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2, Constructors, and Assignment Operations</h2>
+<h3>
+<a id="user-content-5-了解c默认编写并调用那些函数" class="anchor" href="#5-%E4%BA%86%E8%A7%A3c%E9%BB%98%E8%AE%A4%E7%BC%96%E5%86%99%E5%B9%B6%E8%B0%83%E7%94%A8%E9%82%A3%E4%BA%9B%E5%87%BD%E6%95%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5. 了解C++默认编写并调用那些函数</h3>
+<p>一个如下所示的空类</p>
+<pre><code>class Empty {};
+</code></pre>
+<p>经C++处理过后，编译器会自动为其添加默认的构造函数，析构函数，拷贝构造函数和copy assignment运算符，且都是public的，如果人为的定义了某个函数，编译器就不会提供默认的函数，在默认构造函数中，编译器会调用base class 和 non-static成员变量的构造函数</p>
+<p>C++11可以通过default关键字强制使用编译器提供的函数</p>
+<p>如果base class将copy assignment运算符声明为private，编译器会拒绝为derived class生成默认copy assignment运算符</p>
+
+<p>如果class内有reference/pointer/const成员变量，使用默认的copy assignment运算符时编译器会拒绝编译，必须自己定义copy assignment运算符，</p>
+<h3>
+<a id="user-content-6-若不想使用编译器自动生成的函数应该明确拒绝" class="anchor" href="#6-%E8%8B%A5%E4%B8%8D%E6%83%B3%E4%BD%BF%E7%94%A8%E7%BC%96%E8%AF%91%E5%99%A8%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E7%9A%84%E5%87%BD%E6%95%B0%E5%BA%94%E8%AF%A5%E6%98%8E%E7%A1%AE%E6%8B%92%E7%BB%9D" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>6. 若不想使用编译器自动生成的函数，应该明确拒绝</h3>
+<p>将构造函数，析构函数，拷贝构造函数和copy assignment运算符声明为private且不定义以禁止调用</p>
+<p>C++11方法：使用delete关键字禁用类和函数</p>
+<p>将class继承自uncopyable class以禁止拷贝构造</p>
+<h3>
+<a id="user-content-7-为多态基类声明virtual析构函数" class="anchor" href="#7-%E4%B8%BA%E5%A4%9A%E6%80%81%E5%9F%BA%E7%B1%BB%E5%A3%B0%E6%98%8Evirtual%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>7. 为多态基类声明virtual析构函数</h3>
+<p>多态性质的base class应该声明一个virtual析构函数，
+如果设计的class没有多态性，就不该声明virtual析构函数函数</p>
+<p>C++11可以使用final关键字禁止类和成员函数的派生</p>
+<h3>
+<a id="user-content-8-别让异常逃离析构函数" class="anchor" href="#8-%E5%88%AB%E8%AE%A9%E5%BC%82%E5%B8%B8%E9%80%83%E7%A6%BB%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>8. 别让异常逃离析构函数</h3>
+<p>析构函数不要吐出异常，会引发内存泄漏</p>
+<h3>
+<a id="user-content-9--绝不再构造和析构函数中调用virtual函数" class="anchor" href="#9--%E7%BB%9D%E4%B8%8D%E5%86%8D%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E4%B8%AD%E8%B0%83%E7%94%A8virtual%E5%87%BD%E6%95%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>9.  绝不再构造和析构函数中调用virtual函数</h3>
+<p>在构造函数期间调用的virtual函数不下降至derived class层，因为base class的构造函数会先调用，析构函数同理</p>
+<h3>
+<a id="user-content-10-令operator-返回-reference-to-this" class="anchor" href="#10-%E4%BB%A4operator-%E8%BF%94%E5%9B%9E-reference-to-this" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>10. 令operator= 返回 reference to *this</h3>
+<p>允许连锁赋值</p>
+<h3>
+<a id="user-content-11-在operator-中处理自我赋值" class="anchor" href="#11-%E5%9C%A8operator-%E4%B8%AD%E5%A4%84%E7%90%86%E8%87%AA%E6%88%91%E8%B5%8B%E5%80%BC" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>11. 在operator= 中处理自我赋值</h3>
+<p>用证同测试检验自我赋值</p>
+<h3>
+<a id="user-content-12-复制对象时勿忘其每一个成分" class="anchor" href="#12-%E5%A4%8D%E5%88%B6%E5%AF%B9%E8%B1%A1%E6%97%B6%E5%8B%BF%E5%BF%98%E5%85%B6%E6%AF%8F%E4%B8%80%E4%B8%AA%E6%88%90%E5%88%86" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>12. 复制对象时勿忘其每一个成分</h3>
+<p>在derived class的copy assignment和拷贝构造函数中调用base class的相应函数</p>
+<p>在copy assignment运算符中调用拷贝构造函数和在拷贝构造函数中调用copy assignment运算符都是不可取的</p>
+<hr>
+<h2>
+<a id="user-content-3-resources-management" class="anchor" href="#3-resources-management" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3, Resources Management</h2>
+<h3>
+<a id="user-content-13-以对象管理资源" class="anchor" href="#13-%E4%BB%A5%E5%AF%B9%E8%B1%A1%E7%AE%A1%E7%90%86%E8%B5%84%E6%BA%90" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>13. 以对象管理资源</h3>
+<p>获得资源后立刻放进管理对象内</p>
+<p>管理对象运用析构函数确保资源被释放</p>
+<h3>
+<a id="user-content-14-在资源管理类中小心copying行为" class="anchor" href="#14-%E5%9C%A8%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B1%BB%E4%B8%AD%E5%B0%8F%E5%BF%83copying%E8%A1%8C%E4%B8%BA" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>14. 在资源管理类中小心copying行为</h3>
+<h3>
+<a id="user-content-15-在资源管理类中提供对原始资源的访问" class="anchor" href="#15-%E5%9C%A8%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B1%BB%E4%B8%AD%E6%8F%90%E4%BE%9B%E5%AF%B9%E5%8E%9F%E5%A7%8B%E8%B5%84%E6%BA%90%E7%9A%84%E8%AE%BF%E9%97%AE" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>15. 在资源管理类中提供对原始资源的访问</h3>
+<p>提供访问原始资源（private成员）的函数</p>
+<h3>
+<a id="user-content-16-成对使用new和delete时采用相同的形式" class="anchor" href="#16-%E6%88%90%E5%AF%B9%E4%BD%BF%E7%94%A8new%E5%92%8Cdelete%E6%97%B6%E9%87%87%E7%94%A8%E7%9B%B8%E5%90%8C%E7%9A%84%E5%BD%A2%E5%BC%8F" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>16. 成对使用new和delete时采用相同的形式</h3>
+<p><code>new</code>搭配<code>delete</code>，<code>new</code>中使用<code>[]</code>， <code>delete</code>中也使用<code>[]</code>
+delete加上 <code>[]</code> 后编译器会认为指针指向数组，否则它将认定指针指向单一对象</p>
+<h3>
+<a id="user-content-17-以独立语句将newed对象置入智能指针" class="anchor" href="#17-%E4%BB%A5%E7%8B%AC%E7%AB%8B%E8%AF%AD%E5%8F%A5%E5%B0%86newed%E5%AF%B9%E8%B1%A1%E7%BD%AE%E5%85%A5%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>17. 以独立语句将newed对象置入智能指针</h3>
+<p>考虑如下函数</p>
+<pre><code>int priority();
+void processWidget(std::shared_ptr&lt;Widget&gt; (new Widget),priority());
+</code></pre>
+<p>调用processWidget函数之后，编译器会做以下三件事</p>
+<ul>
+<li>执行new Widget</li>
+<li>调用priority</li>
+<li>执行std::shared_ptr构造函数</li>
+</ul>
+<p>编译器只能确定咋执行std::shared_ptr构造函数前执行new Widget</p>
+<p>如果priority在std::shared_ptr之前调用，且抛出异常，new Widget产生的指针会丢失，导致了内存泄漏</p>
+<p>使用单独语句将new产生的指针置入shared_ptr解决这个问题</p>
+<hr>
+<h2>
+<a id="user-content-4-designs-and-declarations" class="anchor" href="#4-designs-and-declarations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4, Designs and Declarations</h2>
+<h3>
+<a id="user-content-18-让接口容易被正确使用不易被误用" class="anchor" href="#18-%E8%AE%A9%E6%8E%A5%E5%8F%A3%E5%AE%B9%E6%98%93%E8%A2%AB%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8D%E6%98%93%E8%A2%AB%E8%AF%AF%E7%94%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>18. 让接口容易被正确使用，不易被误用</h3>
+<p>好的接口很容易被正确使用，不容易被误用。努力达成这些性质(例如 explicit关键字)
+“促进正确使用”的办法包括接口的一致性，以及与内置类型的行为兼容
+“防治误用”b包括建立新类型，限制类型上的操作，束缚对象值，以及消除用户的资源管理责任
+shared_ptr支持定制deleter，需要灵活使用</p>
+<h3>
+<a id="user-content-19-设计class犹如设计type" class="anchor" href="#19-%E8%AE%BE%E8%AE%A1class%E7%8A%B9%E5%A6%82%E8%AE%BE%E8%AE%A1type" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>19. 设计class犹如设计type</h3>
+<h3>
+<a id="user-content-20-宁以pass-by-renference-to-const替换pass-by-value" class="anchor" href="#20-%E5%AE%81%E4%BB%A5pass-by-renference-to-const%E6%9B%BF%E6%8D%A2pass-by-value" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>20. 宁以pass-by-renference-to-const替换pass-by-value</h3>
+<p>pass-by-value:
+会调用对象内所有成员以及base class的构造/析构函数，
+pass-by-renference-to-const
+没有新对象被创建</p>
+<p>slicing问题
+当一个derived class对象以pass-by-value传递给一个接受base class的函数，derived class对象会仅留下一个base对象，特化性质全部被slice掉</p>
+<p>对内置类型/STL迭代器/函数对象，使用pass-by-value往往更高效一些，其他情况下，尽量使用pass-by-renference-to-const</p>
+<h3>
+<a id="user-content-21-必须返回对象时别妄想返回reference" class="anchor" href="#21-%E5%BF%85%E9%A1%BB%E8%BF%94%E5%9B%9E%E5%AF%B9%E8%B1%A1%E6%97%B6%E5%88%AB%E5%A6%84%E6%83%B3%E8%BF%94%E5%9B%9Ereference" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>21. 必须返回对象时，别妄想返回reference</h3>
+<p>不要返回一个指向local 对象的reference，因为它在作用域结束后就被销毁</p>
+<h3>
+<a id="user-content-22-将成员变量声明为private" class="anchor" href="#22-%E5%B0%86%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E%E4%B8%BAprivate" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>22. 将成员变量声明为private</h3>
+<h3>
+<a id="user-content-23-宁以non-membernon-friend替换member函数" class="anchor" href="#23-%E5%AE%81%E4%BB%A5non-membernon-friend%E6%9B%BF%E6%8D%A2member%E5%87%BD%E6%95%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>23. 宁以non-member，non-friend替换member函数</h3>
+<p>member函数的对立面：non-member函数而不是friend函数
+使用non-member，non-friend具有比friend函数更好的封装性</p>
+<h3>
+<a id="user-content-24-若所有参数都需要类型转换请为此采用non-member函数" class="anchor" href="#24-%E8%8B%A5%E6%89%80%E6%9C%89%E5%8F%82%E6%95%B0%E9%83%BD%E9%9C%80%E8%A6%81%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E8%AF%B7%E4%B8%BA%E6%AD%A4%E9%87%87%E7%94%A8non-member%E5%87%BD%E6%95%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>24. 若所有参数都需要类型转换，请为此采用non-member函数</h3>
+<p>考虑Rational类内重载的operator*</p>
+<pre><code>Rational operator*(const Rational&amp; rhs) const;
+</code></pre>
+<p>你可以以如下形式调用operator*</p>
+<pre><code>Rational a, b, result;
+result = a * b; 
+result = a * 2; // &amp;#38544;&amp;#24335;&amp;#31867;&amp;#22411;&amp;#36716;&amp;#25442;
+result = 2 * a; // error
+</code></pre>
+<p>第二条语句中编译器自动将int类型的2转换为了Rational类型
+第三条语句不能通过编译，因为只有当参数位于参数列时才是隐式转换的合格参与者，*this对象不是隐式转换的合格参与者</p>
+
+<pre><code>Rational operator*(const Rational&amp; lhs, const Rational&amp; rhs);
+</code></pre>
+<p>将这个函数声明为non-member函数后，运算符左右两边的对象均可以被隐式转换</p>
+<h3>
+<a id="user-content-25--考虑写一个不抛出异常的swap函数" class="anchor" href="#25--%E8%80%83%E8%99%91%E5%86%99%E4%B8%80%E4%B8%AA%E4%B8%8D%E6%8A%9B%E5%87%BA%E5%BC%82%E5%B8%B8%E7%9A%84swap%E5%87%BD%E6%95%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>25.  考虑写一个不抛出异常的swap函数</h3>
+<hr>
+<h2>
+<a id="user-content-5implementations" class="anchor" href="#5implementations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5，Implementations</h2>
+<h3>
+<a id="user-content-26-尽可能延后变量定义式的出现时间" class="anchor" href="#26-%E5%B0%BD%E5%8F%AF%E8%83%BD%E5%BB%B6%E5%90%8E%E5%8F%98%E9%87%8F%E5%AE%9A%E4%B9%89%E5%BC%8F%E7%9A%84%E5%87%BA%E7%8E%B0%E6%97%B6%E9%97%B4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>26. 尽可能延后变量定义式的出现时间</h3>
+<p>Ex
+定义于循环外</p>
+<pre><code>Widget w;
+for (unsigned int i = 0; i &lt; n; ++i)
+{
+    w = &amp;#21462;&amp;#20915;&amp;#20110;i&amp;#30340;&amp;#26576;&amp;#20010;&amp;#20540;;
+}
+</code></pre>
+<p>定义于循环内</p>
+<pre><code>for (unsigned int i = 0; i &lt; n; ++i)
+{
+    Wiget w = &amp;#21462;&amp;#20915;&amp;#20110;i&amp;#30340;&amp;#26576;&amp;#20010;&amp;#20540;;
+}
+</code></pre>
+<p>第一种写法，调用了一次ctor，n次copy assignment，一次dtor
+第二种写法，调用了n次ctor和dtor</p>
+<p>除非（1）你知道赋值成本比构造+析构成本低（2）你正在处理代码中高度敏感的部分
+否则应该使用第二种写法</p>
+<h3>
+<a id="user-content-27-尽量少做转型动作" class="anchor" href="#27-%E5%B0%BD%E9%87%8F%E5%B0%91%E5%81%9A%E8%BD%AC%E5%9E%8B%E5%8A%A8%E4%BD%9C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>27 尽量少做转型动作</h3>
+<p>如果可以，尽量避免转型，特别是在注重效率的代码中避免dynamic_cast。
+如果转型是必要的，试着将它隐藏于某个函数后。客户可以随时调用该函数，而不需要将转型放入自己的代码。
+使用现代C++风格的转型</p>
+<h3>
+<a id="user-content-28-避免返回handles指向对象内部成分" class="anchor" href="#28-%E9%81%BF%E5%85%8D%E8%BF%94%E5%9B%9Ehandles%E6%8C%87%E5%90%91%E5%AF%B9%E8%B1%A1%E5%86%85%E9%83%A8%E6%88%90%E5%88%86" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>28 避免返回handles指向对象内部成分</h3>
+<p>成员函数切勿返回自身指针/引用，会破坏封装性</p>
+<h3>
+<a id="user-content-29-为异常安全而努力是值得的" class="anchor" href="#29-%E4%B8%BA%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E8%80%8C%E5%8A%AA%E5%8A%9B%E6%98%AF%E5%80%BC%E5%BE%97%E7%9A%84" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>29 为“异常安全”而努力是值得的</h3>
+<h3>
+<a id="user-content-30-透彻了解inline函数的里里外外" class="anchor" href="#30-%E9%80%8F%E5%BD%BB%E4%BA%86%E8%A7%A3inline%E5%87%BD%E6%95%B0%E7%9A%84%E9%87%8C%E9%87%8C%E5%A4%96%E5%A4%96" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>30 透彻了解inline函数的里里外外</h3>
+<p>inline应该限制在小的，频繁调用的函数上
+inline只是给编译器的建议，编译器不一定执行</p>
+<h3>
+<a id="user-content-31-将文件的编译依存关系降到最低" class="anchor" href="#31-%E5%B0%86%E6%96%87%E4%BB%B6%E7%9A%84%E7%BC%96%E8%AF%91%E4%BE%9D%E5%AD%98%E5%85%B3%E7%B3%BB%E9%99%8D%E5%88%B0%E6%9C%80%E4%BD%8E" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>31 将文件的编译依存关系降到最低</h3>
+<h2>
+<a id="user-content-6inheritance-and-object-oriented-design" class="anchor" href="#6inheritance-and-object-oriented-design" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>6，Inheritance and Object-Oriented Design</h2>
+<h3>
+<a id="user-content-32-确定你得public继承额外塑膜出is-a关系" class="anchor" href="#32-%E7%A1%AE%E5%AE%9A%E4%BD%A0%E5%BE%97public%E7%BB%A7%E6%89%BF%E9%A2%9D%E5%A4%96%E5%A1%91%E8%86%9C%E5%87%BAis-a%E5%85%B3%E7%B3%BB" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>32 确定你得public继承额外塑膜出is-a关系</h3>
+<p>共有继承一位is-a关系，适用于base classes上的每一件事情也一定适用于derived class上
+，每一个derived class对象也是base class对象</p>
+<p>总结自《深入理解C++对象模型》第一章-关于对象</p>
+<h3>
+<a id="user-content-c对象模式" class="anchor" href="#c%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%BC%8F" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>C++对象模式</h3>
+<p>在C++中如果一个class/struct 是POD（plain old data），即没有显式构造/析构/拷贝构造函数和virtual函数，那么其内存布局将会和C语言相同，元素按照声明的顺序顺序排列。当类内含virtual函数时，每一个class会产生一个virtual pointer 指向virtual table，virtual table包含了虚函数的地址（经笔者验证gcc-8.1.0中vptr被放置在类的首部）</p>
+<p>考虑如下代码，我们有两个含虚函数的基类<code>B1</code>，<code>B2</code>，一个继承<code>B1</code>，<code>B2</code>
+的子类<code>D</code></p>
+<pre><code>// from microsoft docs
+class B1{
+public:
+    virtual ~B1() {}
+    void f0() {}
+    virtual void f1() {}
+    int int_in_b1;
+};
+class B2{
+public:
+    virtual ~B2() {}
+    virtual void f2() {}
+    int int_in_b2;
+};
+class D : public B1, public B2{
+public:
+    void d() {}
+    void f2() override {}
+    int int_in_d;
+};
+
+int main()
+{
+    D *d = new D();
+    std::cout &lt;&lt; d &lt;&lt; "\n"
+              &lt;&lt; &amp;d-&gt;int_in_b1 &lt;&lt; "\n"
+              &lt;&lt; &amp;d-&gt;int_in_b2 &lt;&lt; "\n"
+              &lt;&lt; &amp;d-&gt;int_in_d &lt;&lt; "\n";
+    std::cout &lt;&lt; sizeof(*d);
+}
+</code></pre>
+<p>gcc 8.1.0 x86_64-w64-mingw32下的测试结果，我们可以通过测试结果推断D的内存布局</p>
+<pre><code>0x721320   // 0 : vptr for b1 table
+0x721328   // 8 : int_in_b1
+           // 12: 4 padding bytes
+           // 16:vptr for b2 table
+0x721338   // 24:int_in_b2
+0x72133c   // 28_int_ind
+32
+</code></pre>
+<h3>
+<a id="user-content-指针的类型" class="anchor" href="#%E6%8C%87%E9%92%88%E7%9A%84%E7%B1%BB%E5%9E%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>指针的类型</h3>
+<p>指针的值是其所指向对象的地址，指针的类型告诉了编译器解释如何解释某个地址中的内存。
+如果我们有一个基类<code>A</code>，一个继承自<code>A</code>的子类<code>B</code>，我们通过如下方式声明两个指针。</p>
+<pre><code>B b;
+A *pa = &amp;b;
+B *pb = &amp;b;
+</code></pre>
+<p>指针<code>pa</code>，<code>pb</code>都指向<code>b</code>的首地址，它们的差别是，<code>pa</code>只覆盖了大小为<code>sizeof(A)</code>的区域。消除此差别的方式是通过类型转换的方式将<code>pa</code>转换成<code>B*</code>，即改变编译器解释地址的方式。</p>
+
+
+
+<h3>
+<a id="user-content-reference" class="anchor" href="#reference" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Reference</h3>
+<p>《深入理解C++对象模型》- Stanley B。 Lippman</p>
+<hr>
+<h2>
+<a id="user-content-layout-posttitle-modern-cpp-featuresdate-2020-12-15" class="anchor" href="#layout-posttitle-modern-cpp-featuresdate-2020-12-15" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>layout: post
+title: modern cpp features
+date: 2020-12-15</h2>
+<p>总结自</p>
+<p><a href="https://isocpp.org/" rel="nofollow">https://isocpp.org/</a></p>
+<p><a href="https://changkun.de/modern-cpp/zh-cn" rel="nofollow">https://changkun.de/modern-cpp/zh-cn</a></p>
+<h1>
+<a id="user-content-c-11" class="anchor" href="#c-11" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>C++ 11</h1>
+<h2>
+<a id="user-content-general-features" class="anchor" href="#general-features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>General Features</h2>
+<h3>
+<a id="user-content-auto" class="anchor" href="#auto" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>auto</h3>
+<p>auto关键字用于在变量初始化时推断变量的类型</p>
+<pre><code>// example
+
+// in c++98
+template&lt;class T&gt; void printall(const vector&lt;T&gt;&amp; v)
+{
+    for (typename vector&lt;T&gt;::const_iterator p = v.begin(); p!=v.end(); ++p)
+        cout &lt;&lt; *p &lt;&lt; "\n";
+}
+// in c++11
+template&lt;class T&gt; void printall(const vector&lt;T&gt;&amp; v)
+{
+    for (auto p = v.begin(); p!=v.end(); ++p)
+        cout &lt;&lt; *p &lt;&lt; "\n";
+}
+</code></pre>
+<h3>
+<a id="user-content-decltype" class="anchor" href="#decltype" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>decltype</h3>
+<p>decltype(E) 代表表达式 E 的类型</p>
+<pre><code>// example
+
+void f(const vector&lt;int&gt;&amp; a, vector&lt;float&gt;&amp; b)
+{
+    typedef decltype(a[0]*b[0]) Tmp;
+    for (int i=0; i&lt;b.size(); ++i) {
+        Tmp* p = new Tmp(a[i]*b[i]);
+        // ...
+    }
+    // ...
+}
+</code></pre>
+<blockquote>
+<p>Note: Prefer just using auto when you just need the type for a variable that you are about to initialize. You really need decltype if you need a type for something that is not a variable, such as a return type.</p>
+</blockquote>
+<h3>
+<a id="user-content-range-for-statement" class="anchor" href="#range-for-statement" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Range-for statement</h3>
+<p>用range-based for loop和auto替代原生C中的for语句</p>
+<pre><code>// example
+
+void f(vector&lt;double&gt;&amp; v)
+{
+    for (auto x : v) cout &lt;&lt; x &lt;&lt; '\n';
+    for (auto&amp; x : v) ++x;  // using a reference to allow us to change  the value
+}
+
+//x.begin() and x.end stand for the first and last element of container.
+</code></pre>
+<h3>
+<a id="user-content-initializer-lists" class="anchor" href="#initializer-lists" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Initializer lists</h3>
+<p>除非你打算和C++98编译器共享你的代码，否则应使用initializer_list重载构造函数</p>
+<h3>
+<a id="user-content-uniform-initialization-syntax-and-semantics" class="anchor" href="#uniform-initialization-syntax-and-semantics" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Uniform initialization syntax and semantics</h3>
+<p>C++11中允许用initializer_list做一切初始化工作</p>
+<pre><code>// example 
+
+X x1 = X{1,2}; 
+X x2 = {1,2};   // the = is optional
+X x3{1,2}; 
+X* p = new X{1,2}; 
+struct D : X {
+    D(int x, int y) :X{x,y} { /* ... */ };
+};
+struct S {
+    int a[3];
+    S(int x, int y, int z) :a{x,y,z} { /* ... */ }; // solution to old problem
+};
+</code></pre>
+<h3>
+<a id="user-content-lambdas" class="anchor" href="#lambdas" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>lambdas</h3>
+<p>lambda表达式/匿名函数</p>
+<h3>
+<a id="user-content-noexcept-to-prevent-exception-propagation" class="anchor" href="#noexcept-to-prevent-exception-propagation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>noexcept to prevent exception propagation</h3>
+<p>在noexcept函数中抛出异常会调用std::terminate()终止程序，为编译器的优化提供了更大的空间</p>
+<pre><code>//example
+
+constexpr int len_2_constexpr = 1 + 2 + 3;
+char arr_4[len_2_constexpr];         // 合法
+</code></pre>
+<h3>
+<a id="user-content-constexpr" class="anchor" href="#constexpr" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>constexpr</h3>
+<p>C++11 提供了 constexpr 让用户显式的声明函数或对象构造函数在编译期会成为常量表达式，如果编译器能够在编译时就把这些表达式直接优化并植入到程序运行时，将能增加程序的性能</p>
+<h3>
+<a id="user-content-nullptr--a-null-pointer-literal" class="anchor" href="#nullptr--a-null-pointer-literal" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>nullptr – a null pointer literal</h3>
+<p>nullptr替代NULL避免歧义</p>
+<h3>
+<a id="user-content-inline-namespaces" class="anchor" href="#inline-namespaces" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>inline namespaces</h3>
+<p>内联命名空间声明之后，就可以在外层命名空间不适用前缀而直接使用它们了</p>
+<p>see: <a href="https://blog.csdn.net/craftsman1970/article/details/82872497" rel="nofollow">https://blog.csdn.net/craftsman1970/article/details/82872497</a></p>
+<h3>
+<a id="user-content-rvalue-references-and-move-semantics" class="anchor" href="#rvalue-references-and-move-semantics" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Rvalue references and move semantics</h3>
+<p>左值是表达式（不一定是赋值表达式）后依然存在的持久对象。
+右值是指表达式结束后就不再存在的临时对象。</p>
+<p><strong>右值引用，移动语义</strong></p>
+<p>考虑C++98中如下情况</p>
+<pre><code>std::vector&lt;int&gt; foo() {
+    std::vector&lt;int&gt; temp = {1, 2, 3, 4};
+    return temp;
+}
+
+std::vector&lt;int&gt; v = foo();
+</code></pre>
+<p>调用foo()后，调用拷贝构造函数将返回值temp赋给v，再调用temp的析构函数，造成了不必要的开销</p>
+<p>在 C++11 之后，编译器为我们做了一些工作，此处的左值 temp 会被进行此隐式右值转换， 等价于 static_cast&lt;std::vector &amp;&amp;&gt;(temp)，进而此处的 v 会将 foo 局部返回的值进行移动，被 vector 的<strong>移动构造函数</strong>引用，从而延长生命周期，并将这个右值中的指针拿到，保存到了 obj 中，而将亡值的指针被设置为 nullptr，防止了这块内存区域被销毁。</p>
+<p>从而避免了无意义的拷贝构造，加强了性能。</p>
+<p>C++11 提供了 std::move 这个方法将左值参数无条件的转换为右值</p>
+<h2>
+<a id="user-content-class-features" class="anchor" href="#class-features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Class Features</h2>
+<h3>
+<a id="user-content-defaultdelete关键字" class="anchor" href="#defaultdelete%E5%85%B3%E9%94%AE%E5%AD%97" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>default,delete关键字</h3>
+<p>default：使用默认构造/析构/拷贝构造函数
+delete：禁用构造/析构/拷贝构造函数</p>
+<pre><code>// example : default
+
+class X1 {
+    // ...
+    X1&amp; operator=(const X1&amp;) = default;    // default copying
+    X1(const X1&amp;) = default;
+};
+// example : delete
+
+class X2 {
+    // ...
+    X2&amp; operator=(const X2&amp;) = delete;    // Disallow copying
+    X2(const X2&amp;) = delete;
+};
+
+</code></pre>
+<h3>
+<a id="user-content-移动拷贝移动构造" class="anchor" href="#%E7%A7%BB%E5%8A%A8%E6%8B%B7%E8%B4%9D%E7%A7%BB%E5%8A%A8%E6%9E%84%E9%80%A0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>移动拷贝，移动构造</h3>
+<p>接受右值时调用移动拷贝，移动构造函数
+接受左值时调用拷贝构造函数，拷贝构造运算符</p>
+<pre><code>class X1 {
+    // ...
+    X1&amp; operator=(X1&amp;&amp;); // move assignment
+}
+
+class X2 {
+    // ...
+    X2&amp; operator=(X2&amp;&amp;); // move constructor
+}
+</code></pre>
+<h3>
+<a id="user-content-委托构造" class="anchor" href="#%E5%A7%94%E6%89%98%E6%9E%84%E9%80%A0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>委托构造</h3>
+<p>构造函数可以以初始化列表的方式调用其他构造函数</p>
+<pre><code>// example
+
+class X {
+    int a;
+public:
+    X(int x) { if (0&lt;x &amp;&amp; x&lt;=max) a=x; else throw bad_X(x); }
+    X() :X{42} { }
+    X(string s) :X{lexical_cast&lt;int&gt;(s)} { }
+    // ...
+};
+</code></pre>
+<h3>
+<a id="user-content-继承构造" class="anchor" href="#%E7%BB%A7%E6%89%BF%E6%9E%84%E9%80%A0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>继承构造</h3>
+<h3>
+<a id="user-content-override关键字" class="anchor" href="#override%E5%85%B3%E9%94%AE%E5%AD%97" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>override关键字</h3>
+<h3>
+<a id="user-content-final关键字" class="anchor" href="#final%E5%85%B3%E9%94%AE%E5%AD%97" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>final关键字</h3>
+<p>再类/函数后加final关键字禁止重载</p>
+<h3>
+<a id="user-content-explicit-conversion-operators" class="anchor" href="#explicit-conversion-operators" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Explicit conversion operators</h3>
+<pre><code>// example
+
+struct S { S(int) { } };
+
+struct SS {
+    int m;
+    SS(int x) :m(x) { }
+    explicit operator S() { return S(m); }  // because S don't have S(SS)
+};
+
+SS ss(1);
+S s1 = ss;  // error; like an explicit constructor
+S s2(ss);   // ok ; like an explicit constructor
+void f(S); 
+f(ss);      // error; like an explicit constructor
+
+</code></pre>
+<h3>
+<a id="user-content-in-class-member-initializers" class="anchor" href="#in-class-member-initializers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>In-class member initializers</h3>
+<p>C++98只允许static const int类型变量类内初始化
+C++11允许所有成员以初始化列表的方式进行初始化</p>
+<h2>
+<a id="user-content-other-types" class="anchor" href="#other-types" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Other Types</h2>
+<h3>
+<a id="user-content-enum-class" class="anchor" href="#enum-class" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>enum class</h3>
+<p>enum的问题</p>
+<ul>
+<li>Conventional enums implicitly convert to an integer, causing errors when someone does not want an enumeration to act as an integer.</li>
+<li>Conventional enums export their enumerators to the surrounding scope, causing name clashes.</li>
+<li>The underlying type of an enum cannot be specified, causing confusion, compatibility problems, and makes forward declaration impossible.</li>
+</ul>
+<h3>
+<a id="user-content-long-long--a-longer-integer" class="anchor" href="#long-long--a-longer-integer" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>long long – a longer integer</h3>
+<p>64位int</p>
+
+<h2>
+<a id="user-content-杂项" class="anchor" href="#%E6%9D%82%E9%A1%B9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>杂项</h2>
+<h3>
+<a id="user-content-__cpluscplus" class="anchor" href="#__cpluscplus" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>__cpluscplus</h3>
+<p>c++11后<code>__cplusplus</code>代表 <em>201103L</em></p>
+<h3>
+<a id="user-content-preventing-narrowing" class="anchor" href="#preventing-narrowing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Preventing narrowing</h3>
+<p>C++11中用<code>{}</code>初始化可以避免narrow的问题</p>
+<pre><code>// example: C++98
+
+int x = 7.3;        // Ouch!
+void f(int);
+f(7.3);         // Ouch!
+</code></pre>
+<pre><code>// example: C++11
+
+int x0 {7.3};   // error: narrowing
+int x1 = {7.3}; // error: narrowing
+double d = 7;
+int x2{d};      // error: narrowing (double to int)
+char x3{7};     // ok: even though 7 is an int, this is not narrowing
+vector&lt;int&gt; vi = { 1, 2.3, 4, 5.6 };    // error: double to int narrowing
+</code></pre>
+<h3>
+<a id="user-content-right-angle-brackets" class="anchor" href="#right-angle-brackets" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Right-angle brackets</h3>
+<p>解决了右尖括号编译问题</p>
+<pre><code>list&lt;vector&lt;string&gt;&gt; lvs;
+</code></pre>
+<h3>
+<a id="user-content-static_assert" class="anchor" href="#static_assert" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>static_assert</h3>
+<p>编译期的<code>assert</code>，不会造成任何运行期性能损失</p>
+<h3>
+<a id="user-content-raw-string-literals" class="anchor" href="#raw-string-literals" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Raw string literals</h3>
+<h3>
+<a id="user-content-alignment" class="anchor" href="#alignment" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Alignment</h3>
+<p>字节对齐，不同编译器的方式不同</p>
+<pre><code>struct alignas(8) X
+{
+    char a;
+    int  b;
+    double c;
+};
+</code></pre>
+<h2>
+<a id="user-content-libiary" class="anchor" href="#libiary" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Libiary</h2>
+<h3>
+<a id="user-content-智能指针" class="anchor" href="#%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>智能指针</h3>
+<p>std::shared_ptr
+std::unique_ptr
+std::weak_ptr</p>
+<h3>
+<a id="user-content-stdarray" class="anchor" href="#stdarray" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>std::array</h3>
+<p>替代原生数组</p>
+<h3>
+<a id="user-content-function--bind" class="anchor" href="#function--bind" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>function &amp; bind</h3>
+<h3>
+<a id="user-content-type-traits" class="anchor" href="#type-traits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>type traits</h3>
+<h3>
+<a id="user-content-garbage-collection-abi" class="anchor" href="#garbage-collection-abi" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Garbage collection ABI</h3>
+<h3>
+<a id="user-content-tuple" class="anchor" href="#tuple" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>tuple</h3>
+<h3>
+<a id="user-content-random-number-generation" class="anchor" href="#random-number-generation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Random number generation</h3>
+<h3>
+<a id="user-content-scoped-allocators" class="anchor" href="#scoped-allocators" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Scoped allocators</h3>
+<hr>
+<h1>
+<a id="user-content-c14" class="anchor" href="#c14" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>C++14</h1>
+<h2>
+<a id="user-content-general-features-1" class="anchor" href="#general-features-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>General Features</h2>
+<p>Binary literals
+C++14 开始，constexpr 函数可以在内部使用局部变量、循环和分支等简单语句</p>
+
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+     </div>
+ </div>

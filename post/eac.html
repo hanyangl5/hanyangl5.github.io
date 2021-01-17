@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<link rel="stylesheet" href="/github-markdown-css/github-css.css">
+
+<meta content="text/html" charset="UTF-8">
+
+
+<div class="gist">
+    <style class="formula-style">
+        svg.gh-md-to-html-formula {
+            fill: black;
+        }
+    </style>
+    <div class="gist-file"> <!-- This is the class that is responsible for the boxing! -->
+        <div class="gist-data">
+            <div class="js-gist-file-update-container js-task-list-container file-box">
+                <div id="article-eac" class="file">
+                    <div id="file-docker-image-pull-md-readme" class="Box-body readme blob js-code-block-container p-5 p-xl-6"
+                         style="margin-left: 40px; margin-right: 40px; margin-top: 20px; margin-bottom: 20px">
+                        <article class="markdown-body entry-content container-lg" itemprop="text">
+                            <h1>
+<a id="user-content-engineering-a-compiler-notes" class="anchor" href="#engineering-a-compiler-notes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Engineering a Compiler notes</h1>
+<p>notes：看的是中文译本</p>
+<h1>
+<a id="user-content-ch1-编译概观" class="anchor" href="#ch1-%E7%BC%96%E8%AF%91%E6%A6%82%E8%A7%82" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CH1 编译概观</h1>
+<p><strong>编译器 vs 解释器</strong></p>
+<p>编译器一次性的，把一个某种语言编写的程序作为输入，产生一个等价的程序作为输出，一些编译器产生的等价程序是面向人类的程序设计语言，这种程序还需要进一步编译成为计算机所识别的机器码才能运行</p>
+<p><a href="https://camo.githubusercontent.com/0b533d61f7aef79121d91cd2d9a8aa759343b459023a43f9db30b5fa392b598f/687474703a2f2f79756d6c2e6d652f6469616772616d2f736372756666792f636c6173732f5be6ba90e7a88be5ba8f5d2d5be7bc96e8af91e599a85d2d3e5be79baee6a087e7a88be5ba8f5d" target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/0b533d61f7aef79121d91cd2d9a8aa759343b459023a43f9db30b5fa392b598f/687474703a2f2f79756d6c2e6d652f6469616772616d2f736372756666792f636c6173732f5be6ba90e7a88be5ba8f5d2d5be7bc96e8af91e599a85d2d3e5be79baee6a087e7a88be5ba8f5d" data-canonical-src="http://yuml.me/diagram/scruffy/class/[源程序]-[编译器]-&gt;[目标程序]" style="max-width:100%;"></a></p>
+<p>解释器一行一行读取代码，解释并运行（编译不包括运行）</p>
+<p><a href="https://camo.githubusercontent.com/425e2a08ad9a438e14910ca6763ffb222bb48338aa28ba604f064b39fde598da/687474703a2f2f79756d6c2e6d652f6469616772616d2f736372756666792f636c6173732f5be6ba90e7a88be5ba8f5d2d5be8a7a3e9878ae599a85d2d3e5be7bb93e69e9c5d" target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/425e2a08ad9a438e14910ca6763ffb222bb48338aa28ba604f064b39fde598da/687474703a2f2f79756d6c2e6d652f6469616772616d2f736372756666792f636c6173732f5be6ba90e7a88be5ba8f5d2d5be8a7a3e9878ae599a85d2d3e5be7bb93e69e9c5d" data-canonical-src="http://yuml.me/diagram/scruffy/class/[源程序]-[解释器]-&gt;[结果]" style="max-width:100%;"></a></p>
+<p><strong>编译器的基本准则</strong></p>
+<ol>
+<li>编译器必须保持被编译程序的语义</li>
+<li>编译器必须以某种可察觉的方式改进输入程序</li>
+</ol>
+<p><strong>编译器结构</strong></p>
+<p>两阶段编译器结构，前端专注于理解语言程序，后端专注于将程序映射到目标机</p>
+<p><a href="https://camo.githubusercontent.com/e8fe1050fdcf9132cd54e407bde763a4d10540b56d6d318161f2223594e4604f/687474703a2f2f79756d6c2e6d652f6469616772616d2f736372756666792f636c6173732f5be6ba90e7a88be5ba8f5d2d5be5898de7abaf5d49522d5be5908ee7abaf5d2d5be79baee6a087e7a88be5ba8f5d" target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/e8fe1050fdcf9132cd54e407bde763a4d10540b56d6d318161f2223594e4604f/687474703a2f2f79756d6c2e6d652f6469616772616d2f736372756666792f636c6173732f5be6ba90e7a88be5ba8f5d2d5be5898de7abaf5d49522d5be5908ee7abaf5d2d5be79baee6a087e7a88be5ba8f5d" data-canonical-src="http://yuml.me/diagram/scruffy/class/[源程序]-[前端]IR-[后端]-[目标程序]" style="max-width:100%;"></a></p>
+<p>输出目标程序前，编译器可以对IR的形式进行多次迭代，生成更好的IR代码，因此引出三阶段编译器结构</p>
+<p><a href="https://camo.githubusercontent.com/57ee9236f68e62a720a6c0abe47fcb449bb5f90ba010be63a11292ea564f5403/687474703a2f2f79756d6c2e6d652f6469616772616d2f736372756666792f636c6173732f5be6ba90e7a88be5ba8f5d2d5be5898de7abaf5d4952312d5be4bc98e58c96e599a85d4952322d5be5908ee7abaf5d2d3e5be79baee6a087e7a88be5ba8f5d" target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/57ee9236f68e62a720a6c0abe47fcb449bb5f90ba010be63a11292ea564f5403/687474703a2f2f79756d6c2e6d652f6469616772616d2f736372756666792f636c6173732f5be6ba90e7a88be5ba8f5d2d5be5898de7abaf5d4952312d5be4bc98e58c96e599a85d4952322d5be5908ee7abaf5d2d3e5be79baee6a087e7a88be5ba8f5d" data-canonical-src="http://yuml.me/diagram/scruffy/class/[源程序]-[前端]IR1-[优化器]IR2-[后端]-&gt;[目标程序]" style="max-width:100%;"></a></p>
+<p>前端：</p>
+<p>词法分析器：将字符构成的串转换为单词构成的流
+语法分析器：判断输入流是否是源语言的一个句子
+类型检查：检查输入程序中对名字使用在类型方面是否一致</p>
+<p>优化器：分析，转化</p>
+<p>后端：</p>
+<p>指令选择：将IR重写为目标机操作</p>
+<p>寄存器分配：目标寄存器数目有限，要最小化寄存器使用</p>
+<p>指令调度：代码重排，最小化等待操作数浪费的周期数，确保新指令序列产生的结果与原来的指令序列相同</p>
+<h1>
+<a id="user-content-ch2-词法分析器" class="anchor" href="#ch2-%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CH2 词法分析器</h1>
+<p>操作输入的每一个字符，读取字符流，产生单词流。</p>
+<p>Algol及其衍生语言定义：标识符为一个字母字符后接零个或多个字母/数字字符，标识符结束于第一个非字母/数字字符，
+有效单词集合是由规则决定的，不用在字典中枚举</p>
+<p><strong>识别单词</strong></p>
+<p><strong>RE</strong></p>
+<p><strong>RE-&gt;LEX</strong></p>
+
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+     </div>
+ </div>
