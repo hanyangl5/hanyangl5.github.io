@@ -17,10 +17,11 @@
                     <div id="file-docker-image-pull-md-readme" class="Box-body readme blob js-code-block-container p-5 p-xl-6"
                          style="margin-left: 40px; margin-right: 40px; margin-top: 20px; margin-bottom: 20px">
                         <article class="markdown-body entry-content container-lg" itemprop="text">
-                            <p>一些关于C++的notes，包含Effective C++，inside C++ Object Model，Modern C++ features</p>
-
+                            <p>一些关于C++的notes，包括 Effective C++，Inside C++ Object Model，Modern C++ features</p>
+<h1>
+<a id="user-content-effective-c" class="anchor" href="#effective-c" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Effective C++</h1>
 <h2>
-<a id="user-content-1-accustoming-yourself-to-c" class="anchor" href="#1-accustoming-yourself-to-c" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1, Accustoming yourself to c++</h2>
+<a id="user-content-accustoming-yourself-to-c" class="anchor" href="#accustoming-yourself-to-c" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Accustoming yourself to c++</h2>
 <h3>
 <a id="user-content-1-视c为一个语言联邦" class="anchor" href="#1-%E8%A7%86c%E4%B8%BA%E4%B8%80%E4%B8%AA%E8%AF%AD%E8%A8%80%E8%81%94%E9%82%A6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. 视C++为一个语言联邦</h3>
 <p>C++经过数十年的发展，已经难以用单一语言描述，而是从四个次语言组成的语言联邦
@@ -76,7 +77,7 @@ int const* p = nullptr;
 请以local static 对象替代non-local static 对象</p>
 <hr>
 <h2>
-<a id="user-content-2-constructors-and-assignment-operations" class="anchor" href="#2-constructors-and-assignment-operations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2, Constructors, and Assignment Operations</h2>
+<a id="user-content-constructors-and-assignment-operations" class="anchor" href="#constructors-and-assignment-operations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Constructors, and Assignment Operations</h2>
 <h3>
 <a id="user-content-5-了解c默认编写并调用那些函数" class="anchor" href="#5-%E4%BA%86%E8%A7%A3c%E9%BB%98%E8%AE%A4%E7%BC%96%E5%86%99%E5%B9%B6%E8%B0%83%E7%94%A8%E9%82%A3%E4%BA%9B%E5%87%BD%E6%95%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5. 了解C++默认编写并调用那些函数</h3>
 <p>一个如下所示的空类</p>
@@ -115,7 +116,7 @@ int const* p = nullptr;
 <p>在copy assignment运算符中调用拷贝构造函数和在拷贝构造函数中调用copy assignment运算符都是不可取的</p>
 <hr>
 <h2>
-<a id="user-content-3-resources-management" class="anchor" href="#3-resources-management" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3, Resources Management</h2>
+<a id="user-content-resources-management" class="anchor" href="#resources-management" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Resources Management</h2>
 <h3>
 <a id="user-content-13-以对象管理资源" class="anchor" href="#13-%E4%BB%A5%E5%AF%B9%E8%B1%A1%E7%AE%A1%E7%90%86%E8%B5%84%E6%BA%90" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>13. 以对象管理资源</h3>
 <p>获得资源后立刻放进管理对象内</p>
@@ -146,7 +147,7 @@ void processWidget(std::shared_ptr&lt;Widget&gt; (new Widget),priority());
 <p>使用单独语句将new产生的指针置入shared_ptr解决这个问题</p>
 <hr>
 <h2>
-<a id="user-content-4-designs-and-declarations" class="anchor" href="#4-designs-and-declarations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4, Designs and Declarations</h2>
+<a id="user-content-designs-and-declarations" class="anchor" href="#designs-and-declarations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Designs and Declarations</h2>
 <h3>
 <a id="user-content-18-让接口容易被正确使用不易被误用" class="anchor" href="#18-%E8%AE%A9%E6%8E%A5%E5%8F%A3%E5%AE%B9%E6%98%93%E8%A2%AB%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8D%E6%98%93%E8%A2%AB%E8%AF%AF%E7%94%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>18. 让接口容易被正确使用，不易被误用</h3>
 <p>好的接口很容易被正确使用，不容易被误用。努力达成这些性质(例如 explicit关键字)
@@ -194,7 +195,7 @@ result = 2 * a; // error
 <a id="user-content-25--考虑写一个不抛出异常的swap函数" class="anchor" href="#25--%E8%80%83%E8%99%91%E5%86%99%E4%B8%80%E4%B8%AA%E4%B8%8D%E6%8A%9B%E5%87%BA%E5%BC%82%E5%B8%B8%E7%9A%84swap%E5%87%BD%E6%95%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>25.  考虑写一个不抛出异常的swap函数</h3>
 <hr>
 <h2>
-<a id="user-content-5implementations" class="anchor" href="#5implementations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5，Implementations</h2>
+<a id="user-content-implementations" class="anchor" href="#implementations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Implementations</h2>
 <h3>
 <a id="user-content-26-尽可能延后变量定义式的出现时间" class="anchor" href="#26-%E5%B0%BD%E5%8F%AF%E8%83%BD%E5%BB%B6%E5%90%8E%E5%8F%98%E9%87%8F%E5%AE%9A%E4%B9%89%E5%BC%8F%E7%9A%84%E5%87%BA%E7%8E%B0%E6%97%B6%E9%97%B4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>26. 尽可能延后变量定义式的出现时间</h3>
 <p>Ex
@@ -232,14 +233,16 @@ inline只是给编译器的建议，编译器不一定执行</p>
 <h3>
 <a id="user-content-31-将文件的编译依存关系降到最低" class="anchor" href="#31-%E5%B0%86%E6%96%87%E4%BB%B6%E7%9A%84%E7%BC%96%E8%AF%91%E4%BE%9D%E5%AD%98%E5%85%B3%E7%B3%BB%E9%99%8D%E5%88%B0%E6%9C%80%E4%BD%8E" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>31 将文件的编译依存关系降到最低</h3>
 <h2>
-<a id="user-content-6inheritance-and-object-oriented-design" class="anchor" href="#6inheritance-and-object-oriented-design" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>6，Inheritance and Object-Oriented Design</h2>
+<a id="user-content-inheritance-and-object-oriented-design" class="anchor" href="#inheritance-and-object-oriented-design" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Inheritance and Object-Oriented Design</h2>
 <h3>
 <a id="user-content-32-确定你得public继承额外塑膜出is-a关系" class="anchor" href="#32-%E7%A1%AE%E5%AE%9A%E4%BD%A0%E5%BE%97public%E7%BB%A7%E6%89%BF%E9%A2%9D%E5%A4%96%E5%A1%91%E8%86%9C%E5%87%BAis-a%E5%85%B3%E7%B3%BB" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>32 确定你得public继承额外塑膜出is-a关系</h3>
 <p>共有继承一位is-a关系，适用于base classes上的每一件事情也一定适用于derived class上
 ，每一个derived class对象也是base class对象</p>
 <p>总结自《深入理解C++对象模型》第一章-关于对象</p>
-<h3>
-<a id="user-content-c对象模式" class="anchor" href="#c%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%BC%8F" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>C++对象模式</h3>
+<h1>
+<a id="user-content-inside-c-object-model" class="anchor" href="#inside-c-object-model" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Inside C++ Object Model</h1>
+<h2>
+<a id="user-content-c对象模式" class="anchor" href="#c%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%BC%8F" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>C++对象模式</h2>
 <p>在C++中如果一个class/struct 是POD（plain old data），即没有显式构造/析构/拷贝构造函数和virtual函数，那么其内存布局将会和C语言相同，元素按照声明的顺序顺序排列。当类内含virtual函数时，每一个class会产生一个virtual pointer 指向virtual table，virtual table包含了虚函数的地址（经笔者验证gcc-8.1.0中vptr被放置在类的首部）</p>
 <p>考虑如下代码，我们有两个含虚函数的基类<code>B1</code>，<code>B2</code>，一个继承<code>B1</code>，<code>B2</code>
 的子类<code>D</code></p>
@@ -295,19 +298,14 @@ B *pb = &amp;b;
 
 
 
-<h3>
-<a id="user-content-reference" class="anchor" href="#reference" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Reference</h3>
-<p>《深入理解C++对象模型》- Stanley B。 Lippman</p>
-<hr>
-<h2>
-<a id="user-content-layout-posttitle-modern-cpp-featuresdate-2020-12-15" class="anchor" href="#layout-posttitle-modern-cpp-featuresdate-2020-12-15" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>layout: post
-title: modern cpp features
-date: 2020-12-15</h2>
+<h1>
+<a id="user-content-modern-c-features" class="anchor" href="#modern-c-features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modern C++ features</h1>
 <p>总结自</p>
 <p><a href="https://isocpp.org/" rel="nofollow">https://isocpp.org/</a></p>
 <p><a href="https://changkun.de/modern-cpp/zh-cn" rel="nofollow">https://changkun.de/modern-cpp/zh-cn</a></p>
 <h1>
-<a id="user-content-c-11" class="anchor" href="#c-11" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>C++ 11</h1>
+<a id="user-content-c-11" class="anchor" href="#c-11" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><em>C++ 11</em>
+</h1>
 <h2>
 <a id="user-content-general-features" class="anchor" href="#general-features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>General Features</h2>
 <h3>
@@ -512,7 +510,7 @@ C++11允许所有成员以初始化列表的方式进行初始化</p>
 <p>64位int</p>
 
 <h2>
-<a id="user-content-杂项" class="anchor" href="#%E6%9D%82%E9%A1%B9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>杂项</h2>
+<a id="user-content-misc" class="anchor" href="#misc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Misc</h2>
 <h3>
 <a id="user-content-__cpluscplus" class="anchor" href="#__cpluscplus" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>__cpluscplus</h3>
 <p>c++11后<code>__cplusplus</code>代表 <em>201103L</em></p>
@@ -577,12 +575,6 @@ std::weak_ptr</p>
 <h3>
 <a id="user-content-scoped-allocators" class="anchor" href="#scoped-allocators" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Scoped allocators</h3>
 <hr>
-<h1>
-<a id="user-content-c14" class="anchor" href="#c14" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>C++14</h1>
-<h2>
-<a id="user-content-general-features-1" class="anchor" href="#general-features-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>General Features</h2>
-<p>Binary literals
-C++14 开始，constexpr 函数可以在内部使用局部变量、循环和分支等简单语句</p>
 
                         </article>
                     </div>

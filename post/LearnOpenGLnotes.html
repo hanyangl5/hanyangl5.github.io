@@ -18,46 +18,19 @@
                          style="margin-left: 40px; margin-right: 40px; margin-top: 20px; margin-bottom: 20px">
                         <article class="markdown-body entry-content container-lg" itemprop="text">
                             <p>Learn OpenGL notes</p>
-<p>2019.8刚开始看opengl时的笔记</p>
+<p>2019.8刚开始看opengl时的笔记（基本上是copypaste）</p>
 <h1>
 <a id="user-content-opengl-简介" class="anchor" href="#opengl-%E7%AE%80%E4%BB%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>OpenGL 简介</h1>
-<ul>
-<li>
 <p><strong>OpenGL</strong>（英语：Open Graphics Library，译名：开放图形库或者“开放式图形库”）是用于渲染2D、3D矢量图形的跨语言、跨平台的应用程序编程接口（API）</p>
-
-</li>
-</ul>
-<hr>
 <ul>
-<li>但实际上OpenGL本身并不是API，它仅仅是一个由<a href="http://www.khronos.org/" rel="nofollow">Khronos组织</a>制定并维护的规（Specification），它定义了一个跨编程语言、跨平台的编程接口的规格，OpenGL规范严格规定了每个函数该如何执行，以及它们的输出值。至于内部具体每个函数是如何实现（Implement）的，将由OpenGL库的开发者自行决定。</li>
+<li>OpenGL是一个由<a href="http://www.khronos.org/" rel="nofollow">Khronos组织</a>制定并维护的规（Specification），它定义了一个跨编程语言、跨平台的编程接口的规格，OpenGL规范严格规定了每个函数该如何执行，以及它们的输出值。至于内部具体每个函数是如何实现（Implement）的，将由OpenGL库的开发者自行决定。</li>
 </ul>
-<hr>
-<ul>
-<li>OpenGL函数库相关的API有核心库，实用库，辅助库、实用工具库，窗口库，和扩展函数库等</li>
-</ul>
-<blockquote>
-<p>gl库是核心库，gl中包含了最基本的3D函数</p>
-</blockquote>
-<blockquote>
-<p>glu是实用库，glu 为了减轻繁重的编程工作，对gl中的函数进行部分封装，glu函数通过调用核心库的函数，为开发者提供了实现复杂操作的相对简单的用法</p>
-</blockquote>
-<blockquote>
-<p>glut，freeglut，GLFW这三个库都可以用来创建并管理OpenGL窗口，并处理消息循环和用户输入，其中GLFW是目前应用最广泛，最稳定的OpenGL窗口库和工具库</p>
-</blockquote>
-<blockquote>
-<p>GLEW（The OpenGL Extension Wrangler Library）由于OpenGL驱动版本众多，它大多数函数的位置都无法在编译时确定下来，需要在运行时查询，而这在开发时会对开发者造成不小的困难，十分复杂和繁琐，GLEW的作用就是简化这一过程，因为GLEW能自动识别你的平台所支持的全部OpenGL高级扩展函数</p>
-</blockquote>
-<blockquote>
-<p>GLAD与GLEW功能相似，是目前最新，也是最流行的库</p>
-</blockquote>
 <h1>
 <a id="user-content-创建窗口" class="anchor" href="#%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>创建窗口</h1>
-<hr>
 <p>首先，包含OpenGL所用的头文件</p>
 <pre><code>#include &lt;glad/glad.h&gt;
 #include &lt;GLFW/glfw3.h&gt;
 </code></pre>
-<hr>
 <h3>
 <a id="user-content-创建窗口-1" class="anchor" href="#%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>创建窗口</h3>
 <p>实例化glfw窗口</p>
@@ -83,7 +56,6 @@ glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); 
 #endif
 </code></pre>
-<hr>
 <h3>
 <a id="user-content-配置窗口参数" class="anchor" href="#%E9%85%8D%E7%BD%AE%E7%AA%97%E5%8F%A3%E5%8F%82%E6%95%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>配置窗口参数</h3>
 <p>接下来我们创建一个窗口对象，这个窗口对象存放了所有和窗口相关的数据，而且会被GLFW的其他函数频繁地用到。</p>
@@ -106,7 +78,6 @@ glfwMakeContextCurrent(window);
 <p>glViewport函数前两个参数控制窗口左下角的位置。第三个和第四个参数控制渲染窗口的宽度和高度（像素）。</p>
 <p>我们实际上也可以将视口的维度设置为比GLFW的维度小，这样子之后所有的OpenGL渲染将会在一个更小的窗口中显示，这样子的话我们也可以将一些其它元素显示在OpenGL视口之外。</p>
 <p>OpenGL幕后使用glViewport中定义的位置和宽高进行2D坐标的转换，将OpenGL中的位置坐标转换为你的屏幕坐标。例如，OpenGL中的坐标(-0.5, 0.5)有可能（最终）被映射为屏幕中的坐标(200,450)。注意，处理过的OpenGL坐标范围只为-1到1，因此我们事实上将(-1到1)范围内的坐标映射到(0, 800)和(0, 600)。</p>
-<hr>
 <h3>
 <a id="user-content-渲染循环" class="anchor" href="#%E6%B8%B2%E6%9F%93%E5%BE%AA%E7%8E%AF" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>渲染循环</h3>
 <p>我们希望程序在我们主动关闭它之前不断绘制图像并能够接受用户输入。因此，我们需要在程序中添加一个while循环，我们可以把它称之为渲染循环(Render Loop)，</p>
@@ -136,7 +107,6 @@ glfwMakeContextCurrent(window);
 <p>glfwSwapBuffers函数会交换颜色缓冲（它是一个储存着GLFW窗口每一个像素颜色值的大缓冲），它在这一迭代中被用来绘制，并且将会作为输出显示在屏幕上。</p>
 </li>
 </ol>
-<hr>
 <h3>
 <a id="user-content-回调函数" class="anchor" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>回调函数</h3>
 <p>然而，当用户改变窗口的大小的时候，视口也应该被调整。我们可以对窗口注册一个回调函数(Callback Function)，它会在每次窗口大小被调整的时候被调用。这个回调函数的原型如下：
@@ -152,7 +122,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 </code></pre>
 <p>当窗口被第一次显示的时候framebuffer_size_callback也会被调用。对于视网膜(Retina)显示屏，width和height都会明显比原输入值更高一点。
 我们还可以将我们的函数注册到其它很多的回调函数中。比如说，我们可以创建一个回调函数来处理手柄输入变化，处理错误消息等。我们会在创建窗口之后，渲染循环初始化之前注册这些回调函数。</p>
-<hr>
 <h3>
 <a id="user-content-输入控制" class="anchor" href="#%E8%BE%93%E5%85%A5%E6%8E%A7%E5%88%B6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>输入控制</h3>
 <p>我们同样也希望能够在GLFW中实现一些输入控制，这可以通过使用GLFW的几个输入函数来完成。我们将会使用GLFW的glfwGetKey函数，它需要一个窗口以及一个按键作为输入。这个函数将会返回这个按键是否正在被按下。我们将创建一个processInput函数来让所有的输入代码保持整洁。</p>
@@ -163,22 +132,18 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 }
 </code></pre>
 <p>接着，把processInput(window)插入到渲染循环中，因为我们想让这些渲染指令在每次渲染循环迭代的时候都能被执行</p>
-<hr>
 <h3>
 <a id="user-content-测试" class="anchor" href="#%E6%B5%8B%E8%AF%95" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>测试</h3>
 <p>为了测试一切都正常工作，我们使用一个自定义的颜色清空屏幕。在每个新的渲染迭代开始的时候我们总是希望清屏，否则我们仍能看见上一次迭代的渲染结果（这可能是你想要的效果，但通常这不是）。我们可以通过调用glClear函数来清空屏幕的颜色缓冲，它接受一个缓冲位(Buffer Bit)来指定要清空的缓冲，可能的缓冲位有GL_COLOR_BUFFER_BIT，GL_DEPTH_BUFFER_BIT和GL_STENCIL_BUFFER_BIT。由于现在我们只关心颜色值，所以我们只清空颜色缓冲。除了glClear之外，我们还调用了glClearColor来设置清空屏幕所用的颜色。当调用glClear函数，清除颜色缓冲之后，整个颜色缓冲都会被填充为glClearColor里所设置的颜色。在这里，我们将屏幕设置为了类似黑板的深蓝绿色。</p>
 <pre><code>glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 glClear(GL_COLOR_BUFFER_BIT);
 </code></pre>
-<hr>
 <h3>
 <a id="user-content-释放内存" class="anchor" href="#%E9%87%8A%E6%94%BE%E5%86%85%E5%AD%98" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>释放内存</h3>
 <p>当渲染循环结束后我们需要正确释放/删除之前的分配的所有资源。我们可以在main函数的最后调用glfwTerminate函数来完成。</p>
 <pre><code>glfwTerminate();
 return 0;
 </code></pre>
-<hr>
-<p><a href="https://github.com/v4vendeta/MyOpenGL/blob/master/opengl/Create_Window.cpp">完整代码</a></p>
 <h1>
 <a id="user-content-三角形的绘制" class="anchor" href="#%E4%B8%89%E8%A7%92%E5%BD%A2%E7%9A%84%E7%BB%98%E5%88%B6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>三角形的绘制</h1>
 <h2>
@@ -191,7 +156,6 @@ return 0;
 };
 </code></pre>
 
-<hr>
 <h2>
 <a id="user-content-顶点缓冲对象" class="anchor" href="#%E9%A1%B6%E7%82%B9%E7%BC%93%E5%86%B2%E5%AF%B9%E8%B1%A1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>顶点缓冲对象</h2>
 <p>定义顶点数据后，我们会把它作为输入发送给顶点着色器，它会在GPU上创建一片内存储存我们的顶点数据，我们用顶点缓冲对象（<a href="https://en.wikipedia.org/wiki/Vertex_buffer_object" rel="nofollow">Vertex Buffer Object</a>，简称VBO）来操作这片内存，VBO实质上是一个<code>unsigned int</code>型变量，我们用<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenBuffers.xhtml" rel="nofollow"><code>glGenBuffer()</code></a>函数创建缓冲并将缓冲的ID返回给VBO</p>
@@ -205,7 +169,6 @@ glGenBuffers(1, &amp;VBO);
 <p>此后，我们使用的任何（在GL_ARRAY_BUFFER目标上的）缓冲调用都会用来配置当前绑定的缓冲(VBO)。然后我们可以调用<code>glBufferData()</code>函数，它会把之前定义的顶点数据复制到缓冲的内存中</p>
 <pre><code>glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 </code></pre>
-<hr>
 <h2>
 <a id="user-content-顶点数组对象" class="anchor" href="#%E9%A1%B6%E7%82%B9%E6%95%B0%E7%BB%84%E5%AF%B9%E8%B1%A1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>顶点数组对象</h2>
 <p>顶点数组对象（VAO）也是一个 OpenGL 对象，它存储提供顶点数据所需的所有状态，即告诉OpenGL如何读取VBO中所储存的定点数据，创建VAO的方式和VBO类似，通过<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/" rel="nofollow"><code>glGenVertexArrays()</code></a>，<a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindVertexArray.xhtml" rel="nofollow"><code>glBindVertexArray()</code></a>创建并绑定</p>
@@ -236,7 +199,6 @@ glEnableVertexAttribArray(0);
 </ul>
 <h2>
 <a id="user-content-着色器" class="anchor" href="#%E7%9D%80%E8%89%B2%E5%99%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>着色器</h2>
-<hr>
 <h3>
 <a id="user-content-顶点着色器" class="anchor" href="#%E9%A1%B6%E7%82%B9%E7%9D%80%E8%89%B2%E5%99%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>顶点着色器</h3>
 <p>顶点着色器(Vertex Shader)是几个可编程着色器中的一个。现代OpenGL需要我们至少设置一个顶点和一个片段着色器。我们会配置两个非常简单的着色器来绘制一个三角形</p>
@@ -277,7 +239,6 @@ glEnableVertexAttribArray(0);
 	glLinkProgram(shaderProgram);
 
 </code></pre>
-<hr>
 <h2>
 <a id="user-content-绘制" class="anchor" href="#%E7%BB%98%E5%88%B6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>绘制</h2>
 <p>要想绘制我们想要的物体，OpenGL给我们提供了glDrawArrays函数，它使用当前激活的着色器，之前定义的顶点属性配置，和VBO的顶点数据（通过VAO间接绑定）来绘制图元。</p>
@@ -289,15 +250,8 @@ glDrawArrays(GL_TRIANGLES, 0, 3);
 </code></pre>
 <p>输出结果</p>
 <p><a href="https://camo.githubusercontent.com/7250ee22527c22f9563d854e331fafdcc4f185d2c5e4494818aa1efa15084580/68747470733a2f2f616530312e616c6963646e2e636f6d2f6b662f483164323436323330633331393436666261313764643834373963396565656432482e706e67" target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/7250ee22527c22f9563d854e331fafdcc4f185d2c5e4494818aa1efa15084580/68747470733a2f2f616530312e616c6963646e2e636f6d2f6b662f483164323436323330633331393436666261313764643834373963396565656432482e706e67" alt="" data-canonical-src="https://ae01.alicdn.com/kf/H1d246230c31946fba17dd8479c9eeed2H.png" style="max-width:100%;"></a></p>
-<p><a href="https://raw.githubusercontent.com/v4vendeta/MyOpenGL/master/1_start/practice1.cpp" rel="nofollow">完整代码</a></p>
-<hr>
-<h2>
-<a id="user-content-layout-posttitle-opengl-05-shaderdate-2019-09-03-234036" class="anchor" href="#layout-posttitle-opengl-05-shaderdate-2019-09-03-234036" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>layout: post
-title: OpenGL-05-Shader
-date: 2019-09-03 23:40:36</h2>
 <h1>
 <a id="user-content-着色器-1" class="anchor" href="#%E7%9D%80%E8%89%B2%E5%99%A8-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>着色器</h1>
-<hr>
 <h1>
 <a id="user-content-glsl" class="anchor" href="#glsl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>GLSL</h1>
 <p>着色器是使用一种叫GLSL的类C语言写成的。GLSL是为图形计算量身定制的，它包含一些针对向量和矩阵操作的有用特性。</p>
@@ -325,7 +279,6 @@ int main()
   out_variable_name = weird_stuff_we_processed;
 }
 </code></pre>
-<hr>
 
 <h1>
 <a id="user-content-数据类型" class="anchor" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>数据类型</h1>
@@ -336,11 +289,9 @@ int main()
 <p>可以用如下方式声明一个matrix4变量</p>
 <pre><code>mat4 testMat4 = mat4(1.0);
 </code></pre>
-<hr>
 <h1>
 <a id="user-content-输入输出" class="anchor" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>输入输出</h1>
 <p>GL3.x中，GLSL废弃了<code>attribute</code>，<code>varying</code>关键字，定义了<code>in</code> ，<code>out</code> 两个关键字来处理着色器的输入和输出</p>
-<hr>
 <h3>
 <a id="user-content-顶点着色器-1" class="anchor" href="#%E9%A1%B6%E7%82%B9%E7%9D%80%E8%89%B2%E5%99%A8-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>顶点着色器</h3>
 <p>以下是一个基本的<strong>顶点着色器</strong></p>
@@ -379,7 +330,6 @@ void main()
 </blockquote>
 <p><strong>我们通常用第二种方式来定义索引的对应关系</strong></p>
 <p>程序结束后，GLSL的内置变量gl_Position的值会成为该顶点着色器的输出值</p>
-<hr>
 <h3>
 <a id="user-content-片段着色器-1" class="anchor" href="#%E7%89%87%E6%AE%B5%E7%9D%80%E8%89%B2%E5%99%A8-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>片段着色器</h3>
 <p>以下是一个基本的<strong>片段着色器</strong></p>
@@ -393,7 +343,6 @@ void main()
 }
 </code></pre>
 <p>片段着色器需要输出一个vec4类型的变量（R，G，B，A）作为着色器渲染的颜色，也可以用内置变量gl_FragColor作为片段着色器的输出</p>
-<hr>
 <h3>
 <a id="user-content-发送数据" class="anchor" href="#%E5%8F%91%E9%80%81%E6%95%B0%E6%8D%AE" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>发送数据</h3>
 <p>如果我们要从一个着色器向另一个着色器发送数据，我们必须在发送方着色器中声明一个输出，在接收方着色器中声明一个类似的输入。当类型和名字都一样的时候，OpenGL就会把两个变量链接到一起，它们之间就能发送数据了，下图所示的代码演示了如何通过顶点着色器向片段着色器发送数据</p>
@@ -423,7 +372,6 @@ void main()
 	fragColor = vertexColor ;
 }
 </code></pre>
-<hr>
 <h3>
 <a id="user-content-uniform" class="anchor" href="#uniform" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Uniform</h3>
 <p>Uniform是一种从CPU中的应用向GPU中的着色器发送数据的方式，通常在顶点着色器和片段着色器中使用，用来储存一些不变的变量，类似const，Uniform变量是<strong>全局可读</strong>变量，它可以被当前着色器程序的任意着色器在任意阶段访问，我们可以在一个着色器中添加<code>uniform</code>关键字至类型和变量名前来声明一个GLSL的uniform变量</p>
@@ -443,7 +391,6 @@ void main()
 GLint location = glGetUniformLocation(shaderProgram, "uniformColor");
 glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f); //red
 </code></pre>
-<hr>
 <h1>
 <a id="user-content-着色器类" class="anchor" href="#%E7%9D%80%E8%89%B2%E5%99%A8%E7%B1%BB" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>着色器类</h1>
 <p>我们可以定义自己的着色器类来简化编写、编译、管理着色器的过程</p>
@@ -560,21 +507,8 @@ void Shader::checkCompileErrors(unsigned int ID, std::string Type) {
 	}
 }
 </code></pre>
-<hr>
-<p>液<g-emoji class="g-emoji" alias="v" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/270c.png">✌</g-emoji></p>
-<hr>
-<p>Inspired by</p>
-<p><a href="http://zwqxin.com/archives/shaderglsl/communication-between-opengl-glsl-2.html" rel="nofollow">http://zwqxin.com/archives/shaderglsl/communication-between-opengl-glsl-2.html</a></p>
-<p><a href="https://blog.csdn.net/candycat1992/article/details/8830894" rel="nofollow">https://blog.csdn.net/candycat1992/article/details/8830894</a></p>
-<p>[<a href="https://learnopengl-cn.github.io/01%20Getting%20started/05%20Shaders/#_4%5D(" rel="nofollow">https://learnopengl-cn.github.io/01%20Getting%20started/05%20Shaders/#_4](</a><a href="https://learnopengl-cn.github.io/01" rel="nofollow">https://learnopengl-cn.github.io/01</a> Getting started/05 Shaders/#_4)</p>
-<hr>
-<h2>
-<a id="user-content-layout-posttitle-opengl-06-texturedate-2019-09-11-234036" class="anchor" href="#layout-posttitle-opengl-06-texturedate-2019-09-11-234036" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>layout: post
-title: OpenGL-06-Texture
-date: 2019-09-11 23:40:36</h2>
 <h1>
 <a id="user-content-纹理" class="anchor" href="#%E7%BA%B9%E7%90%86" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>纹理</h1>
-<hr>
 <h1>
 <a id="user-content-纹理坐标" class="anchor" href="#%E7%BA%B9%E7%90%86%E5%9D%90%E6%A0%87" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>纹理坐标</h1>
 <p>纹理坐标看起来就像这样：</p>
@@ -762,6 +696,12 @@ while(...)
 }
 </code></pre>
 <p>通过使用glUniform1i设置采样器，我们保证了每个uniform采样器对应着正确的纹理单元</p>
+<p><strong>END</strong></p>
+<p>液<g-emoji class="g-emoji" alias="v" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/270c.png">✌</g-emoji></p>
+<p>Inspired by</p>
+<p><a href="http://zwqxin.com/archives/shaderglsl/communication-between-opengl-glsl-2.html" rel="nofollow">http://zwqxin.com/archives/shaderglsl/communication-between-opengl-glsl-2.html</a></p>
+<p><a href="https://blog.csdn.net/candycat1992/article/details/8830894" rel="nofollow">https://blog.csdn.net/candycat1992/article/details/8830894</a></p>
+<p>[<a href="https://learnopengl-cn.github.io/01%20Getting%20started/05%20Shaders/#_4%5D(" rel="nofollow">https://learnopengl-cn.github.io/01%20Getting%20started/05%20Shaders/#_4](</a><a href="https://learnopengl-cn.github.io/01" rel="nofollow">https://learnopengl-cn.github.io/01</a> Getting started/05 Shaders/#_4)</p>
 
                         </article>
                     </div>

@@ -21,7 +21,8 @@
 <a id="user-content-engineering-a-compiler-notes" class="anchor" href="#engineering-a-compiler-notes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Engineering a Compiler notes</h1>
 <p>notes：看的是中文译本</p>
 <h1>
-<a id="user-content-ch1-编译概观" class="anchor" href="#ch1-%E7%BC%96%E8%AF%91%E6%A6%82%E8%A7%82" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CH1 编译概观</h1>
+<a id="user-content-ch1-编译概观" class="anchor" href="#ch1-%E7%BC%96%E8%AF%91%E6%A6%82%E8%A7%82" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><em>CH1 编译概观</em>
+</h1>
 <p><strong>编译器 vs 解释器</strong></p>
 <p>编译器一次性的，把一个某种语言编写的程序作为输入，产生一个等价的程序作为输出，一些编译器产生的等价程序是面向人类的程序设计语言，这种程序还需要进一步编译成为计算机所识别的机器码才能运行</p>
 <p><a href="https://camo.githubusercontent.com/0b533d61f7aef79121d91cd2d9a8aa759343b459023a43f9db30b5fa392b598f/687474703a2f2f79756d6c2e6d652f6469616772616d2f736372756666792f636c6173732f5be6ba90e7a88be5ba8f5d2d5be7bc96e8af91e599a85d2d3e5be79baee6a087e7a88be5ba8f5d" target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/0b533d61f7aef79121d91cd2d9a8aa759343b459023a43f9db30b5fa392b598f/687474703a2f2f79756d6c2e6d652f6469616772616d2f736372756666792f636c6173732f5be6ba90e7a88be5ba8f5d2d5be7bc96e8af91e599a85d2d3e5be79baee6a087e7a88be5ba8f5d" data-canonical-src="http://yuml.me/diagram/scruffy/class/[源程序]-[编译器]-&gt;[目标程序]" style="max-width:100%;"></a></p>
@@ -47,7 +48,8 @@
 <p>寄存器分配：目标寄存器数目有限，要最小化寄存器使用</p>
 <p>指令调度：代码重排，最小化等待操作数浪费的周期数，确保新指令序列产生的结果与原来的指令序列相同</p>
 <h1>
-<a id="user-content-ch2-词法分析器" class="anchor" href="#ch2-%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CH2 词法分析器</h1>
+<a id="user-content-ch2-词法分析器" class="anchor" href="#ch2-%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><em>CH2 词法分析器</em>
+</h1>
 <p>操作输入的每一个字符，读取字符流，产生单词流。</p>
 <p>Algol及其衍生语言定义：标识符为一个字母字符后接零个或多个字母/数字字符，标识符结束于第一个非字母/数字字符，
 有效单词集合是由规则决定的，不用在字典中枚举</p>

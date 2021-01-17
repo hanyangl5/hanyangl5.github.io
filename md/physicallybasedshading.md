@@ -21,7 +21,7 @@
 下面列举的模型仅仅因为它们模型简单，效果甚佳而在实时渲染中被广泛应用（实际上大家都在追求基于物理的渲染）
 
 - lambertian lighting model
-     $\\I=ka+kd·dot(n,l)$
+     $I=ka+kd·dot(n,l)$
 
 - phong lighting model(1975)
 
@@ -96,28 +96,28 @@ radiance=物体表面发出的光+反射的其他光线
 $L_o(p,v)$ 只由入射光线$l$，出射光线$v$和材质决定，brdf函数（Bidirectional Reflectance Distribution Function）$f(l,v)$定义了光线如何作用于材质
 
 **reflectance equation**
-$\\ L_o(p,v)=\int_{l\in\Omega}f(l,v)L_i(p,l)(n·l)dl$
+$L_o(p,v)=\int_{l\in\Omega}f(l,v)L_i(p,l)(n·l)dl$
 
 现在看相机c沿-v方向的radiance=距离c最近点的，某个点的radiance=单位半球面上其他方向入射光的 projected radiance*brdf函数的和
 
 简洁起见，省略p
-$\\L_o(v)=\int_{l\in\Omega}f(l,v)L_i(l)(n·l)dl$
+$L_o(v)=\int_{l\in\Omega}f(l,v)L_i(l)(n·l)dl$
 
 **转换成球面积分**
 
 用$\theta$,$\phi$表示方向$l$
-$\\ dl=\sin\theta d\theta d\phi\\ 
+$dl=\sin\theta d\theta d\phi\\ 
 n·l=\cos\theta\\ 
 L_o(\theta_o,\phi_o)=\int_{\phi_i=0}^{2\pi}\int_{\theta_i=0}^{\frac{\pi}{2}}f(\theta_i,\phi_i,\theta_o,\phi_o)\cos\theta_i\sin\theta_i d\theta_i d\phi_i$
 
 **物理性对brdf的约束**
 
 1. Helmholtz reciprocity principle
-    $\\f(l,v)=f(v,l)$
+    $f(l,v)=f(v,l)$
     
 
 2. conservation of energy
-    $\\∀l,\int_{Ω}f(l,v)(n·v) dω_0 ≤ 1$
+    $∀l,\int_{Ω}f(l,v)(n·v) dω_0 ≤ 1$
    能量守恒，反射光能量不能大于入射光
 
 精确的Helmholtz reciprocity和能量转换对于实时渲染算法不是必须的
@@ -139,7 +139,7 @@ $R(l)=c\\
 =\pi f(l,v)$
 $f(l,v)=\frac{c}{\pi}$
 
->注:lambert diffuse是经验模型，not physically correct
+注:lambert diffuse是经验模型，not physically correct
 
 ---
 
@@ -187,8 +187,8 @@ $F(n,l)\approx F_0+(F_{90}-F_0)(1-(n·l))^{\frac{1}{p}}$
 折射方向由snell law计算
 
 $sin_{\theta_i}\cdot n_1=sin_{\theta_t}\cdot n_2$
-$\\ \theta_t$始终大于$\theta_i$，小于1
-$\\ \theta_i>\theta_c$时发生全反射
+$\theta_t$始终大于$\theta_i$，小于1
+$\theta_i>\theta_c$时发生全反射
 
 反射光强度将external的$F_0\to F_{90}$映射到了$F_0\to F_{\theta_c}$，一张对比图
 

@@ -17,7 +17,9 @@
                     <div id="file-docker-image-pull-md-readme" class="Box-body readme blob js-code-block-container p-5 p-xl-6"
                          style="margin-left: 40px; margin-right: 40px; margin-top: 20px; margin-bottom: 20px">
                         <article class="markdown-body entry-content container-lg" itemprop="text">
-                            <h3>
+                            <h1>
+<a id="user-content-about-z" class="anchor" href="#about-z" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>About Z</h1>
+<h3>
 <a id="user-content-z_buffer为什么是非线性的" class="anchor" href="#z_buffer%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E9%9D%9E%E7%BA%BF%E6%80%A7%E7%9A%84" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>z_buffer为什么是非线性的</h3>
 <p>引用<a href="http://www.humus.name/index.php?page=News&amp;ID=255" rel="nofollow">humus:A couple of notes about Z</a>的一句话</p>
 <p>While W is linear in view space it's not linear in screen space. Z, which is non-linear in view space, is on the other hand linear in screen space</p>
@@ -29,7 +31,6 @@
 <p>在近平面时，z''的精度较高，深度缓冲有较好的表现，我们在深度缓冲时可以很容易判断出物体的前后</p>
 <p>在远平面附近，同样z值相差为1，z''的值相差很小，甚至会计算出相同的深度值，这时就无法分辨哪个物体在前，哪个物体在后，这就是depth precision error(z fighting)</p>
 <p><a href="https://camo.githubusercontent.com/7ed303131e2280d171956d1dee71808517a0967229a88384f614464b795668db/68747470733a2f2f7069632e646f776e6b2e63632f6974656d2f3566336136393032313431393561613539346134393962342e706e67" target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/7ed303131e2280d171956d1dee71808517a0967229a88384f614464b795668db/68747470733a2f2f7069632e646f776e6b2e63632f6974656d2f3566336136393032313431393561613539346134393962342e706e67" alt="" data-canonical-src="https://pic.downk.cc/item/5f3a690214195aa594a499b4.png" style="max-width:100%;"></a></p>
-z fighting 
 <p><strong>解决方法：</strong></p>
 <ul>
 <li>
