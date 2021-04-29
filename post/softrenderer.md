@@ -461,7 +461,7 @@ e_{x,y}=0,on the line$  -->
 
 
 
-<!-- # *纹理映射*
+-- # *纹理映射*
 
 通过stb_image库读取纹理，模型文件中的(u,v)坐标采样纹理
 
@@ -487,73 +487,66 @@ e_{x,y}=0,on the line$  -->
 
 不仅是uv，顶点，法线也都会有问题
 
-**解决方法**
-
-$(e_x,e_y,e_z)$ 代表某一点view space的坐标，这一点由 $\alpha v_1+\beta v_2+\gamma v_3$ 计算得到
-
-在光栅化阶段，插值是在screen space下计算，
-
-$(\frac{e_x}{w},\frac{e_y}{w},\frac{e_z}{w})= \alpha\frac{v_1}{w}+\beta\frac{v_2}{w}+\gamma\frac{v_3}{w}$ -->
-
-
-<!-- 
-透视纹理矫正
-![](figures/texture_correction.png)
+**解决方法-透视纹理矫正**
 
 
 
-还记得吗，我们在投影变换中把z值映射成了关于1/z的函数
-
-$z''=\frac{a}{pz}+b$
-$\\a=\frac{-(z_{near}+z_{far})}{z_{far}-z_{near}}\\
-b=\frac{-2z_{near}z_{far}}{z_{far}-z_{near}}$
-
-在纹理映射时，如果我们用z值进行插值，则会出现如上图所示的问题，
-
-
-我们先做透视除法再插值
+之前我们先做透视除法到screen space再插值
 $f_x=\alpha\ \frac{x_0}{\omega_0}+(1-\alpha)\ \frac{x_1}{\omega_1}$
-我们希望先插值再做透视除法
+我们希望先在view space插值再做透视除法
 $f_x=\frac{\beta\  x_0+(1-\beta)\ x_1}{\beta\ \omega_0+(1-\beta)\ \omega_0}$
 
+找到$\beta, alpha$之间的比例关系，就可以修正屏幕空间插值使其在viewspace下计算
 
 $\beta=\frac{\alpha\ \omega_0}{(1-\alpha)\ \omega_1+\alpha\ \omega_0}$
 
-
-最近在做作业时遇到了一些以前没接触过的东西，
-
-法线贴图normal mapping，也叫凹凸贴图bump mapping，是指对模型表面应用一层纹理，从而改变表面的法线方向，进而影响光照
-下图是一张砖块法线贴图
-
-![](normalmap.png)
-
-在法线贴图中，我们用颜色的r，g，b值来存存储法线向量的x，y，z值
-贴图颜色整体偏蓝色的原因是法线方向都在轴(0,0,1)附近
-我们希望法线都是指向z轴的，如果模型表面是扭曲的，或者某个点的法线方向不是z轴，而是指向其他方向，如(1,0,0)，那么法线贴图就不能直接贴在模型上，因此，我们要将法线贴图中的法线方向转换到模型空间
-
-
-我们称法线贴图所在的空间为切线空间，我们对模型上的每个点计算一个TBN矩阵，使得从贴图中获取法线方向垂直于该点，要构建这样的空间，我们需要三个相互垂直的向量t，b，n。
-
-首先我们获得该点的法线n，切线t
-n cross t得到向量b
-
-构成的矩阵如下
-$\begin{bmatrix}
-t_x&t_y&t_z&0\\
-b_x&b_y&b_z&0\\
-n_x&n_y&n_z&0\\
-0  &  0  &0&1
-\end{bmatrix}$
-通过这个矩阵可以将向量从模型空间转换到切线空间
-<!-->
-在实际情况中，为了节省内存，我们只存贮t，b 用tcrossb计算n的方向
-<!-->
- -->
 
 # Conclusion
 
 渲染器还有很多不完善的地方，渲染效率较低，着色部分还没写，以后找时间填坑吧
 
+# 2021.3.4
+
+最近面试，面试官都问了软渲中光栅化有没有加速所以去看了下openmp
+
+起初是在光栅化便利boundingbox的两层循环外加了
+```#pragma omp parallel for```
+
+结果帧率直接降到5fps
+
+先梳理一下渲染的流程
+
+```
+for model in scene
+    for triangle in model
+        geometry transform
+        for pixel in bounding box
+            if pass coverage test and depth test
+                shade
+            else 
+                discard
+
+```
+
+
+sdl窗口的处理，surface，texture创建和拷贝5ms
+vs阶段大概10-15ms
+初始状态下，光栅化5ms，ps 5-10ms，物体离摄像机越近，光栅化和ps消耗越大，物体占满屏幕时200+ms
+<!-- 
+**优化的方法**
+glm开simd
+
+gs阶段：
+ps：把vec4替换为vec3
+起初用vec4的原因是考虑矩阵乘法点和向量的差异，后来发现用处不大
+
+light是场景中的属性，计算变化只用一次
+
+(glm::dot(view_normal, glm::vec3(0, 0, 1)) <= 0) {
+   只用考虑z是不是小于0
+
+
+depth color是共享的 -->
 ### reference:
 
 https://learnopengl-cn.github.io/

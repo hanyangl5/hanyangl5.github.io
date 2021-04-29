@@ -266,8 +266,38 @@ brdf模型只考虑光线/视线在点的上半球面（光不穿过物体），
 
  -->
 
+# Real Shading in Unreal Engine 4
 
+## GOAL:
+- real-time performance
+- reduce complexity
+- intutive interface
+- Perceptually Linear
+- easy to master
+- robust
+- experssive
+- flexible
 
+## Shaidng Model
+
+### Diffuse
+disney pricipled brdf里diffuse没有用lambertian diffuse，而是加上给你了Fresnel factor，计算形式如下
+$f_d=\frac{c_{diffuse}}{\pi}(1+(F_{D90}-1)(1-\cos\theta_v))^5)(1+(F_{D90}-1)(1-\cos\theta_v=l))^5)$
+$F_{D90}=0.5+2\cdot roughness\cdot\cos^2_d\theta_d$
+
+### Specular 
+GGX做NDF，Smith-GGX做Geometry Function，Spherical Gaussian approximation做Fresnel Term
+
+## IBL:
+
+用MC方法近似渲染方程，pdf是$p(l_k,v)$
+![](https://www.zhihu.com/equation?tex=L_%7Bo%7D%28v%29+%3D+%5Cint_%7BH%7DL_%7Bi%7D%28l%29f%28l%2Cv%29cos%5Ctheta_%7Bl%7Ddl%5Capprox+%5Cfrac%7B1%7D%7BN%7D%5Csum_%7Bk%3D1%7D%5E%7BN%7D%5Cfrac%7BL_%7Bi%7D%28l_%7Bk%7D%29f%28l_%7Bk%7D%2Cv%29cos%5Ctheta_%7Bl_%7Bk%7D%7D%7D%7Bp%28l_%7Bk%7D%2C+v%29%7D)
+# Split Sum Approximation
+
+将上面的求和式写成如下形式
+![](https://www.zhihu.com/equation?tex=%5Cfrac%7B1%7D%7BN%7D%5Csum_%7Bk%3D1%7D%5E%7BN%7D%5Cfrac%7BL_%7Bi%7D%28l_%7Bk%7D%29f%28l_%7Bk%7D%2C+v%29cos%5Ctheta_%7Bl_%7Bk%7D%7D%7D%7Bp%28l_%7Bk%7D%2C+v%29%7D+%5Capprox+%28%5Cfrac%7B1%7D%7BN%7D%5Csum_%7Bk%3D1%7D%5E%7BN%7DL_%7Bi%7D%28l_%7Bk%7D%29%29%28%5Cfrac%7B1%7D%7BN%7D%5Csum_%7Bk%3D1%7D%5E%7BN%7D%5Cfrac%7Bf%28l_%7Bk%7D%2Cv%29cos%5Ctheta_%7Bl_%7Bk%7D%7D%7D%7Bp%28l_%7Bk%7D%2C+v%29%7D%29+)
+
+对不同的roughness，可以把$\frac{1}{N}\sum^N_{k=1}L_i(l_k)$预计算成纹理
 ### Reference
 
 《Real-Time Rendering, 4th Edition》
