@@ -22,37 +22,42 @@ pcss
 - Render the scene from the camera’s point of view. Depending on the 
 fragment’s z-value, pick an appropriate shadow map to the lookup into. 
 
+(如果分成多个frustum，两个相邻的frustum之间阴影会有缝隙)
 **Detailed：** 
 建议用一个texture array存储shadowmaps
 
 **Shadow-map generation**
 
-
 ![](figs/p3-90.png)
-计算eye space下split后的frustum的z值，ds是一个像素在shadowmap在的长度，阴影长度为dp，nnear记为n
-
-
-得出下面等式：
-$\frac{dp}{dy}=\frac{n}{z}$
-$\frac{ds}{\cos\theta}=\frac{dy}{\cos\phi}$
-$\frac{dp}{ds}=\frac{dz\ n\cos\phi}{ds\ z\cos\theta}$
-
-论文[1]中作者测试了不同split方法，包括logarithmic split scheme, uniform split scheme and practical split scheme
-![](figs/split.png)
-
-**logarithmic split scheme**
-
-若shadowmap上不同位置的aliasing程度相同，那$\frac{dp}{ds}$应为常数，$\rho=\frac{dz}{z\ ds}$是不变的
+计算eye space下split后的frustum的z值，ds是一个像素shadowmap边长，产生的阴影长度为dp
 
 可得
-$s=\int_0^s\ ds=\frac{1}{rho}\int_n^z\frac{dz}{z}=\frac{1}{\rho}\ln(\frac{z}{n})\ s \in [0,1]$
+$\frac{dp}{dy}=\frac{n}{z}$
+$\frac{dz}{\cos\theta}=\frac{dy}{\cos\phi}$
+$\frac{dp}{dz}=\frac{n\cos\phi}{z\cos\theta}$
+$\frac{dp}{ds}=\frac{dz\ n\cos\phi}{ds\ z\cos\theta}$
 
-假设所有的frustum完全覆盖了depth range
+论文[1]中讨论了不同的split方法，有logarithmic split scheme, uniform split scheme and practical split scheme
+![](figs/split.png)
 
-$\rho=\ln(\frac{f}{n})$
+**logarithmic splitscheme**
+
+理论上，如果最后计算出的shadow的error相同，$\frac{dp}{ds}$应为常数，那么cos项的系数也应该是常数，即
+$\frac{dz}{zds}=\rho$
+在depth范围内积分 
+$s=\int_0^s ds=\frac{1}{\rho}\int_n^z \frac{dz}{z}=\frac{1}{\rho}\ln(\frac{z}{n})\ s\in [0,1]$
+
+得到
+
+$\rho=\ln(f/n$)
+
+那么
 
 $s=\frac{\ln(z/n)}{\ln(f/n)}$
 
+split point应呈指数分布
+$z_i=n(f/n)^{1/N}$
+N是split的次数
 **Final scene rendering**
 
 在ps阶段，每个像素的深度值（projection后的）和不同shadowmap的z-range比较，找到对应的第ith级shadowmap，再转换到worldspace并乘上对应的light mat到光源空间，变换为0-1的texcoord，就可以查shadowmap上的值计算阴影了
@@ -66,3 +71,7 @@ $s=\frac{\ln(z/n)}{\ln(f/n)}$
 ![](figs/p12-45.png)
 3 split，效果比1 split好很多
 ![](figs/p12-46.png)
+
+### 参考
+
+[1]Parallel-split shadow maps for large-scale virtual environments
