@@ -8,7 +8,36 @@ pcf
 pcss
 ![pcss](figs/PCSS_xxx.png)
 
-在游戏引擎中，更常用的技术是cascaded shadow maps，Nvidia放出的这篇论文中较为详细地介绍了csm的算法
+**shadowmap中的一些问题**
+
+- Perspective Aliasing
+
+距离light远的物体投射出的阴影精度低
+
+![](https://docs.microsoft.com/en-us/windows/win32/dxtecharts/images/high-perspective-aliasing-vs-low-perspective-aliasing.jpg)
+
+- Projective Aliasing
+
+物体表面和light方向几乎平行，shadowmap中深度信息不准确造成的
+
+![](https://docs.microsoft.com/en-us/windows/win32/dxtecharts/images/high-projective-aliasing-vs-low%20projective-aliasing.jpg)
+
+- Shadow Acne and Erroneous Self-Shadowing
+
+自遮挡，查询shadowmap时
+
+![](https://docs.microsoft.com/en-us/windows/win32/dxtecharts/images/shadow-acne-artifact.jpg)
+
+- Peter Panning
+
+bias设置太大产生的看起来像人体浮在空中的问题
+
+![](https://docs.microsoft.com/en-us/windows/win32/dxtecharts/images/peter-panning-artifact.jpg)
+
+
+**CSM**
+
+在游戏引擎中，更常用的技术是cascaded shadow maps，Nvidia这篇论文中介绍了csm的算法
 
 原文地址：https://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf
 
@@ -50,7 +79,7 @@ $\frac{dp}{ds}=\frac{dz\ n\cos\phi}{ds\ z\cos\theta}$
 
 ![](figs/split.png)
 
-**logarithmic split scheme**
+- logarithmic split scheme
 
 
 若shadowmap上不同位置的aliasing程度相同，那$\frac{dp}{ds}$应为常数，$\rho=\frac{dz}{z\ ds}$是不变的
@@ -58,6 +87,7 @@ $\frac{dp}{ds}=\frac{dz\ n\cos\phi}{ds\ z\cos\theta}$
 假设所有的frustum完全覆盖了depth range
 
 可得
+
 $s=\int_0^s\ ds=\frac{1}{rho}\int_n^z\frac{dz}{z}=\frac{1}{\rho}\ln(\frac{z}{n})\ s \in [0,1]$
 
 $\rho=\ln(\frac{f}{n})$
@@ -86,11 +116,11 @@ $C_i^{log}=n(\frac{f}{n})^{i/m}$
 
 这种split方法在距离相机很近的情况下light frustum很小，包括的物体较少
 
-**Uniform Split Scheme**
+- Uniform Split Scheme
 
 就是平均分，这样的效果最差，距离越远走样越严重
 
-**Practical Split Scheme**
+- Practical Split Scheme
 
 把log和uniform的结果平均了一下，效果还不错
 
@@ -101,6 +131,7 @@ $C_i^{log}=n(\frac{f}{n})^{i/m}$
 这一步将light frustum$W$分为更小的light frustum $W_i$
 
 ![](figs/p5-19.png)
+
 上图用2个frustum渲染阴影时，在light frustum里，view frustum外的部分没有被利用到，shadowmap中有一部分浪费了
 
 
@@ -135,4 +166,8 @@ $\lambda$调整修正的程度
 
 ![](figs/p12-46.png)
 
+
+## 参考
+
 [1]Parallel-split shadow maps for large-scale virtual environments
+[2]https://docs.microsoft.com/en-us/windows/win32/dxtecharts/common-techniques-to-improve-shadow-depth-maps#:~:text=The%20distended%20shadows%20highlighted%20in%20Figure%207%20demonstrate,the%20geometry%20with%20respect%20to%20the%20light%20camera.
