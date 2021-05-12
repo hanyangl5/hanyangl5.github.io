@@ -298,6 +298,13 @@ GGX做NDF，Smith-GGX做Geometry Function，Spherical Gaussian approximation做F
 ![](https://www.zhihu.com/equation?tex=%5Cfrac%7B1%7D%7BN%7D%5Csum_%7Bk%3D1%7D%5E%7BN%7D%5Cfrac%7BL_%7Bi%7D%28l_%7Bk%7D%29f%28l_%7Bk%7D%2C+v%29cos%5Ctheta_%7Bl_%7Bk%7D%7D%7D%7Bp%28l_%7Bk%7D%2C+v%29%7D+%5Capprox+%28%5Cfrac%7B1%7D%7BN%7D%5Csum_%7Bk%3D1%7D%5E%7BN%7DL_%7Bi%7D%28l_%7Bk%7D%29%29%28%5Cfrac%7B1%7D%7BN%7D%5Csum_%7Bk%3D1%7D%5E%7BN%7D%5Cfrac%7Bf%28l_%7Bk%7D%2Cv%29cos%5Ctheta_%7Bl_%7Bk%7D%7D%7D%7Bp%28l_%7Bk%7D%2C+v%29%7D%29+)
 
 对不同的roughness，可以把$\frac{1}{N}\sum^N_{k=1}L_i(l_k)$预计算成纹理
+
+
+### 其他
+
+roughness，specularness，metalness，smoothness，glossiness的概念
+
+
 ### Reference
 
 《Real-Time Rendering, 4th Edition》
