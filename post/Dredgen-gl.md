@@ -10,6 +10,7 @@
 效果
 
 ssao 
+
 ![](figs/ao1.png)
 
 在helmet周围有一圈阴影:(
@@ -60,3 +61,21 @@ void main() {
   }
 }
 ~~~
+
+# ShadowMap
+
+light prepass计算光源空间的depthtex作为shadowmap
+
+deferred lighting pass传lightMVP
+
+计算visibility，和color相乘
+
+初始版本
+
+![](figs/sm.png)
+
+pcf 32 sample
+
+![](figs/pcf.png)
+
+
