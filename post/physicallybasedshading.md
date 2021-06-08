@@ -1,101 +1,50 @@
-# 物理着色
-
-### 着色模型
-
-- flat shading model
-
-    对每个三角面计算光照
-
-- gouraud shading model(1971)
-
-    计算三角形三个顶点光照，插值颜色(per-pixel)
-
-- phong shading model(1975)
-
-    插值三角形三个顶点的normal(per-pixel)，计算光照
-
----
-
-### 传统的光照模型
-
-下面列举的模型仅仅因为它们模型简单，效果甚佳而在实时渲染中被广泛应用（实际上大家都在追求基于物理的渲染）
-
-- lambertian lighting model
-     $I=ka+kd·dot(n,l)$
-
-- phong lighting model(1975)
-
-    加了指数形式的specular项
-     $I=ka+kd·dot(n,l)+ks·dot(reflect,v)^N\\ 
-     reflect=2(normal·lightdir)·normal−ligtdir$
-
-    ![](https://upload.wikimedia.org/wikipedia/commons/6/6b/Phong_components_version_4.png)
-
-
-- Blinn–Phong(1977)
-    <!-- 由Torrance and Sparrow 1967年的文章启发， -->
-    specular部分用$dot(\frac{viewdir+lightdir}{2},normal)$代替，减少计算量
-
-    ![](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Blinn_phong_comparison.png/600px-Blinn_phong_comparison.png)
-
-
-- Oren–Nayar模型
-  （Rough opaque diffuse surfaces，产生比lambertian更粗糙的漫反射）
-
-- Minnaert模型 
-    在lambertian模型上加了darkening factor，看起来更暗
-
-
-
->注：如果有看过原论文的话，会发现有很多问题，像深度剔除，着色，光照模型这些往往在一篇论文中都会涉及
-
----
-
-### physically based shading
+# physically based shading
 
 传统的光照模型有很多局限性，很多材质无法表示，如今不管是在实时渲染还是离线渲染所使用的是基于物理的着色模型，以精确描述材质和光的传输过程中能量变化
 
 **辐射度量学**
 
 
-名词解释
+一些物理量的定义
 
 | terms             |                                   description                                   |   符号   |                            计算方式                            |        单位 |
 | :---------------- | :-----------------------------------------------------------------------------: | :------: | :------------------------------------------------------------: | ----------: |
 | Radiant Energy    |                                  total energy                                   |  $Q$   |                                                                |       $J$ |
 | Radiant Flux      |                            the energy per unit time                             | $\Phi$ |                     $\Phi=\frac{dQ}{dt}$                     |       $W$ |
-| Radiant Intensity |                         the energy per unit solid angle                         |  $I$   |         $I=\frac{d\Phi}{d\omega}$,$d\omega=dA*r^2$         |    $W/sr$ |
+| Radiant Intensity |                         the energy per unit solid angle                         |  $I$   |         $I=\frac{d\Phi}{d\omega}$       |    $W/sr$ |
 | Irradiance        | the energy per (perpendicular/projected) unit area incident on a surface point. |  $E$   |                 $E(p) =\frac {d\Phi(p)}{dA}$                 |   $W/m^2$ |
 | Radiance          |               energy per unit solid angle per projected unit area               |  $L$   | $L(p,\omega)=\frac{d^2\Phi(p,\omega)}{d\omega dA\cos\theta}$ | $W/m^2sr$ |
 
 
 
-我们在渲染中计算的量是某个点x沿d方向的radiance
-
-iradiance和radiance的转换关系
+一些转换关系
+$d\omega=dA*r^2$  
 $L(p,\omega)=\frac{dE(p)}{d\omega\\cos\theta}\\ 
 E(p)=\int_{\omega\in\Omega} L(p,\omega)\cos\theta d\omega $
 
 
-<!-- ### microgeometry theory
+### Rendering Equation & Reflectance Equation
 
-不是在建模时将模型建成微表面
-视一个点的表面法线方向不唯一，呈随机正态分布 -->
-
----
-
-### reflectance equation
+按照wiki的定义
+> In computer graphics, the rendering equation is an integral equation in which the equilibrium radiance leaving a point is given as the sum of emitted plus reflected radiance under a geometric optics approximation. The various realistic rendering techniques in computer graphics attempt to solve this equation.
 
 
-着色的计算量$L_i(c,-v)$，c是相机位置，-v是光线方向
+
+我们在渲染中计算的量是某个点x沿d方向的radiance，屏幕上的像素是距离相机最近点沿到相机方向的radiance
+
+所要计算的radiance $L_i(c,-v)$，c是相机位置，-v是光线方向
 
 不考虑paticipating media，相机接受的$L_i$就是最近点的$L_o$，$L_i(c,-v)=L_o(p,v)$
 
-radiance=物体表面发出的光+反射的其他光线
 
-$L_o(p,v)$ 只由入射光线$l$，出射光线$v$和材质决定，brdf函数（Bidirectional Reflectance Distribution Function）$f(l,v)$定义了光线如何作用于材质
+**rendering equation**
+$L_o(p,v)=L_e(p,v)+\int_{l\in\Omega}f(l,v)L_i(p,l)(n·l)dl$
+
 
 **reflectance equation**
+
+上式去掉自发光项$L_e(p,v)$
+
 $L_o(p,v)=\int_{l\in\Omega}f(l,v)L_i(p,l)(n·l)dl$
 
 现在看相机c沿-v方向的radiance=距离c最近点的，某个点的radiance=单位半球面上其他方向入射光的 projected radiance*brdf函数的和
@@ -109,6 +58,13 @@ $L_o(v)=\int_{l\in\Omega}f(l,v)L_i(l)(n·l)dl$
 $dl=\sin\theta d\theta d\phi\\ 
 n·l=\cos\theta\\ 
 L_o(\theta_o,\phi_o)=\int_{\phi_i=0}^{2\pi}\int_{\theta_i=0}^{\frac{\pi}{2}}f(\theta_i,\phi_i,\theta_o,\phi_o)\cos\theta_i\sin\theta_i d\theta_i d\phi_i$
+
+
+# BRDF
+
+同样是wiki的定义
+
+>The bidirectional reflectance distribution function (BRDF; ${\displaystyle f_{\text{r}}(\omega _{\text{i}},\,\omega _{\text{r}})}f_{\text{r}}(\omega _{\text{i}},\,\omega _{\text{r}}) $) is a function of four real variables that defines how light is reflected at an opaque surface. It is employed in the optics of real-world light, in computer graphics algorithms, and in computer vision algorithms. The function takes an incoming light direction, ${\displaystyle \omega _{\text{i}}}$, and outgoing direction, ${\displaystyle \omega _{\text{r}}}$ (taken in a coordinate system where the surface normal ${\displaystyle \mathbf {n} }$  lies along the z-axis), and returns the ratio of reflected radiance exiting along ${\displaystyle \omega _{\text{r}}}$$\omega _{\text{r}}$ to the irradiance incident on the surface from direction ${\displaystyle \omega _{\text{i}}}$. Each direction $\omega$  is itself parameterized by azimuth angle $\phi$  and zenith angle $\theta$ , therefore the BRDF as a whole is a function of 4 variables. The BRDF has units sr^−1^, with steradians (sr) being a unit of solid angle.
 
 **物理性对brdf的约束**
 
