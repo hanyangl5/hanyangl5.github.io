@@ -1,4 +1,4 @@
-### [Cascaded Shadow Maps](csm.md)
+<!-- ### [Cascaded Shadow Maps](csm.md)
 notes of Cascaded Shadow Maps
 ### [about z buffer](aboutz.md)
 something about z buffer
@@ -10,7 +10,7 @@ notes of rtr4, npr chapter
 blogs of writting a soft renderer
 ### [physically based shading](physicallybasedshading.md)
 notes of rtr4, physically based rendering chapter
-### [Dredgen-gl 渲染器构建记录](Dredgen-gl.md)
+### [Dredgen-gl 渲染器构建记录](Dredgen-gl.md) -->
 
 
 
