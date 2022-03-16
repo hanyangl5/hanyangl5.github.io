@@ -20,3 +20,5 @@ permalink: /games.html
 ![](figs/vod/screenshot.jpg)
 ![](figs/vod/emblem.jpg)
 ![](figs/vod/rank.png)
+
+video record [bilibili](https://www.bilibili.com/video/BV1ma411h7cJ/)/[youtube](https://www.youtube.com/watch?v=7Ze6v1N4ldA&t=7s)
