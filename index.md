@@ -2,8 +2,6 @@
 permalink: /index.html
 ---
 
-# [games&graphics](https://v4vendetalhy.cn/)
-
 ![](https://avatars.githubusercontent.com/u/45009841?s=128&v=4)
 
 Email: hy.lu@outlook.com

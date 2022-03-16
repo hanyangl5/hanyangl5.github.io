@@ -17,7 +17,7 @@ permalink: /games.html
 ## Vow of the Disciple Dayone - 2022.03.07
 
 ![](figs/vod/defeat.jpg)
-![](figs/vod/screenshot.jpg)
+![](figs/vod/screenshot.jpg)    
 ![](figs/vod/emblem.jpg)
 ![](figs/vod/rank.png)
 
