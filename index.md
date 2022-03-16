@@ -26,13 +26,13 @@ horizon is a real time rendering engine for my graduation project. it is for imp
 
 #### [Dredgen-gl](https://github.com/v4vendeta/Dredgen-gl)
 
-a real time renderer based on OpenGL, Implemented deferred shading pipeline, physically based shading for opaque material, real time shadowing algorithm, shadow mapping and percentage closer filtering.
+Dredgen-gl is a real time renderer based on OpenGL, Implemented deferred shading pipeline, physically based shading for opaque material, real time shadowing algorithm, shadow mapping and percentage closer filtering.
 
 ![](https://github.com/v4vendeta/Dredgen-gl/raw/main/resources/figs/ex3_224.png)
 
 #### [soft-renderer](https://github.com/v4vendeta/soft-renderer)
 
-soft-renderer basic elements of rendering pipeline: model loading, geometry transformation, barycentric coordinate based rasterization, Phong shading and texture mapping.
+soft-renderer consists basic elements of rendering pipeline: model loading, geometry transformation, barycentric coordinate based rasterization, Phong shading and texture mapping.
 
 ![](https://github.com/v4vendeta/soft-renderer/raw/master/figs/output_224.png)
 
