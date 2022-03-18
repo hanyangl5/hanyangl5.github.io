@@ -46,6 +46,6 @@ my toy offline renderer, implemented ray casting, ray geometry intersection, rec
 
 ## Misc
 
-- I am a huge fan of video games, AAA&indie&competitive&coop, currently I am falling in love with [Destiny2](https://www.bungie.net/7/en/Destiny/), some game record can be found [here](https://v4vendetalhy.cn/games)
+- I am a huge fan of video games, AAA&indie&competitive&coop, currently I am falling in love with [Destiny2](https://www.bungie.net/7/en/Destiny/), some game record can be found [here](https://v4vendetalhy.cn/games).
 - maybe some time I write [blogs](https://github.com/v4vendeta/v4vendeta.github.io/tree/master/post).
-- friends: [boyu zhang](https://luciferbobo.github.io/)
+- friends: [boyu zhang](https://luciferbobo.github.io/).
