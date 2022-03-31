@@ -5,14 +5,16 @@ permalink: /index.html
 ![](https://avatars.githubusercontent.com/u/45009841?s=128&v=4)
 
 Email: hy.lu@outlook.com
+
 Github: [v4vendeta](https://github.com/v4vendeta)
-Linkedin: [hanyanglu]()
+
+Linkedin: [hanyanglu](https://www.linkedin.com/in/hanyang-lu-06a250181/)
 
 ---
 
 ## Bio
 
-I am Hanyang Lu, a senior student at Southeast University, major in Computer Science. I am passionated about real-time rendering techniques. Currently I am focusing on my graduation project Horizon(see below).
+I am Hanyang Lu, a senior student at Southeast University, major in Computer Science. I am passionated about real-time rendering techniques. Currently I am focusing on my graduation project Horizon.
 
 ---
 
@@ -20,7 +22,7 @@ I am Hanyang Lu, a senior student at Southeast University, major in Computer Sci
 
 #### [Horizon](https://github.com/v4vendeta/horizon)
 
-horizon is a real time rendering engine for my graduation project. it is for implementing real time atmospheric scattering effect.
+horizon is a real time rendering engine for my graduation project. It is for implementing real time atmospheric scattering effect.
 
 ![](https://github.com/v4vendeta/horizon/raw/main/figs/horizon_224.png)
 
