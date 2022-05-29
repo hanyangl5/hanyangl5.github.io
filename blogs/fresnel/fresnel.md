@@ -126,6 +126,10 @@ compared with schlick's one, it can yield smaller error with GT.
 
 >the fresnel equation describes the light amount of reflection and refraction. The reflected light contributes to the specular brdf, and the refracted light under the surface will be absorbed and scatterd outside the surface. the scattered light is the diffuse part we calculated in shader.
 
+# multi scatter diffuse
+
+# kulla conty
+
 # Ref
 
 - https://jcgt.org/published/0003/04/03/
