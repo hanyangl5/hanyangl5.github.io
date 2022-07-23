@@ -14,7 +14,7 @@ Linkedin: [hanyanglu](https://www.linkedin.com/in/hanyang-lu-06a250181/)
 
 ## Bio
 
-I am Hanyang Lu, I received my B.Sc degree in Computer Science(Artificial Intelligence) from School of Computer Science and Engineering, Southeast University. I am passionate about real-time rendering techniques.
+I am Hanyang Lu, I received my B.Sc degree in Computer Science(Artificial Intelligence) from School of Computer Science and Engineering, Southeast University. I am interest in graphics programming.
 
 ---
 
