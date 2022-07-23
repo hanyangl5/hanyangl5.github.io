@@ -14,7 +14,7 @@ Linkedin: [hanyanglu](https://www.linkedin.com/in/hanyang-lu-06a250181/)
 
 ## Bio
 
-I am Hanyang Lu, a senior student at Southeast University, major in Computer Science. I am passionated about real-time rendering techniques. Currently I am focusing on my graduation project Horizon.
+I am Hanyang Lu, I received my B.Sc degree in Computer Science(Artificial Intelligence) from School of Computer Science and Engineering, Southeast University. I am interest in graphics programming.
 
 ---
 
@@ -50,4 +50,3 @@ my toy offline renderer, implemented ray casting, ray geometry intersection, rec
 
 - I am a huge fan of video games, AAA&indie&competitive&coop, currently I am falling in love with [Destiny2](https://www.bungie.net/7/en/Destiny/), some game record can be found [here](https://v4vendetalhy.cn/games).
 - maybe some time I write [blogs](blogs.md).
-- friends: [boyu zhang](https://luciferbobo.github.io/).
