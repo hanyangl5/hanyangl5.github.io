@@ -2,11 +2,7 @@
 permalink: /games.html
 ---
 
-I can say absolutely Destiny2 is my favorite game, it was a winter vacation, I have played Read Dead Online with a friend for a month, but one day his account was banned by rockstar, so we have to find another game to play. At that time destiny cames up.
-
 ## first time I entered the tower - 2020.02.10
-
-
 
 ![](figs/tower.jpg)
 
