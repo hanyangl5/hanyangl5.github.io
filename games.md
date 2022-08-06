@@ -4,8 +4,6 @@ permalink: /games.html
 
 ## first time I entered the tower - 2020.02.10
 
-
-
 ![](figs/tower.jpg)
 
 
