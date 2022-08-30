@@ -20,3 +20,10 @@ permalink: /games.html
 ![](figs/vod/rank.png)
 
 video record [bilibili](https://www.bilibili.com/video/BV1ma411h7cJ/)/[youtube](https://www.youtube.com/watch?v=7Ze6v1N4ldA&t=7s)
+
+## Kings Fall - 2022.08.27
+
+![](figs/kf/oryx.jpg)
+![](figs/kf/rank.png)
+
+video record [bilibili](https://www.bilibili.com/video/BV1Ud4y1d7uK)/[youtube](https://youtu.be/GGuOyblO_RU)
