@@ -24,7 +24,7 @@ I am Hanyang Lu, I received my B.Sc degree in Computer Science(Artificial Intell
 
 horizon is a real time rendering engine for my graduation project. It is for implementing real time atmospheric scattering effect.
 
-![](https://github.com/v4vendeta/horizon/raw/main/figs/horizon_224.png)
+![](https://v4vendetalhy.cn/horizon/docs/figs/horizon_224.png)
 
 #### [Dredgen-gl](https://github.com/v4vendeta/Dredgen-gl)
 
