@@ -28,7 +28,7 @@ TBD
 
 horizon is a real time rendering engine for my graduation project. It is for implementing real time atmospheric scattering effect.
 
-rhi abstraction of Vulkan with async compute \& transfer, auto pipeline layout generation, and efficient resource binding model.
+rhi abstraction of Vulkan with async compute & transfer, auto pipeline layout generation, and efficient resource binding model.
 
 physically based rendering workflow consist of the lighting, shading, and camera exposure. 
 
@@ -60,7 +60,7 @@ Developed a puzzle-solving game for CIGA Game Jam 2022, responsible for gameplay
 
 #### [ECG-based Atrial Fibrillation Rhythm Recognition]()
 
-Applied several machine learning method to detect atrial fibrillation rhythm based on RR interval data from electrocardiograms, achieved over 95\% accuracy on test dataset. Second price in Jiangsu Province Biomedical Innovative Design Competition.
+Applied several machine learning method to detect atrial fibrillation rhythm based on RR interval data from electrocardiograms, achieved over 95% accuracy on test dataset. Second price in Jiangsu Province Biomedical Innovative Design Competition.
 
 #### [TTSR_b2](https://github.com/Luciferbobo/TTSR_b2)
 
