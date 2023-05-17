@@ -6,7 +6,7 @@ permalink: /index.html
 
 Email: hy.lu@outlook.com
 
-Github: [v4vendeta](https://github.com/v4vendeta)
+Github: [hanyangl5](https://github.com/hanyangl5)
 
 Linkedin: [hanyanglu](https://www.linkedin.com/in/hanyang-lu-06a250181/)
 
