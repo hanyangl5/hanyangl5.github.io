@@ -20,11 +20,19 @@ I am Hanyang Lu, I received my B.Sc degree in Computer Science(Artificial Intell
 
 ## Project
 
+#### [Antumbra](https://github.com/hanyangl5/antumbra)
+
+TBD
+
 #### [Horizon](https://github.com/v4vendeta/horizon)
 
 horizon is a real time rendering engine for my graduation project. It is for implementing real time atmospheric scattering effect.
-
-![](https://v4vendetalhy.cn/horizon/docs/figs/horizon_224.png)
+rhi abstraction of Vulkan with async compute \& transfer, auto pipeline layout generation, and efficient resource binding model.
+physically based rendering workflow consist of the lighting, shading, and camera exposure. 
+precomputed atmospheric scattering.
+several other rendering effects, e.g. Image-Based Lighing, Shadow Mapping, TAA, SSAO, Tone Mapping.
+![](https://github.com/hanyangl5/horizon/blob/main/docs/figs/horizon_224.png)
+![](https://github.com/hanyangl5/horizon/blob/main/docs/figs/samples/atmosphere.png)
 
 #### [Dredgen-gl](https://github.com/v4vendeta/Dredgen-gl)
 
@@ -34,15 +42,29 @@ Dredgen-gl is a real time renderer based on OpenGL, Implemented deferred shading
 
 #### [soft-renderer](https://github.com/v4vendeta/soft-renderer)
 
-soft-renderer consists basic elements of rendering pipeline: model loading, geometry transformation, barycentric coordinate based rasterization, Phong shading and texture mapping.
+soft-renderer implemented some graphcis pipeline stage. e.g, Vertex transformation, back face culling, scanline rasterization with perspective correct interpolation. Phong shading and texture filtering.
 
 ![](https://github.com/v4vendeta/soft-renderer/raw/master/figs/output_224.png)
 
-#### [Astral](https://github.com/v4vendeta/Astral)
+#### [tiny ray tracer](https://github.com/hanyangl5/tiny-ray-tracer)
 
-my toy offline renderer, implemented ray casting, ray geometry intersection, recursive ray tracing.
+A tiny ray tracer followed by the tutorial "Ray Tracing in One Weekend Series" and smallpt.
 
-![](https://github.com/v4vendeta/Astral/raw/main/output/1000_224.png)
+#### [Trick Game](https://github.com/hanyangl5/CIGA-2022-TRICK)
+
+Developed a puzzle-solving game for CIGA Game Jam 2022, responsible for gameplay programming with Unity.
+
+#### [ECG-based Atrial Fibrillation Rhythm Recognition]()
+
+Applied several machine learning method to detect atrial fibrillation rhythm based on RR interval data from electrocardiograms, achieved over 95\% accuracy on test dataset. Second price in Jiangsu Province Biomedical Innovative Design Competition.
+
+#### [TTSR_b2](https://github.com/Luciferbobo/TTSR_b2)
+
+A team work project of machine learning course. made improvements to an image super-resolutoin method using transformer neural network and enhanced attension mechanism. Improved performance in PSNR an SSIM.
+
+#### [Marvel_KG](https://github.com/hanyangl5/Marvel_KG)
+
+A team work project of knowledge graph course. Constructed a knowledge graph for Marvel heros using data from Wikipedia and Baidu. Implemented functions includes Entity Query, Knowledge Question Answering, Knowledge Fusion, etc.
 
 ---
 
