@@ -27,11 +27,15 @@ TBD
 #### [Horizon](https://github.com/v4vendeta/horizon)
 
 horizon is a real time rendering engine for my graduation project. It is for implementing real time atmospheric scattering effect.
+
 rhi abstraction of Vulkan with async compute \& transfer, auto pipeline layout generation, and efficient resource binding model.
+
 physically based rendering workflow consist of the lighting, shading, and camera exposure. 
+
 precomputed atmospheric scattering.
+
 several other rendering effects, e.g. Image-Based Lighing, Shadow Mapping, TAA, SSAO, Tone Mapping.
-![](https://github.com/hanyangl5/horizon/blob/main/docs/figs/horizon_224.png)
+
 ![](https://github.com/hanyangl5/horizon/blob/main/docs/figs/samples/atmosphere.png)
 
 #### [Dredgen-gl](https://github.com/v4vendeta/Dredgen-gl)
@@ -70,5 +74,6 @@ A team work project of knowledge graph course. Constructed a knowledge graph for
 
 ## Misc
 
-- I am a huge fan of video games, AAA&indie&competitive&coop, currently I am falling in love with [Destiny2](https://www.bungie.net/7/en/Destiny/), some game record can be found [here](https://v4vendetalhy.cn/games).
-- maybe some time I write [blogs](blogs.md).
+I am a huge fan of video games, AAA&indie&competitive&coop, currently I am falling in love with [Destiny2](https://www.bungie.net/7/en/Destiny/), some game record can be found [here](https://v4vendetalhy.cn/games).
+
+maybe some time I write [blogs](blogs.md).
