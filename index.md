@@ -36,7 +36,7 @@ precomputed atmospheric scattering.
 
 several other rendering effects, e.g. Image-Based Lighing, Shadow Mapping, TAA, SSAO, Tone Mapping.
 
-![](https://github.com/hanyangl5/horizon/blob/main/docs/figs/samples/atmosphere.png)
+![](https://github.com/hanyangl5/horizon/blob/raw/main/docs/figs/samples/atmosphere.png)
 
 #### [Dredgen-gl](https://github.com/v4vendeta/Dredgen-gl)
 
