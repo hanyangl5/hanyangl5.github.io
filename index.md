@@ -36,13 +36,13 @@ precomputed atmospheric scattering.
 
 several other rendering effects, e.g. Image-Based Lighing, Shadow Mapping, TAA, SSAO, Tone Mapping.
 
-![]([https://github.com/hanyangl5/horizon/blob/raw/main/docs/figs/samples/atmosphere.png](https://github.com/hanyangl5/horizon/blob/main/docs/figs/samples/atmosphere.png?raw=true))
+![](https://github.com/hanyangl5/horizon/blob/main/docs/figs/samples/atmosphere.png?raw=true)
 
 #### [Dredgen-gl](https://github.com/v4vendeta/Dredgen-gl)
 
 Dredgen-gl is a real time renderer based on OpenGL, Implemented deferred shading pipeline, physically based shading for opaque material, real time shadowing algorithm, shadow mapping and percentage closer filtering.
 
-![](https://github.com/v4vendeta/Dredgen-gl/raw/main/resources/figs/ex3_224.png)
+![](https://github.com/v4vendeta/dredgen-gl/raw/main/resources/figs/ex3_224.png)
 
 #### [soft-renderer](https://github.com/v4vendeta/soft-renderer)
 
