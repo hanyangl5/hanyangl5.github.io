@@ -40,7 +40,8 @@ several other rendering effects, e.g. Image-Based Lighing, Shadow Mapping, TAA, 
 
 #### [Dredgen-gl](https://github.com/v4vendeta/Dredgen-gl)
 
-Dredgen-gl is a real time renderer based on OpenGL, Implemented deferred shading pipeline, physically based shading for opaque material, real time shadowing algorithm, shadow mapping and percentage closer filtering.
+Dredgen-gl is a real time renderer based on OpenGL, Implemented deferred shading pipeline, physically based shading, real time shadowing algorithm, shadow mapping and percentage closer filtering.
+integrated imgui for mesh import and scene editing.
 
 ![](https://raw.githubusercontent.com/hanyangl5/Dredgen-gl/main/resources/figs/ex3_224.png?token=GHSAT0AAAAAACA5MFHX6OLSYPUXLRRYQSJAZDF44UQ)
 
