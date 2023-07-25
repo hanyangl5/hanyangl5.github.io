@@ -75,6 +75,6 @@ A team work project of knowledge graph course. Constructed a knowledge graph for
 
 ## Misc
 
-I am a huge fan of video games, AAA&indie&competitive&coop, currently I am falling in love with [Destiny2](https://www.bungie.net/7/en/Destiny/), some game record can be found [here](https://v4vendetalhy.cn/games).
+I am a huge fan of video games, AAA&indie&competitive&coop, currently I am falling in love with [Destiny2](https://www.bungie.net/7/en/Destiny/), some game record can be found [here](games.md).
 
 maybe some time I write [blogs](blogs.md).
