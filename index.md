@@ -47,7 +47,7 @@ integrated imgui for mesh import and scene editing.
 
 #### [soft-renderer](https://github.com/v4vendeta/soft-renderer)
 
-soft-renderer implemented some graphcis pipeline stage. e.g, Vertex transformation, back face culling, scanline rasterization with perspective correct interpolation. Phong shading and texture filtering.
+Soft Renderer is a cross-platform implementation of the GPU rendering pipeline on CPU.
 
 ![](https://github.com/v4vendeta/soft-renderer/raw/master/figs/output_224.png)
 
