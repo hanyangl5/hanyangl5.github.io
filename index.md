@@ -24,7 +24,7 @@ I am Hanyang Lu, I received my B.Sc degree in Computer Science(Artificial Intell
 
 TBD
 
-#### [Horizon](https://github.com/v4vendeta/horizon)
+#### [Horizon](https://github.com/hanyangl5/horizon)
 
 horizon is a real time rendering engine for my graduation project. It is for implementing real time atmospheric scattering effect.
 
@@ -38,14 +38,14 @@ several other rendering effects, e.g. Image-Based Lighing, Shadow Mapping, TAA, 
 
 ![](https://github.com/hanyangl5/horizon/blob/main/docs/figs/samples/atmosphere.png?raw=true)
 
-#### [Dredgen-gl](https://github.com/v4vendeta/Dredgen-gl)
+#### [OpenGL-Renderer](https://github.com/hanyangl5/OpenGL-Renderer)
 
 Dredgen-gl is a real time renderer based on OpenGL, Implemented deferred shading pipeline, physically based shading, real time shadowing algorithm, shadow mapping and percentage closer filtering.
 integrated imgui for mesh import and scene editing.
 
 ![](https://raw.githubusercontent.com/hanyangl5/Dredgen-gl/main/resources/figs/ex3_224.png?token=GHSAT0AAAAAACA5MFHX6OLSYPUXLRRYQSJAZDF44UQ)
 
-#### [soft-renderer](https://github.com/v4vendeta/soft-renderer)
+#### [soft-renderer](https://github.com/hanyangl5/soft-renderer)
 
 Soft Renderer is a cross-platform implementation of the GPU rendering pipeline on CPU.
 
