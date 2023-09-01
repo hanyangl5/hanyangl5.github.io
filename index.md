@@ -55,11 +55,11 @@ Soft Renderer is a cross-platform implementation of the GPU rendering pipeline o
 
 A tiny ray tracer followed by the tutorial "Ray Tracing in One Weekend Series" and smallpt.
 
-#### [Trick Game](https://github.com/hanyangl5/CIGA-2022-TRICK)
+#### Trick Game
 
 Developed a puzzle-solving game for CIGA Game Jam 2022, responsible for gameplay programming with Unity.
 
-#### [ECG-based Atrial Fibrillation Rhythm Recognition]()
+#### ECG-based Atrial Fibrillation Rhythm Recognition
 
 Applied several machine learning method to detect atrial fibrillation rhythm based on RR interval data from electrocardiograms, achieved over 95% accuracy on test dataset. Second price in Jiangsu Province Biomedical Innovative Design Competition.
 
