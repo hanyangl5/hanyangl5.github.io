@@ -68,11 +68,11 @@ Developed a puzzle-solving game for CIGA Game Jam 2022, responsible for gameplay
 
 Applied several machine learning method to detect atrial fibrillation rhythm based on RR interval data from electrocardiograms, achieved over 95% accuracy on test dataset. Second price in Jiangsu Province Biomedical Innovative Design Competition.
 
-#### [TTSR_b2](https://github.com/Luciferbobo/TTSR_b2)
+#### [TTSR](https://github.com/Luciferbobo/TTSR_b2)
 
 A team work project of machine learning course. made improvements to an image super-resolutoin method using transformer neural network and enhanced attension mechanism. Improved performance in PSNR an SSIM.
 
-#### [Marvel_KG](https://github.com/hanyangl5/Marvel_KG)
+#### [Marvel Knowledge Graph](https://github.com/hanyangl5/Marvel_KG)
 
 A team work project of knowledge graph course. Constructed a knowledge graph for Marvel heros using data from Wikipedia and Baidu. Implemented functions includes Entity Query, Knowledge Question Answering, Knowledge Fusion, etc.
 
