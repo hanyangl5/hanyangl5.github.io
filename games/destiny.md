@@ -1,11 +1,8 @@
----
-permalink: /games.html
----
-
 ## first time I entered the tower - 2020.02.10
 
 ![](figs/tower.jpg)
 
+below are some raid's dayone screenshots
 
 ## Vault of Glass Dayone - 2021.05.23
 
@@ -27,3 +24,8 @@ video record [bilibili](https://www.bilibili.com/video/BV1ma411h7cJ/)/[youtube](
 ![](figs/kf/rank.png)
 
 video record [bilibili](https://www.bilibili.com/video/BV1Ud4y1d7uK)/[youtube](https://youtu.be/GGuOyblO_RU)
+
+## Root of Nightmare - 2022.3.11
+
+![](figs/ron/emblem.JPG)
+video record [bilibili](https://www.bilibili.com/video/BV1iv4y187cc)
