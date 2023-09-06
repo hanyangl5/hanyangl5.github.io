@@ -2,8 +2,7 @@
 permalink: /games.html
 ---
 
-<details>
-<summary>destiny</summary>
+# Destiny 2
 
 ## first time I entered the tower - 2020.02.10
 
@@ -27,11 +26,8 @@ below are some raid's dayone screenshots
 
 [![video](figs/d2/ron/emblem.JPG "video")](https://www.bilibili.com/video/BV1iv4y187cc)
 
-</details>
 
-
-<details>
-<summary>2023</summary>
+# 2023 
 
 ## God of War Ragnarök
 
@@ -77,12 +73,7 @@ below are some raid's dayone screenshots
 
 ![](figs/2023/bd3.png)
 
-</details>
-
-
-<details>
-<summary>2022</summary>
-
+# 2022
 
 ## Elden Ring
 
@@ -100,11 +91,8 @@ below are some raid's dayone screenshots
 
 ![](figs/2022/gow4.jpg)
 
-</details>
 
-
-<details>
-<summary>2021</summary>
+# 2021
 
 ## Yakuza 0 & 2 & 7
 
@@ -132,11 +120,7 @@ below are some raid's dayone screenshots
 
 ## Sea of Solitude
 
-</details>
-
-
-<details>
-<summary>2020</summary>
+# 2020
 
 ## Detroit: Become Human
 
@@ -176,10 +160,7 @@ below are some raid's dayone screenshots
 
 ## Journey
 
-</details>
-
-<details>
-<summary>2019</summary>
+# 2019
 
 ## The Witcher 3: Wild Hunt
 
@@ -215,10 +196,7 @@ below are some raid's dayone screenshots
 
 ## Finding Paradise
 
-</details>
-
-<details>
-<summary>2018</summary>
+# 2018
 
 ## Chinese Parents
 
@@ -229,5 +207,3 @@ below are some raid's dayone screenshots
 ## SUPERHOT
 
 ## To The Moon
-
-</details>
