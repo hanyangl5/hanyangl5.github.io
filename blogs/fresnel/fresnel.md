@@ -1,14 +1,12 @@
 # Fresnel
 
-- an conclusion of some resources of fresnel in rendering
+what is fresnel equation, and how it applies to real-time rendering
 
----
+## Fresnel Equation
 
-# Basics
+The Fresnel equations describe the interaction of light with a planar interface between two substances. They assume no surface variations larger than 1-100 light wavelengths.
 
-The interaction of light with a planar interface between two substance follows the Fresnal Equations. The surface is assumed to not have any irregulariies between 1 light wavelength and 100 wavelengths in size.
-
-ight incident on a flat surface split into reflected part and refrated part, we define the angle between surface normal and reflected light direction is $\theta_i$, the angle between surface normal and refracted light direction is $\theta_t$, the Index of Refraction(IOR) of two substance is $n_{i}$, $n_{t}$
+Light incident on a flat surface split into reflected part and refrated part, we define the angle between surface normal and reflected light direction is $\theta_i$, the angle between surface normal and refracted light direction is $\theta_t$, the Index of Refraction(IOR) of two substance is $n_{i}$, $n_{t}$
 (incident, transmitted).
 
 > the formula of IOR is  $n = \eta + ik$, for dieletric, kappa is zero, we use 
@@ -46,11 +44,11 @@ the following figure demonstrate the reflection ratio of light shoot to differen
 
 if the Index of Refraction of substance $n_i<n_t$, according to snell's law, $\theta_t>\theta_i$, if $\sin\theta_i = \sin\theta_c=\frac{n_t}{n_i}$, no transmission occurs, that is total internal reflection.  
 
-## Make It Real-Time
+## Approximating Fresnel In Real-Time
 
 ####  Shilick Approximation
 
-calculating the Fresnal Equation in real-time is very expensive, schlick gives an easier way to approximate the fresnel reflection.
+Computing the Fresnel equations is expensive for real-time rendering. The Schlick approximation interpolates between F0 at normal incidence and 1 at grazing angles:
 
 the fresnel reflection can be see as an interpolation between $F_0$ and $1$, $F_0$ is the fresnel reflection when $\theta_i = 0$. 
 
@@ -113,7 +111,7 @@ $F_r \approx F_0+(1-F_0)(1-\cos\theta_i)^5 - a\cos\theta_i(1-\cos\theta_i)^{6}$
 
 compared with schlick's one, it can yield smaller error with GT.
 
-## TBD
+## Furthur Reading
 
 
 [Hoffman20](https://blog.selfshadow.com/publications/s2020-shading-course/hoffman/s2020_pbs_hoffman_slides.pdf)
@@ -124,11 +122,10 @@ compared with schlick's one, it can yield smaller error with GT.
 
 **why almost all render engine use a fresnel term to mix specular and diffuse color?**
 
->the fresnel equation describes the light amount of reflection and refraction. The reflected light contributes to the specular brdf, and the refracted light under the surface will be absorbed and scatterd outside the surface. the scattered light is the diffuse part we calculated in shader.
+> the fresnel equation describes the light amount of reflection and refraction. The reflected light contributes to the specular brdf, and the refracted light under the surface will be absorbed and scatterd outside the surface. the scattered light is the diffuse part we calculated in shader.
 
-# multi scatter diffuse
+> update on 9.11 2023, I think it is a simple mix between diffuse and microfacet model now, because diffuse and microfacet is two different model of the surface, diffuse is not subsurface scattering.
 
-# kulla conty
 
 # Ref
 
