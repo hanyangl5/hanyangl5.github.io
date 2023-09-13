@@ -49,6 +49,9 @@ below are some raid's dayone screenshots
 
 ![](figs/2023/tlou.png)
 
+
+## Uncharted 2
+
 ## UNCHARTED 4: A Thief's End
 
 ![](figs/2023/uncharted4.jpg)
@@ -62,6 +65,8 @@ below are some raid's dayone screenshots
 ![](figs/2023/justice.jpg)
 
 ## The Legend of Zelda: Tears of the Kingdom
+
+## Diablo IV
 
 ![](figs/2023/tok.jpg)
 
