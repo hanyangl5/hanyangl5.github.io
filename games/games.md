@@ -78,6 +78,18 @@ below are some raid's dayone screenshots
 
 ![](figs/2023/bd3.png)
 
+## Lies of P
+
+![](figs/2023/liesofp.jpg)
+
+## Assassin's Creed Mirage
+
+![](figs/2023/mirage.JPG)
+
+## Borderlands 3
+
+![](figs/2023/bl3.jpg)
+
 # 2022
 
 ## Elden Ring
