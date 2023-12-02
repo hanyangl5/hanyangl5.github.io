@@ -90,6 +90,14 @@ below are some raid's dayone screenshots
 
 ![](figs/2023/bl3.jpg)
 
+## Marvel's Spider-Man 2 
+
+![](figs/2023/spiderman2.jpg)
+
+## Divinity: Original Sin 2
+
+![](figs/2023/d2.jpg)
+
 # 2022
 
 ## Elden Ring
