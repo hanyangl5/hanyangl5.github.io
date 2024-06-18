@@ -44,6 +44,7 @@ variables_map[obj] = new_value;
 ```
 
 **IMPORTANT IMPORTANT IMPORTANT**
+
 When the object is destroyed, remove the corresponding entry from the map to avoid memory leaks. For example:
 
 ```c++
