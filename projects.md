@@ -33,11 +33,11 @@ horizon is a real time rendering engine for my graduation project. It is for imp
 
 precomputed atmospheric scattering.
 
-rhi abstraction of Vulkan with async compute & transfer, auto pipeline layout generation, and efficient resource binding model.
+rhi abstraction of Vulkan with async compute & transfer, auto pipeline layout generation, and frequency based resource binding model.
 
-physically based rendering workflow consist of the lighting, shading, and camera exposure. 
+physically based rendering workflow consist of the lighting, shading, and exposure. 
 
-several other rendering effects, e.g. Image-Based Lighing, TAA, SSAO, HBAO, Tone Mapping.
+several other rendering effects, e.g. Image-Based Lighing, TAA, SSAO.
 
 
 #### [OpenGL-Renderer](https://github.com/hanyangl5/OpenGL-Renderer)
@@ -46,6 +46,7 @@ several other rendering effects, e.g. Image-Based Lighing, TAA, SSAO, HBAO, Tone
 ![](https://raw.githubusercontent.com/hanyangl5/Dredgen-gl/main/resources/figs/ex3_224.png?token=GHSAT0AAAAAACA5MFHX6OLSYPUXLRRYQSJAZDF44UQ)
 
 Dredgen-gl is a real time renderer based on OpenGL. Implemented deferred shading pipeline, physically based shading, real time shadowing algorithm, shadow mapping, percentage closer filtering.
+
 integrated imgui for mesh import and scene editing.
 
 
@@ -55,22 +56,13 @@ integrated imgui for mesh import and scene editing.
 
 Soft Renderer is a cross-platform implementation of the GPU rendering pipeline on CPU.
 
-
 #### [Astral](https://github.com/hanyangl5/Astral)
 
 A tiny ray tracer followed by the tutorial "Ray Tracing in One Weekend Series".
 
-#### Trick Game
-
-Developed a puzzle-solving game for CIGA Game Jam 2022, responsible for gameplay programming with Unity.
-
-#### ECG-based Atrial Fibrillation Rhythm Recognition
-
-Applied several machine learning method to detect atrial fibrillation rhythm based on RR interval data from electrocardiograms, achieved over 95% accuracy on test dataset. Second price in Jiangsu Province Biomedical Innovative Design Competition.
-
 #### [TTSR](https://github.com/Luciferbobo/TTSR_b2)
 
-A team work project of machine learning course. made improvements to an image super-resolutoin method using transformer neural network and enhanced attension mechanism. Improved performance in PSNR an SSIM.
+A team work project of machine learning course. Made improvements to an image super-resolutoin method using transformer neural network and enhanced attention mechanism. Improved performance in PSNR an SSIM.
 
 #### [Marvel Knowledge Graph](https://github.com/hanyangl5/Marvel_KG)
 
