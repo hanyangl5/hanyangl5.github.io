@@ -1,5 +1,5 @@
 ---
-permalink: /index.html
+permalink: /projects.html
 ---
 
 [**Projects**](/projects.md) | [**Blogs**](/blogs.md) | [**Misc**](/misc.md)
