@@ -18,5 +18,5 @@ Linkedin: [hanyanglu](https://www.linkedin.com/in/hanyang-lu-06a250181/)
 
 ## Bio
 
-I'm Hanyang Lu, I received my B.Sc degree in Computer Science(Artificial Intelligence) from School of Computer Science and Engineering, [Southeast University](https://www.seu.edu.cn/english/). I'm now an engine programmer at Netease Games.
+I'm Hanyang Lu, I received my B.E degree in Computer Science(Artificial Intelligence) from School of Computer Science and Engineering, [Southeast University](https://www.seu.edu.cn/english/). I'm now an engine programmer at [Netease Games](https://www.neteasegames.com/).
 

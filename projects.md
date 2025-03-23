@@ -10,7 +10,8 @@ permalink: /projects.html
 
 ### [Racing Master](https://www.racingmaster.game/)
 
-![](figs/rm.jpg)
+
+![rm1](figs/rm1.jpg)
 
 - Focus on engine/graphics performance optmizations
 
