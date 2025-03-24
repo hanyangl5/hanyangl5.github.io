@@ -70,7 +70,7 @@ $$d<\frac{\lambda}{2\pi}$$
 
 oxygen, nitrogen or carbon dioxide molecules.
 
-$$f_{p}(\theta)=\frac{3}{16\pi}(1+\cos^{2}(\theta)).$$
+$$f_{p}(\theta)=\frac{3}{4}(1+\cos^{2}(\theta)).$$
 
 ### Mie Scattering
 
@@ -79,7 +79,7 @@ Mie Scattering always used to describe larger particles, its scattering is more 
 Cornette-Shanks function
 
 $$
-f_p{} ( \theta)=\frac{3 ( 1-g^{2} )} {8\pi ( 2+g^{2} )} \frac{( 1+\operatorname{c o s}^{2} ( \theta) )} {( 1+g^{2}-2 g \operatorname{c o s} ( \theta) )^{3 / 2}} \tag{3} 
+f_p{} ( \theta)=\frac{3 ( 1-g^{2} )} {2 ( 2+g^{2} )} \frac{( 1+\operatorname{c o s}^{2} ( \theta) )} {( 1+g^{2}-2 g \operatorname{c o s} ( \theta) )^{3 / 2}} \tag{3} 
 $$
 
 there are other math approximations of to fit the distribution of Mie Scattering, See [Appendix](##Appendix)
