@@ -43,31 +43,6 @@ $L_s(x, o) = \sum_{i=0}^{lights}L_{in}(x, i)\cdot Phase(i, o)\cdot Vis(x, i)$
 - $L_s(x,o)$ is the source radiance at x coming from all light sources (sun, sky) in direction o.
 
 
-
-volume rendering equation
-
-![alt text](image-1.png)
-
-$$L(x,\omega)=\int_{t=0}^dT_{t}\left[\sigma_a(x_t)L_e(x_t,\omega)+\sigma_s(x_t)L_s(x_t,\omega)+L_d(x_d,\omega)\right]dt$$
-
-omit emission, 
-
-$$L(x,\omega)=\int_{t=0}^dT_{t}\sigma_s(x_t)L_s(x_t,\omega)dt + T_{d}L_d(x_d,\omega)dt$$
-
-
-$$
-L_{s} ( {x_t}, \omega)=\int_{S^{2}} f_{p} ( {x_t}, \omega, \omega^{\prime} ) L ( {x_t}, \omega^{\prime} ) d \omega^{\prime}. 
-$$
-
-Single Scattering
-
-
-<!-- for single light source, ex, sunlight $L(s)$
-
-$$
-L_s(x_t, \omega) = f_{p} ( {x_t}, \omega, \omega^{\prime} ) T(x, s) L ( s ). 
-$$ -->
-
 ## Scattering Coefficient
 
 $$
@@ -78,6 +53,8 @@ $$
 \sigma_{s_{Mie}}(h)=\sigma_{s_{Mie}}(0)
 e^{-\frac{h}{H_{Mie}}}
 $$
+
+the latter $e^{-\frac{h}{H}}$ is density function of rayleigh & mie scattering.
 
 with
 
@@ -144,13 +121,58 @@ float2 TransmittanceLutUvFromRMu(AtmosphereParam atm, float R, float Mu) {
 ```
 
 
-## Precompute Direct Irradiance
 
-For single scattering, $L(p_{s}, o)$ is only affected by sun light,
 
-$L(p_{s}) = L_{s}$
+volume rendering equation
 
-## Precompute In-Scattering?
+![alt text](image-1.png)
+
+$$L(x,\omega)=\int_{t=0}^dT_{t}\left[\sigma_a(x_t)L_e(x_t,\omega)+\sigma_s(x_t)L_s(x_t,\omega)+L_d(x_d,\omega)\right]dt$$
+
+omit emission, 
+
+$$L(x,\omega)=\int_{t=0}^dT_{t}\sigma_s(x_t)L_s(x_t,\omega)dt + T_{d}L_d(x_d,\omega)dt$$
+
+
+$$
+L_{s} ( {x_t}, \omega)=\int_{S^{2}} f_{p} ( {x_t}, \omega, \omega^{\prime} ) L ( {x_t}, \omega^{\prime} ) d \omega^{\prime}. 
+$$
+
+Single Scattering
+
+
+only consider one scattering event, of sun light $L(s)$
+
+$$
+L_s(x_t, \omega) = f_{p} ( {x_t}, \omega, s ) T(x, s) L ( s )
+$$
+
+The in-scattering part ot VRE is 
+
+
+$$
+L_{s}^0 ( {x_t}, \omega, s) = \int_{t=0}^dT_{t}\sigma_s(x_t)f_{p} ( {x_t}, \omega, s ) T(x, s) L ( s ) dt
+$$
+
+Multiple Scattering of kth order
+
+$$
+L_{s}^1 ( {x_t}, \omega, s) = L_{s}^0 ( {x_t}, \omega, s) + \int_{t=0}^dT_{t}\sigma_s(x_t)\int_{S^{2}} f_{p} ( {x_t}, \omega, \omega^{\prime} ) L_s^0 ( {x_t}, \omega^{\prime},s) d \omega^{\prime}  dt
+$$
+
+## Precompute In-Scattering
+
+ (2) The planet is perfectly spherical
+ (4) The atmosphere is a spherical shell and its colour
+ is symmetrical around the plane
+
+we can reduce the parameter to 4,
+
+altitude $h$, view-zenith angle $\mu$, sun-zenith angle $\mu_s$, sun-view azimuth $\nu$
+
+to decrease 1D, we omit azimuth $\nu$, because it's only contribute to shadow with weeky illumination.
+
+
 
 $S(p,i)$ represent the in scattering radiance reaching p from q.
 
