@@ -83,4 +83,4 @@ The initialization that was originally on the render thread has been moved to th
 
 ## References
 
-\[1\] [UOD2021 "Dawn Awakening" Mobile Real-time GI and Multi-threaded Rendering Optimization | Photon Studio, Wei Zhixiao](https://www.bilibili.com/video/av978281593/)
+\[1\] [[UOD2021]《黎明觉醒》中的移动端实时GI和多线程渲染优化 | 光子工作室 魏知晓](https://www.bilibili.com/video/av978281593/)
