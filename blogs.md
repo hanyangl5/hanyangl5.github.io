@@ -8,16 +8,20 @@ permalink: /blogs.html
 
 ## [Fresnel](blogs/fresnel/fresnel.md)
 
-This article origins from a frequently asked question when I interviewed a graphics programmer posiion: what is fresnel term in microfacet brdf, and it's meaning in physics?
+This article originates from a frequently asked question during my interview for a graphics programmer position: What is the Fresnel term in microfacet BRDF, and what does it mean in physics?
 
 ## [Auto-Res Virtual Shadow Map](blogs/virtualshadowmap/vsm.md)
 
-Steps to implement a virtual shadow map, present a idea to prevent readback opreation in virtual shadow map rendering.
+Steps to implement a virtual shadow map, presenting an idea to avoid readback operations in virtual shadow map rendering.
+<!-- 
+## [Personal Notes for Volumetric/Atmospheric Rendering](blogs/atmospheric%20scattering/atmosphere.md)
 
-## [Personal Notes for Volumetric/Atmospheric rendering](blogs/atmospheric%20scattering/atmosphere.md)
+TBD. -->
 
-TBD.
+## [Unreal Opt: Asynchronous Resource Initialization with Auxiliary Render Thread](blogs/auxiliaryrhi/auxiliaryrhi.md)
 
-## [Unreal Optimization: Asynchronous Resource Initialization with Auxiliary Render Thread](blogs/auxiliaryrhi/auxiliaryrhi.md)
+Discusses techniques for optimizing Unreal Engine by moving resource initialization tasks from the main render thread to auxiliary threads. Offers solutions to minimize game thread stuttering caused by render resource creation.
 
-Discuss techniques for optimizing Unreal Engine by moving resource initialization tasks from the main render thread to auxiliary threads. Offers solutions to minimize game thread stuttering and improve overall performance during resource setup.
+## [Unreal Tips: Packaging Android Without Android Studio](blogs/Unreal%20Tips%20Packaging%20Android%20Without%20Android%20Studio/index.md)
+
+Package Android with Unreal without Android Studio! If you don't want UE to pollute your local Android environment or need to package Android with multiple versions of UE, try this method!
