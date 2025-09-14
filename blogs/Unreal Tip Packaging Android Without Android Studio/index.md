@@ -1,4 +1,4 @@
-# Unreal Tips: Packaging Android Without Android Studio
+# Unreal Tip: Packaging Android Without Android Studio
 
 Developing Unreal Engine projects for Android often means following official documentation that requires installing Android Studio and matching versions of the SDK, NDK, and JDK. This process can be inconvenient, when work with multiple Unreal Engines, since different engine versions may need different Android toolchains. This guide shows how to set up a standalone Android environment UnrealEngine without Android Studio.
 
