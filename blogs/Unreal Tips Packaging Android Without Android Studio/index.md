@@ -86,6 +86,6 @@ New-Item "C:\Program Files\Android\Android Studio\bin\studio64.exe" -ItemType Fi
 
     ![alt text](image.png)
 
-I have already tested this method on a prebuilt engine and a source build engine of UE 5.6.1, source build engine of ue4.26, try it out if you are interested.
+I have already tested this method on a prebuilt/source engine of UE 5.6.1,prebuilt/source engine of ue4.27, try it out if you are interested.
 
 > BTW, Android Studio is still necessary if you want to profile your app, you can download a portable version instead of a installer.
