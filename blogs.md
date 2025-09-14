@@ -13,10 +13,6 @@ This article originates from a frequently asked question during my interview for
 ## [Auto-Res Virtual Shadow Map](blogs/virtualshadowmap/vsm.md)
 
 Steps to implement a virtual shadow map, presenting an idea to avoid readback operations in virtual shadow map rendering.
-<!-- 
-## [Personal Notes for Volumetric/Atmospheric Rendering](blogs/atmospheric%20scattering/atmosphere.md)
-
-TBD. -->
 
 ## [Unreal Opt: Asynchronous Resource Initialization with Auxiliary Render Thread](blogs/auxiliaryrhi/auxiliaryrhi.md)
 
