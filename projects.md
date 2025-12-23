@@ -10,20 +10,19 @@ permalink: /projects.html
 
 ### [Racing Master](https://www.racingmaster.game/)
 
+![rm1](figs/rm.jpg)
 
-![rm1](figs/rm1.jpg)
-
-- Focus on engine/graphics performance optmizations
+- engine/graphics optmizations
 
 ---
 
 ## Hobby Projects
 
 
-#### [Antumbra](https://github.com/hanyangl5/antumbra)
+<!-- #### [Antumbra](https://github.com/hanyangl5/antumbra)
 
 
-yet another render framework for graphics programming.
+yet another render framework for graphics programming. -->
 
 #### [Horizon](https://github.com/hanyangl5/horizon)
 
