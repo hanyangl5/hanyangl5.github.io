@@ -18,6 +18,6 @@ Steps to implement a virtual shadow map, presenting an idea to avoid readback op
 
 Discusses techniques for optimizing Unreal Engine by moving resource initialization tasks from the main render thread to auxiliary threads. Offers solutions to minimize game thread stuttering caused by render resource creation.
 
-## [Unreal Tip: Packaging Android Without Android Studio](blogs/Unreal%20Tips%20Packaging%20Android%20Without%20Android%20Studio/index.md)
+## [Unreal Tip: Packaging Android Without Android Studio](blogs/UnrealTipPackagingAndroidWithoutAndroidStudio/index.md)
 
 Package Android with Unreal without Android Studio! If you don't want UE to pollute your local Android environment or need to package Android with multiple versions of UE, try this method!
