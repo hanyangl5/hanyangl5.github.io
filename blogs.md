@@ -21,3 +21,7 @@ Discusses techniques for optimizing Unreal Engine by moving resource initializat
 ## [Unreal Tip: Packaging Android Without Android Studio](blogs/UnrealTipPackagingAndroidWithoutAndroidStudio/index.md)
 
 Package Android with Unreal without Android Studio! If you don't want UE to pollute your local Android environment or need to package Android with multiple versions of UE, try this method!
+
+## [Profile GPU Counters without SnapdragonProfiler & Streamline]
+
+Use perfetto to capture and profile gpu counters on Snapdragon & Mali gpu.
