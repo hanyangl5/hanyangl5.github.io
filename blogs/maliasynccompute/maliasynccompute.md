@@ -1,10 +1,10 @@
 ---
-title: "Async Compute on Mali: A Mobile Ray Tracing Optimization Survey"
+title: "Async Compute on Mali: Lessons from a Mobile Ray Tracing Experiment"
 date: 2026-03-24
 tags: [GPU, Mali, Ray Tracing, Mobile, Async Compute, Performance, Vulkan]
 ---
 
-# The Truth About Async Compute on Mali: A Mobile Ray Tracing Optimization Story
+# Async Compute on Mali: Lessons from a Mobile Ray Tracing Experiment
 
 ## Abstract
 
@@ -34,6 +34,8 @@ bool trace_shadow_ray(vec3 origin, vec3 direction) {
 }
 ```
 
+![](rt1.jpg)
+
 **Result**: The Lighting Pass execution time increased significantly. This is expected — ray traversal and intersection testing add substantial ALU and memory pressure to an already heavy fragment shader. The entire frame becomes bottlenecked on this single pass.
 
 **Conclusion**: Inlining ray queries into a heavy fragment pass is not viable. The cost is additive and directly increases frame time.
@@ -59,6 +61,8 @@ The intent was to leverage Mali's Async Compute capability: while the graphics q
 
 ### Observation via AGI (Android GPU Inspector)
 
+![](rt21.jpg)
+
 Inspecting the GPU queue timeline in AGI confirmed that the compute and graphics queues **do overlap in time**. The RT Compute Pass and the Heavy Fragment Pass appeared to execute concurrently.
 
 **However, there was no FPS improvement whatsoever.** Frame time remained identical to the non-async baseline.
@@ -72,6 +76,8 @@ To understand why queue overlap produced no performance gain, I examined hardwar
 ### Key Finding
 
 Regardless of which pipeline type was used — graphics, compute, or ray tracing — whenever shader work was active, the **Execution Engine (EE) utilization remained at ~100%**.
+
+![](rt22.jpg)
 
 This held true across all tested configurations:
 
@@ -113,6 +119,8 @@ The parallelism model is:
 - **Tiler ↔ EE**: The Tiler is a dedicated fixed-function unit that handles vertex shading and tile binning. It operates **independently** from the Execution Engines. When the Tiler is active, the EE may be idle or underutilized — this is the window where Async Compute can provide real benefits.
 
 - **Compute ↔ Fragment on EE**: Both compute and fragment workloads are dispatched to the **same** Execution Engines. When EE utilization is high (which it typically is during fragment-heavy passes), there is no spare capacity for additional compute work. The queues may overlap at the scheduling level, but the hardware execution is effectively serialized.
+
+![](rt3.jpg)
 
 This is fundamentally different from desktop GPUs (e.g., NVIDIA Ampere/Ada), where independent hardware partitions (such as separate SMs or GPC-level scheduling) can process compute and graphics work truly in parallel.
 

@@ -25,3 +25,9 @@ Package Android with Unreal without Android Studio! If you don't want UE to poll
 ## [Profile GPU Counters without SnapdragonProfiler & Streamline](blogs/gpucounters/gpucounters.md)
 
 Use perfetto to capture and profile gpu counters on Snapdragon & Mali gpu.
+
+
+## [Async Compute on Mali: Lessons from a Mobile Ray Tracing Experiment](blogs/maliasynccompute/maliasynccompute.md)
+
+A postmortem of an unsuccessful async-compute experiment on Mali GPUs, and what GPU counters revealed about the real parallelism between the Tiler and Execution Engine.
+

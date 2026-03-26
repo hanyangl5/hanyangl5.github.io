@@ -31,11 +31,11 @@ Based on that, I tested a Perfetto-based pipeline for Snapdragon GPU counters an
 
 ### QCOM
 
-![alt text](image.png)
+![alt text](qcom.jpg)
 
 ### Mali
 
-![alt text](image-1.png)
+![alt text](mali.jpg)
 
 ## GPU-related Queries (Copy and Run)
 
