@@ -93,6 +93,9 @@ The main lessons from this debugging session:
 
    Using `gl_BaseInstance` as a per-draw data index worked well on other GPUs, but caused a severe binning bottleneck on Mali in this case. Replacing it with `gl_DrawID` fixed the issue.
 
+
 This was easy to misread as a generic vertex throughput problem, but the real bottleneck was in the frontend / tiler path caused by a specific indirect draw pattern.
+
+> This issue was reproduced on MTK9500 with driver version 54.1. Other Mali driver versions may behave differently.
 
 Final result: Mali performance improved from around **40 FPS** to a much healthier range, and the binning stage was no longer dominating the frame.
