@@ -31,3 +31,6 @@ Use perfetto to capture and profile gpu counters on Snapdragon & Mali gpu.
 
 A postmortem of an unsuccessful async-compute experiment on Mali GPUs, and what GPU counters revealed about the real parallelism between the Tiler and Execution Engine.
 
+## [Mali Binning Bottleneck Caused by VkCmdDrawIndirect and gl_BaseInstance](blogs/mali%20mdi%20perf/index.md)
+
+A Bistro benchmark that ran at 150+ FPS on Adreno 840 dropped to around 40 FPS on MTK9500 / Mali, with nearly 20 ms spent in binning. After several failed geometry-side optimizations, the issue turned out to be the combination of `VkCmdDrawIndirect` and `gl_BaseInstance`-based per-draw indexing.
