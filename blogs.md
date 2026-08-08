@@ -34,3 +34,8 @@ A postmortem of an unsuccessful async-compute experiment on Mali GPUs, and what 
 ## [Mali Binning Bottleneck Caused by VkCmdDrawIndirect and gl_BaseInstance](blogs/malimdiperf/index.md)
 
 A Bistro benchmark that ran at 150+ FPS on Adreno 840 dropped to around 40 FPS on MTK9500 / Mali, with nearly 20 ms spent in binning. After several failed geometry-side optimizations, the issue turned out to be the combination of `VkCmdDrawIndirect` and `gl_BaseInstance`-based per-draw indexing.
+
+
+## [Experiencing VR Graphics](blogs/experiencingvrgraphics/experiencingvrgraphics.md)
+
+A experience of bringing an LVK-based Vulkan renderer into VR with OpenXR, Multiview, and VR-specific rendering optimizations.
