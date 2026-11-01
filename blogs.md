@@ -26,7 +26,6 @@ Package Android with Unreal without Android Studio! If you don't want UE to poll
 
 Use perfetto to capture and profile gpu counters on Snapdragon & Mali gpu.
 
-
 ## [Async Compute on Mali: Lessons from a Mobile Ray Tracing Experiment](blogs/maliasynccompute/maliasynccompute.md)
 
 A postmortem of an unsuccessful async-compute experiment on Mali GPUs, and what GPU counters revealed about the real parallelism between the Tiler and Execution Engine.
@@ -35,7 +34,10 @@ A postmortem of an unsuccessful async-compute experiment on Mali GPUs, and what 
 
 A Bistro benchmark that ran at 150+ FPS on Adreno 840 dropped to around 40 FPS on MTK9500 / Mali, with nearly 20 ms spent in binning. After several failed geometry-side optimizations, the issue turned out to be the combination of `VkCmdDrawIndirect` and `gl_BaseInstance`-based per-draw indexing.
 
-
 ## [Experiencing VR Graphics](blogs/experiencingvrgraphics/experiencingvrgraphics.md)
 
 A experience of bringing an LVK-based Vulkan renderer into VR with OpenXR, Multiview, and VR-specific rendering optimizations.
+
+## [Shadow Occlusion Culling](blogs/shadowoc/shadowoc.md)
+
+Reproject camera depth into a light-space receiver hierarchy to cull shadow casters, with a Bistro benchmark comparing the rendering savings against the culling overhead.
